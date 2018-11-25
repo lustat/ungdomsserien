@@ -4,11 +4,16 @@ import os
 import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
+from loader.loader_utils import rel2fullpath
 
 
 def xmlstring2file(response, xmlname):
     soup = BeautifulSoup(response.text, 'html.parser')
     text = soup.prettify()
+    if xmlname:
+        xmlfile = os.path.join(rel2fullpath('data'), xmlname)
+        with open(xmlfile, "w") as text_file:
+            print(response.text, file=text_file)
 
 
 def get_event(event_id):
@@ -16,7 +21,7 @@ def get_event(event_id):
     apikey = os.environ["apikey"]
     headers = {'ApiKey': apikey}
 
-    response = requests.get(url, headers=headers, params={'eventId': eventid, 'includeSplitTimes': False})
+    response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
 
     root = ET.fromstringlist(response.text)
     return root, response
@@ -25,12 +30,12 @@ def get_event(event_id):
 def get_resultlist(root):
     index = 0
     df = pd.DataFrame()
-    for x in root.findall('ClassResult'):
+    for x in root.findall('ClassResult'):  # Read every class
         print(x.attrib)
         obj_eventclass = x.find('EventClass')
         eventname = obj_eventclass.find('Name').text
         print()
-        for y in x.findall('PersonResult'):
+        for y in x.findall('PersonResult'):  # Get every result from each person
             index += 1
             obj_person = y.find('Person')
             name = obj_person.find('PersonName/Given').text +' ' + obj_person.find('PersonName/Family').text

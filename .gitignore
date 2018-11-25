@@ -104,3 +104,9 @@ venv.bak/
 .mypy_cache/
 
 .idea/
+
+# xsd schema and xml-files
+*.xsd
+*.xml
+
+/data
