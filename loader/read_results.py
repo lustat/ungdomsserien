@@ -74,10 +74,23 @@ def get_resultlist(root):
     return df
 
 
+def get_region_table():
+    apikey = os.environ["apikey"]
+    headers = {'ApiKey': apikey}
+
+    url = "https://eventor.orientering.se/api/organisation/"
+    response = requests.get(url, headers=headers)
+
+    root = ET.fromstringlist(response.text)
+    return root, response
+
 if __name__ == "__main__":
     # eventid = 18667
+    regions = get_region_table()
+
     eventid = 23906
     xmlroot, resp = get_event(eventid)
     reslist = get_resultlist(xmlroot)
+
     print(reslist)
     print('Finished')
