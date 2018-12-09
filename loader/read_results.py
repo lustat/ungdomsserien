@@ -8,8 +8,8 @@ from loader.loader_utils import rel2fullpath
 
 
 def xmlstring2file(response, xmlname):
-    soup = BeautifulSoup(response.text, 'html.parser')
-    text = soup.prettify()
+    # soup = BeautifulSoup(response.text, 'html.parser')
+    # text = soup.prettify()
     if xmlname:
         xmlfile = os.path.join(rel2fullpath('data'), xmlname)
         with open(xmlfile, "w") as text_file:
@@ -38,7 +38,7 @@ def get_resultlist(root):
         for y in x.findall('PersonResult'):  # Get every result from each person
             index += 1
             obj_person = y.find('Person')
-            name = obj_person.find('PersonName/Given').text +' ' + obj_person.find('PersonName/Family').text
+            name = obj_person.find('PersonName/Given').text + ' ' + obj_person.find('PersonName/Family').text
             position = obj_person.find('PersonName/Given').text
 
             person_id = obj_person.find('PersonId').text
@@ -48,7 +48,6 @@ def get_resultlist(root):
             else:
                 birthyear = obj_birth.text[:4]
 
-
             obj_org = y.find('Organisation')
             if obj_org == None:
                 orgid = int(0)
@@ -56,6 +55,8 @@ def get_resultlist(root):
             else:
                 orgid = int(obj_org.find('OrganisationId').text)
                 club = obj_org.find('Name').text
+
+            parent_org_id = get_parent_organisation(orgid)
 
             obj_res = y.find('Result/ResultPosition')
             if obj_res == None:
@@ -69,24 +70,47 @@ def get_resultlist(root):
             df.at[index, 'birthyear'] = birthyear
             df.at[index, 'orgid'] = orgid
             df.at[index, 'club'] = club
+            df.at[index, 'region'] = parent_org_id
             df.at[index, 'position'] = position
 
     return df
+
+
+def get_parent_organisation(id='16'):
+    if not isinstance(id, str):
+        id = str(id)
+
+    response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
+    # soup = BeautifulSoup(response.text, 'html.parser')
+    # text = soup.prettify()
+    # print(text)
+    root = ET.fromstringlist(response.text)
+    obj_parent = root.find('ParentOrganisation/OrganisationId')
+    if obj_parent == None:
+        parent_org = 0
+    else:
+        parent_org = int(obj_parent.text)
+
+    return parent_org
 
 
 def get_region_table():
     apikey = os.environ["apikey"]
     headers = {'ApiKey': apikey}
 
-    url = "https://eventor.orientering.se/api/organisation/"
+    url = "https://eventor.orientering.se/api/organisation"
     response = requests.get(url, headers=headers)
 
     root = ET.fromstringlist(response.text)
+
+    soup = BeautifulSoup(response.text, 'html.parser')
+    text = soup.prettify()
+
     return root, response
 
 if __name__ == "__main__":
-    # eventid = 18667
-    regions = get_region_table()
+    apikey = os.environ["apikey"]
+    headers = {'ApiKey': apikey}
 
     eventid = 23906
     xmlroot, resp = get_event(eventid)
