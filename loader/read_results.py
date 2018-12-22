@@ -5,6 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import rel2fullpath
+from calculation.points_calculation import add_points_to_event_result
 
 
 def xmlstring2file(response, xmlname):
@@ -22,9 +23,10 @@ def get_event(event_id):
     headers = {'ApiKey': apikey}
 
     response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
-
     root = ET.fromstringlist(response.text)
-    return root, response
+    df = get_resultlist(root)
+
+    return df
 
 
 def get_resultlist(root):
@@ -70,7 +72,7 @@ def get_resultlist(root):
             else:
                 finished = True
 
-            df.at[index, 'eventname'] = eventname
+            df.at[index, 'class'] = eventname
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
             df.at[index, 'birthyear'] = birthyear
@@ -117,8 +119,8 @@ if __name__ == "__main__":
     headers = {'ApiKey': apikey}
 
     eventid = 23906
-    xmlroot, resp = get_event(eventid)
-    reslist = get_resultlist(xmlroot)
+    event_results = get_event(eventid)
+    results_with_points = add_points_to_event_result(event_results)
 
-    print(reslist)
+    print(results_with_points)
     print('Finished')
