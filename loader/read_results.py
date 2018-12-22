@@ -64,6 +64,12 @@ def get_resultlist(root):
             else:
                 position = obj_res.text
 
+            finishtime = y.find('Result/FinishTime/Clock')
+            if obj_res == None:
+                finished = False
+            else:
+                finished = True
+
             df.at[index, 'eventname'] = eventname
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
@@ -71,6 +77,7 @@ def get_resultlist(root):
             df.at[index, 'orgid'] = orgid
             df.at[index, 'club'] = club
             df.at[index, 'region'] = parent_org_id
+            df.at[index, 'finished'] = finished
             df.at[index, 'position'] = position
 
     return df
@@ -81,9 +88,6 @@ def get_parent_organisation(id='16'):
         id = str(id)
 
     response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
-    # soup = BeautifulSoup(response.text, 'html.parser')
-    # text = soup.prettify()
-    # print(text)
     root = ET.fromstringlist(response.text)
     obj_parent = root.find('ParentOrganisation/OrganisationId')
     if obj_parent == None:

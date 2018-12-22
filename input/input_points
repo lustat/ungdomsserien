@@ -1,0 +1,7 @@
+{
+  "ordinary_winner": 30,
+  "ordinary_minimum": 10,
+  "ordinary_non_approved": 5,
+  "open_approved": 10,
+  "open_non_approved": 5
+}
