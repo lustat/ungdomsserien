@@ -50,6 +50,9 @@ def get_resultlist(root):
             obj_person = y.find('Person')
             name = obj_person.find('PersonName/Given').text + ' ' + obj_person.find('PersonName/Family').text
 
+            # if obj_person.find('PersonName/Given').text == 'David':
+            #     print('temporary stop')
+
             person_id = obj_person.find('PersonId').text
             obj_birth = obj_person.find('BirthDate/Date')
             if obj_birth is None:
@@ -84,11 +87,17 @@ def get_resultlist(root):
             else:
                 position = obj_res.text
 
-            finishtime = y.find('Result/FinishTime/Clock')
-            if obj_res is None:
-                finished = False
+            obj_status = y.find('Result/CompetitorStatus')
+            status = obj_status.get('value')
+            if status.lower()=='didnotstart':
+                started = False
             else:
+                started = True
+
+            if status.lower()=='ok':
                 finished = True
+            else:
+                finished = False
 
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
@@ -138,6 +147,7 @@ if __name__ == "__main__":
     headers = {'ApiKey': apikey}
 
     eventid = 18218
+    #eventid = 23906
     event_results = get_event(eventid)
     results_with_points = add_points_to_event_result(event_results)
 
