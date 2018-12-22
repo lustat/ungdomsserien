@@ -18,13 +18,22 @@ def xmlstring2file(response, xmlname):
 
 
 def get_event(event_id):
-    url = "https://eventor.orientering.se/api/results/event"
-    apikey = os.environ["apikey"]
-    headers = {'ApiKey': apikey}
+    storage_path = rel2fullpath('events_storage')
+    output_file = os.path.join(storage_path, str(event_id) + '.parq')
 
-    response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
-    root = ET.fromstringlist(response.text)
-    df = get_resultlist(root)
+    if not os.path.exists(output_file):  #Load events
+        url = "https://eventor.orientering.se/api/results/event"
+        apikey = os.environ["apikey"]
+        headers = {'ApiKey': apikey}
+        response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
+        root = ET.fromstringlist(response.text)
+        df = get_resultlist(root)
+        print('Storing ' + output_file)
+        df.to_parquet(output_file)
+
+    else:  # Load already stored event
+        df = pd.read_parquet(output_file)
+
 
     return df
 
@@ -33,52 +42,62 @@ def get_resultlist(root):
     index = 0
     df = pd.DataFrame()
     for x in root.findall('ClassResult'):  # Read every class
-        print(x.attrib)
         obj_eventclass = x.find('EventClass')
-        eventname = obj_eventclass.find('Name').text
-        print()
-        for y in x.findall('PersonResult'):  # Get every result from each person
+        class_name = obj_eventclass.find('Name').text
+        print(class_name)
+        for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')
             name = obj_person.find('PersonName/Given').text + ' ' + obj_person.find('PersonName/Family').text
-            position = obj_person.find('PersonName/Given').text
 
             person_id = obj_person.find('PersonId').text
             obj_birth = obj_person.find('BirthDate/Date')
-            if obj_birth == None:
+            if obj_birth is None:
                 birthyear = np.nan
             else:
                 birthyear = obj_birth.text[:4]
 
             obj_org = y.find('Organisation')
-            if obj_org == None:
+            if obj_org is None:
                 orgid = int(0)
                 club = 'Klubblös'
             else:
-                orgid = int(obj_org.find('OrganisationId').text)
-                club = obj_org.find('Name').text
+                obj_orgid = obj_org.find('OrganisationId')
+                if obj_orgid is None:
+                    orgid = int(0)
+                    club = 'Klubblös'
+                else:
+                    orgid = int(obj_orgid.text)
+                    obj_clubname= obj_org.find('Name')
+                    if obj_clubname is None:
+                        club = '?'
+                        print(name)
+                        print(club)
+                    else:
+                        club = obj_org.find('Name').text
 
             parent_org_id = get_parent_organisation(orgid)
 
             obj_res = y.find('Result/ResultPosition')
-            if obj_res == None:
+            if obj_res is None:
                 position = 'x'
             else:
                 position = obj_res.text
 
             finishtime = y.find('Result/FinishTime/Clock')
-            if obj_res == None:
+            if obj_res is None:
                 finished = False
             else:
                 finished = True
 
-            df.at[index, 'class'] = eventname
+            df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
             df.at[index, 'birthyear'] = birthyear
             df.at[index, 'orgid'] = orgid
             df.at[index, 'club'] = club
             df.at[index, 'region'] = parent_org_id
+            df.at[index, 'started'] = started
             df.at[index, 'finished'] = finished
             df.at[index, 'position'] = position
 
@@ -118,7 +137,7 @@ if __name__ == "__main__":
     apikey = os.environ["apikey"]
     headers = {'ApiKey': apikey}
 
-    eventid = 23906
+    eventid = 18218
     event_results = get_event(eventid)
     results_with_points = add_points_to_event_result(event_results)
 
