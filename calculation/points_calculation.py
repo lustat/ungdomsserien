@@ -9,3 +9,4 @@ def add_points_to_event_result(res, class_selection=None):
 
 
 def add_points_to_coempetion_class(res):
+    return res
