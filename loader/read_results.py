@@ -8,6 +8,11 @@ from loader.loader_utils import rel2fullpath
 from calculation.points_calculation import add_points_to_event_result
 
 
+def get_events(event_list):
+    for event in event_list:
+        get_event(event)
+
+
 def xmlstring2file(response, xmlname):
     # soup = BeautifulSoup(response.text, 'html.parser')
     # text = soup.prettify()
@@ -47,8 +52,20 @@ def get_resultlist(root):
         for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')
-            name = obj_person.find('PersonName/Given').text + ' ' + obj_person.find('PersonName/Family').text
-
+            if obj_person is not None:
+                obj_given = obj_person.find('PersonName/Given')
+                obj_last = obj_person.find('PersonName/Family')
+                if obj_given is not None:
+                    name = obj_given.text
+                else:
+                    name = '?'
+                if obj_last is not None:
+                    name = name + ' ' + obj_last.text
+                else:
+                    name = name + ' ' + '?'
+                    print(name)
+            else:
+                name = '?'
             # if obj_person.find('PersonName/Given').text == 'David':
             #     print('temporary stop')
 
@@ -142,13 +159,9 @@ def get_region_table():
     return root, response
 
 if __name__ == "__main__":
-    apikey = os.environ["apikey"]
-    headers = {'ApiKey': apikey}
+    event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
 
-    eventid = 18218
-    #eventid = 23906
-    event_results = get_event(eventid)
-    results_with_points = add_points_to_event_result(event_results)
-
-    print(results_with_points)
+    get_events(event_ids)
+    # results_with_points = add_points_to_event_result(event_results)
+    # print(results_with_points)
     print('Finished')
