@@ -34,7 +34,6 @@ def get_event(event_id):
     else:  # Load already stored event
         df = pd.read_parquet(output_file)
 
-
     return df
 
 
