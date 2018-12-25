@@ -129,14 +129,16 @@ def get_resultlist(root):
     return df
 
 
-def get_parent_organisation(id='16'):
+def get_parent_organisation(id):
+    apikey = os.environ["apikey"]
+    headers = {'ApiKey': apikey}
     if not isinstance(id, str):
         id = str(id)
 
     response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
     root = ET.fromstringlist(response.text)
     obj_parent = root.find('ParentOrganisation/OrganisationId')
-    if obj_parent == None:
+    if obj_parent is None:
         parent_org = 0
     else:
         parent_org = int(obj_parent.text)
