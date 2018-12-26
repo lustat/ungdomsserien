@@ -11,4 +11,6 @@ def valid_open_runners(df):
 
         df.at[key, 'include']=include
 
-    return df.loc[df.include]
+    df = df.loc[df.include]
+    df = df.drop(columns=['include'])
+    return df

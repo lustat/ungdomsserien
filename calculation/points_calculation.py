@@ -68,4 +68,8 @@ def region_runners(df, region_id=16):
 
 
 def add_points_to_open_class(df):
-    print(df)
+    df = df.assign(points=0)
+    df.loc[df.finished] = 10
+    df.loc[(df.started) & ~df.finished] = 5
+
+    return df
