@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import rel2fullpath, included_class
 from calculation.points_calculation import add_points_to_event
+from calculation.summarize import summarize_compclasses
 from datetime import datetime
 
 
@@ -47,12 +48,12 @@ def evaluate(event_list):
     storage_path = rel2fullpath('events_storage')
 
     for event in event_list:
-        event_results = get_event(event)
-        event_points = add_points_to_event(event_results)
-
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
-        print('Storing ' + output_file)
-        event_points.to_parquet(output_file)
+        if not os.path.exists(output_file):
+            event_results = get_event(event)
+            event_points = add_points_to_event(event_results)
+            print('Storing ' + output_file)
+            event_points.to_parquet(output_file)
 
 
 def get_resultlist(root):
@@ -202,10 +203,25 @@ def get_region_table():
     return root, response
 
 
+def concatenate(event_list):
+    storage_path = rel2fullpath('events_storage')
+
+    df = pd.DataFrame()
+    for event in event_list:
+        file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
+        df0 = pd.read_parquet(file)
+        if df.empty:
+            df = df0.copy()
+        else:
+            df = df.append(df0, sort=False)
+
+    return df
+
 if __name__ == "__main__":
     event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
 
     get_events(event_ids)
     evaluate(event_ids)
-    #summarize(event_ids)
+    df = concatenate(event_ids)
+    #summarize(df)
     print('Finished')
