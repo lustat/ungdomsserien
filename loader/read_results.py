@@ -5,7 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import rel2fullpath, included_class
-from calculation.points_calculation import add_points_to_event_result
+from calculation.points_calculation import add_points_to_event
 from datetime import datetime
 
 
@@ -48,7 +48,7 @@ def evaluate(event_list):
 
     for event in event_list:
         event_results = get_event(event)
-        event_points = add_points_to_event_result(event_results)
+        event_points = add_points_to_event(event_results)
 
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
         print('Storing ' + output_file)
@@ -94,8 +94,12 @@ def get_resultlist(root):
                     print('Unexpected name: ' + name)
             else:
                 name = '?'
+            obj_id = obj_person.find('PersonId')
+            if obj_id is None:
+                person_id = 0
+            else:
+                person_id = obj_id.text
 
-            person_id = obj_person.find('PersonId').text
             obj_birth = obj_person.find('BirthDate/Date')
             if obj_birth is None:
                 birthyear = np.nan
@@ -129,9 +133,14 @@ def get_resultlist(root):
 
             obj_res = y.find('Result/ResultPosition')
             if obj_res is None:
-                position = 'x'
+                position = 0
             else:
-                position = obj_res.text
+                str_position = obj_res.text
+                if str_position.isdigit():
+                    position = int(str_position)
+                else:
+                    print('Unknown position for ' + name)
+                    position = 0
 
             obj_status = y.find('Result/CompetitorStatus')
             status = obj_status.get('value')
@@ -198,4 +207,5 @@ if __name__ == "__main__":
 
     get_events(event_ids)
     evaluate(event_ids)
+    #summarize(event_ids)
     print('Finished')

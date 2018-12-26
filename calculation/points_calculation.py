@@ -2,7 +2,7 @@ import pandas as pd
 from calculation.calc_utils import valid_open_runners
 
 
-def add_points_to_event_result(res, class_selection=None, region_id=16):
+def add_points_to_event(res, class_selection=None, region_id=16):
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
 
@@ -17,10 +17,11 @@ def add_points_to_event_result(res, class_selection=None, region_id=16):
     region_open = valid_open_runners(openres)
 
     results1 = add_points_to_competion_class(region_competition)
-    results2 = add_points_to_open_class(region_open)
+    results2 = points_to_started_open(region_open)
 
-    results = results1.append(results2)
+    results = results1.append(results2, sort=False)
     return results
+
 
 def add_points_to_competion_class(res):
     res = res.reset_index(drop=True, inplace=False)  #Make sure runners (i.e. rows) have unique index
@@ -67,9 +68,12 @@ def region_runners(df, region_id=16):
     return df_all
 
 
-def add_points_to_open_class(df):
-    df = df.assign(points=0)
-    df.loc[df.finished] = 10
-    df.loc[(df.started) & ~df.finished] = 5
+def points_to_started_open(df):
+    df = df.assign(region_position=0, points=0)
+    df_fin = df.loc[df.finished]
+    df_sta = df.loc[~df.finished]
 
-    return df
+    df_fin = df_fin.assign(points=10)
+    df_sta = df_sta.assign(points=5)
+    df_out = df_fin.append(df_sta, sort=False)
+    return df_out
