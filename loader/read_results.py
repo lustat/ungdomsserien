@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import rel2fullpath, included_class
 from calculation.points_calculation import add_points_to_event_result
+from datetime import datetime
 
 
 def get_events(event_list):
@@ -44,15 +45,28 @@ def get_event(event_id):
 
 def evaluate(event_list):
     storage_path = rel2fullpath('events_storage')
-    output_file = os.path.join(storage_path, 'Result_' + str(event_id) + '.parq')
 
     for event in event_list:
         event_results = get_event(event)
         event_points = add_points_to_event_result(event_results)
+
+        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
         print('Storing ' + output_file)
-        df.to_parquet(output_file)
+        event_points.to_parquet(output_file)
+
 
 def get_resultlist(root):
+
+    # Get year of competition
+    event_date = root.find('Event/FinishDate/Date')
+    if event_date is None:
+        print('Warning, unknown competition date')
+        event_year = np.nan
+    else:
+        date = datetime.strptime(event_date.text, '%Y-%m-%d')
+        event_year = date.year
+    print(event_year)
+
     index = 0
     df = pd.DataFrame()
     for x in root.findall('ClassResult'):  # Read every class
@@ -87,7 +101,11 @@ def get_resultlist(root):
             if obj_birth is None:
                 birthyear = np.nan
             else:
-                birthyear = obj_birth.text[:4]
+                year_str = obj_birth.text[:4]
+                if year_str.isdigit():
+                    birthyear = int(year_str)
+                else:
+                    birthyear = np.nan
 
             obj_org = y.find('Organisation')
             if obj_org is None:
@@ -128,10 +146,12 @@ def get_resultlist(root):
             else:
                 finished = False
 
+            df.at[index, 'event_year'] = event_year
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
             df.at[index, 'birthyear'] = birthyear
+            df.at[index, 'age'] = event_year - birthyear
             df.at[index, 'orgid'] = orgid
             df.at[index, 'club'] = club
             df.at[index, 'region'] = parent_org_id
