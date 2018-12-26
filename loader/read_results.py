@@ -67,9 +67,10 @@ def get_resultlist(root):
         event_year = date.year
     print(event_year)
 
+    # Extract results from classes
     index = 0
     df = pd.DataFrame()
-    for x in root.findall('ClassResult'):  # Read every class
+    for x in root.findall('ClassResult'):
         obj_eventclass = x.find('EventClass')
         class_name = obj_eventclass.find('Name').text
         if not included_class(class_name):
@@ -93,8 +94,6 @@ def get_resultlist(root):
                     print('Unexpected name: ' + name)
             else:
                 name = '?'
-            # if obj_person.find('PersonName/Given').text == 'David':
-            #     print('temporary stop')
 
             person_id = obj_person.find('PersonId').text
             obj_birth = obj_person.find('BirthDate/Date')
@@ -136,12 +135,12 @@ def get_resultlist(root):
 
             obj_status = y.find('Result/CompetitorStatus')
             status = obj_status.get('value')
-            if status.lower()=='didnotstart':
+            if status.lower() == 'didnotstart':
                 started = False
             else:
                 started = True
 
-            if status.lower()=='ok':
+            if status.lower() == 'ok':
                 finished = True
             else:
                 finished = False
@@ -193,11 +192,10 @@ def get_region_table():
 
     return root, response
 
+
 if __name__ == "__main__":
     event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
 
     get_events(event_ids)
     evaluate(event_ids)
-    # results_with_points = add_points_to_event_result(event_results)
-    # print(results_with_points)
     print('Finished')
