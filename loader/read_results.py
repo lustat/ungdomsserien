@@ -42,11 +42,17 @@ def get_event(event_id):
     return df
 
 
-def get_resultlist(root):
+def evaluate(event_list):
+    storage_path = rel2fullpath('events_storage')
+    output_file = os.path.join(storage_path, 'Result_' + str(event_id) + '.parq')
 
-    comp_classes = ["H10", "H12", "H14", "H16", "D10", "D12", "D14", "D16"]
-    short_classes = ["H10 Kort", "H12", "H14", "H16", "D10", "D12", "D14", "D16"]
-    open_classes = ["Inskolning", "U1", "U2"]
+    for event in event_list:
+        event_results = get_event(event)
+        event_points = add_points_to_event_result(event_results)
+        print('Storing ' + output_file)
+        df.to_parquet(output_file)
+
+def get_resultlist(root):
     index = 0
     df = pd.DataFrame()
     for x in root.findall('ClassResult'):  # Read every class
@@ -171,6 +177,7 @@ if __name__ == "__main__":
     event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
 
     get_events(event_ids)
+    evaluate(event_ids)
     # results_with_points = add_points_to_event_result(event_results)
     # print(results_with_points)
     print('Finished')
