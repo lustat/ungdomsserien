@@ -4,7 +4,7 @@ import os
 import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
-from loader.loader_utils import rel2fullpath
+from loader.loader_utils import rel2fullpath, included_class
 from calculation.points_calculation import add_points_to_event_result
 
 
@@ -43,12 +43,19 @@ def get_event(event_id):
 
 
 def get_resultlist(root):
+
+    comp_classes = ["H10", "H12", "H14", "H16", "D10", "D12", "D14", "D16"]
+    short_classes = ["H10 Kort", "H12", "H14", "H16", "D10", "D12", "D14", "D16"]
+    open_classes = ["Inskolning", "U1", "U2"]
     index = 0
     df = pd.DataFrame()
     for x in root.findall('ClassResult'):  # Read every class
         obj_eventclass = x.find('EventClass')
         class_name = obj_eventclass.find('Name').text
-        print(class_name)
+        if not included_class(class_name):
+            print('Skip ' + class_name)
+            continue
+        print('Loading ' + class_name)
         for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')

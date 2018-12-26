@@ -3,5 +3,6 @@
   "ordinary_minimum": 10,
   "ordinary_non_approved": 5,
   "open_approved": 10,
-  "open_non_approved": 5
+  "open_non_approved": 5,
+  "comp_classes": ["H10", "H12", "H14", "H16", "D10", "D12", "D14", "D16"]
 }
