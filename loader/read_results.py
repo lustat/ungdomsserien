@@ -55,15 +55,15 @@ def get_resultlist(root):
             if obj_person is not None:
                 obj_given = obj_person.find('PersonName/Given')
                 obj_last = obj_person.find('PersonName/Family')
-                if obj_given is not None:
+                if (obj_given is not None) and (isinstance(obj_given.text, str)):
                     name = obj_given.text
                 else:
                     name = '?'
-                if obj_last is not None:
+                if (obj_last is not None) and (isinstance(obj_last.text, str)):
                     name = name + ' ' + obj_last.text
                 else:
                     name = name + ' ' + '?'
-                    print(name)
+                    print('Unexpected name: ' + name)
             else:
                 name = '?'
             # if obj_person.find('PersonName/Given').text == 'David':
