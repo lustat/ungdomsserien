@@ -13,3 +13,6 @@ def individual_results_excel(dct):
         df.to_excel(writer, class_name)
 
     writer.save()
+
+def club_results_excel(dct):
+    print(dct)

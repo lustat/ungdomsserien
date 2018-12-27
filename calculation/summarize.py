@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 def individual_summary(df, class_selection=None):
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
@@ -29,6 +30,7 @@ def individual_summary(df, class_selection=None):
         summary[classname] = class_summary
     return summary
 
+
 def add_total_score(df, events):
     points = df[events].values
     sorted_points =  -np.sort(-points, axis=1)  #Sort in descending order
@@ -40,3 +42,32 @@ def add_total_score(df, events):
     df = df.sort_values(by='score', inplace=False, axis=0)
     df = df.sort_values(by='score', inplace=False, ascending=False)
     return df
+
+
+def club_summary(df):
+    df = df.loc[~df.orgid.isna()]
+    df = df.assign(orgid=df.orgid.astype(int))
+
+    events = list(df.eventid.unique())
+    organisations = list(df.orgid.unique())
+
+    summary = pd.DataFrame(index=organisations)
+    for orgid in organisations:
+        df0 = df.loc[df.orgid == orgid]
+        class_summary.at[pid, 'club'] = df0.orgid.iloc[0]
+
+    for event in events:
+        summary = summary.assign(**{str(event): 0})
+        df_event = df.loc[df.eventid==event]
+        x = df_event.groupby(by='orgid')
+        summed_points = x.points.sum()
+        summary = summary.assign(**{str(event): summed_points})
+        na_rows = summary.loc[summary[str(event)].isna().values].index
+        for key in na_rows:
+            summary.at[key, str(event)] = 0
+        summary = summary.assign(**{str(event): summary[str(event)].astype(int)})
+
+    events_str = [str(event) for event in events]
+    summary = add_total_score(summary, events_str)
+    print(summary)
+    print(summary)
