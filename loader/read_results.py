@@ -210,6 +210,7 @@ def concatenate(event_list):
     for event in event_list:
         file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
         df0 = pd.read_parquet(file)
+        df0 = df0.assign(eventid=event)
         if df.empty:
             df = df0.copy()
         else:
@@ -223,5 +224,5 @@ if __name__ == "__main__":
     get_events(event_ids)
     evaluate(event_ids)
     df = concatenate(event_ids)
-    #summarize(df)
+    s = summarize_compclasses(df)
     print('Finished')
