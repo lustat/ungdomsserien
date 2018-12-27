@@ -68,7 +68,10 @@ def region_runners(df, region_id=16):
     return df_all
 
 
-def points_to_started_open(df):
+def points_to_started_open(df, region_id=16):
+    df = df.assign(region=df.region.astype('int'))
+    df = df.loc[df.region == region_id]
+
     df = df.assign(region_position=0, points=0)
     df_fin = df.loc[df.finished]
     df_sta = df.loc[~df.finished]

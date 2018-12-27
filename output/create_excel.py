@@ -14,5 +14,9 @@ def individual_results_excel(dct):
 
     writer.save()
 
-def club_results_excel(dct):
-    print(dct)
+def club_results_excel(df):
+    storage_path = rel2fullpath('output')
+    excel_file = os.path.join(storage_path, 'ClubResults.xlsx')
+    writer = pd.ExcelWriter(excel_file)
+    df.to_excel(writer, 'Summary')
+    writer.save()

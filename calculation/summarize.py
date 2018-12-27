@@ -12,7 +12,7 @@ def individual_summary(df, class_selection=None):
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
         events = list(df_class.eventid.unique())
 
-        class_summary = pd.DataFrame(index=ids, columns=events)
+        class_summary = pd.DataFrame(index=ids)
         for pid in ids:
             res_person = df_class.loc[df_class.personid == pid]
             class_summary.at[pid, 'name'] = res_person.name.iloc[0]
@@ -54,7 +54,7 @@ def club_summary(df):
     summary = pd.DataFrame(index=organisations)
     for orgid in organisations:
         df0 = df.loc[df.orgid == orgid]
-        class_summary.at[pid, 'club'] = df0.orgid.iloc[0]
+        summary.at[orgid, 'club'] = df0.club.iloc[0]
 
     for event in events:
         summary = summary.assign(**{str(event): 0})
@@ -69,5 +69,4 @@ def club_summary(df):
 
     events_str = [str(event) for event in events]
     summary = add_total_score(summary, events_str)
-    print(summary)
-    print(summary)
+    return summary
