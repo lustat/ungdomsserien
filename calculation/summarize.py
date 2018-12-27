@@ -25,7 +25,6 @@ def summarize_compclasses(df, class_selection=None):
                     class_summary.at[pid, event] = res_person.points.iloc[0]
                 else:
                     class_summary.at[pid, event] = 0
-        print(class_summary)
         class_summary = add_total_score(class_summary, events)
         summary[classname] = class_summary
     return summary
@@ -39,5 +38,5 @@ def add_total_score(df, events):
     score = np.sum(sorted_points[:,:4],axis=1)
     df = df.assign(score = score)
     df = df.sort_values(by='score', inplace=False, axis=0)
-    df.sort_values(by='score', inplace=False, ascending=False)
+    df = df.sort_values(by='score', inplace=False, ascending=False)
     return df
