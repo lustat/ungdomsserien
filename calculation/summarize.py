@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-def summarize_compclasses(df, class_selection=None):
+def individual_summary(df, class_selection=None):
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
 

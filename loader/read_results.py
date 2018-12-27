@@ -6,8 +6,9 @@ from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import rel2fullpath, included_class
 from calculation.points_calculation import add_points_to_event
-from calculation.summarize import summarize_compclasses
+from calculation.summarize import individual_summary
 from datetime import datetime
+from output.create_excel import individual_results_excel
 
 
 def get_events(event_list):
@@ -224,5 +225,9 @@ if __name__ == "__main__":
     get_events(event_ids)
     evaluate(event_ids)
     df = concatenate(event_ids)
-    s = summarize_compclasses(df)
+    si = individual_summary(df)
+    individual_results_excel(si)
+    # sc = club_summary(df)
+    # club_results_excel(sc)
+
     print('Finished')
