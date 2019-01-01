@@ -59,7 +59,6 @@ def evaluate(event_list):
 
 
 def get_resultlist(root):
-
     # Get year of competition
     event_date = root.find('Event/FinishDate/Date')
     if event_date is None:
@@ -220,17 +219,23 @@ def concatenate(event_list):
 
     return df
 
-if __name__ == "__main__":
-    event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
+
+def extract_and_analyse(event_ids=None):
+    if event_ids is None:
+        event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
 
     get_events(event_ids)
     evaluate(event_ids)
     df = concatenate(event_ids)
 
     sc = club_summary(df)
-    club_results_excel(sc)
+    club_file = club_results_excel(sc)
 
     si = individual_summary(df)
-    individual_results_excel(si)
+    indiv_file = individual_results_excel(si)
+    return club_file, indiv_file
 
+if __name__ == "__main__":
+    extract_and_analyse()
     print('Finished')
+

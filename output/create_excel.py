@@ -12,11 +12,15 @@ def individual_results_excel(dct):
         df = dct[class_name]
         df.to_excel(writer, class_name)
 
+    print('Saving ' + excel_file)
     writer.save()
+    return excel_file
 
 def club_results_excel(df):
     storage_path = rel2fullpath('output')
     excel_file = os.path.join(storage_path, 'ClubResults.xlsx')
     writer = pd.ExcelWriter(excel_file)
     df.to_excel(writer, 'Summary')
+    print('Saving ' + excel_file)
     writer.save()
+    return excel_file
