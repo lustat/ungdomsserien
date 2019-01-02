@@ -5,7 +5,7 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import rel2fullpath, included_class
-from calculation.points_calculation import add_points_to_event
+from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
@@ -54,6 +54,18 @@ def evaluate(event_list):
         if not os.path.exists(output_file):
             event_results = get_event(event)
             event_points = add_points_to_event(event_results)
+            print('Storing ' + output_file)
+            event_points.to_parquet(output_file)
+
+
+def evaluate_night(event_list):
+    storage_path = rel2fullpath('events_storage')
+
+    for event in event_list:
+        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
+        if not os.path.exists(output_file):
+            event_results = get_event(event)
+            event_points = add_night_points_to_event(event_results)
             print('Storing ' + output_file)
             event_points.to_parquet(output_file)
 
@@ -220,18 +232,25 @@ def concatenate(event_list):
     return df
 
 
-def extract_and_analyse(event_ids=None):
+def extract_and_analyse(event_ids=None, night_ids=None):
     if event_ids is None:
         event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
+    if night_ids is None:
+        night_ids = [18459, 18485]
 
     get_events(event_ids)
     evaluate(event_ids)
+
+    get_events(night_ids)
+    evaluate_night(night_ids)
+    df_night = concatenate(night_ids)
+
     df = concatenate(event_ids)
 
     sc = club_summary(df)
     club_file = club_results_excel(sc)
 
-    si = individual_summary(df)
+    si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(si)
     return club_file, indiv_file
 

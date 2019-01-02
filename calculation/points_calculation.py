@@ -2,6 +2,27 @@ import pandas as pd
 from calculation.calc_utils import valid_open_runners
 
 
+def add_night_points_to_event(res, class_selection=None, region_id=16):
+    if class_selection is None:
+        class_selection = ['H12', 'H14', 'H16', 'D12', 'D14', 'D16']
+
+    competition_class = [classname in class_selection for classname in res['classname']]
+    open_short_class = [not (classname in class_selection) for classname in res['classname']]
+
+    compres = res.loc[competition_class]
+    openres = res.loc[open_short_class]
+
+    # Pick out runners from Skåne
+    region_competition = region_runners(compres)
+    region_open = valid_open_runners(openres)
+
+    results1 = points_to_started_night(region_competition)
+    results2 = points_to_started_night(region_open)
+
+    results = results1.append(results2, sort=False)
+    return results
+
+
 def add_points_to_event(res, class_selection=None, region_id=16):
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
@@ -69,6 +90,22 @@ def region_runners(df, region_id=16):
 
 
 def points_to_started_open(df, region_id=16):
+    df = df.assign(region=df.region.astype('int'))
+    df = df.loc[df.region == region_id]
+
+    df = df.assign(region_position=0, points=0)
+    df_fin = df.loc[df.finished]
+    df_sta = df.loc[~df.finished]
+
+    df_fin = df_fin.assign(points=10)
+    df_sta = df_sta.assign(points=5)
+    df_out = df_fin.append(df_sta, sort=False)
+    return df_out
+
+
+def points_to_started_night(df, region_id=16):
+    df = df.loc[df.started]  #Remove not started
+
     df = df.assign(region=df.region.astype('int'))
     df = df.loc[df.region == region_id]
 
