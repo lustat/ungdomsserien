@@ -36,9 +36,10 @@ def individual_summary(df, df_night, class_selection=None):
                     class_summary.at[pid, 'night'] = 0
                 else:
                     class_summary.at[pid, 'night'] = max(night_person.points)
-                    
+
         class_summary = add_best4_score(class_summary, events)
         class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
+        class_summary = class_summary.sort_values(by='total', inplace=False, ascending=False)
         summary[classname] = class_summary
     return summary
 
@@ -50,9 +51,7 @@ def add_best4_score(df, events):
     # Sum over four best competitions
     np.sum(sorted_points[:,:4])
     score = np.sum(sorted_points[:,:4],axis=1)
-    df = df.assign(score = score)
-    df = df.sort_values(by='score', inplace=False, axis=0)
-    df = df.sort_values(by='score', inplace=False, ascending=False)
+    df = df.assign(score=score)
     return df
 
 
