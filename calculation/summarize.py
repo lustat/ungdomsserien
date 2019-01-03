@@ -11,8 +11,12 @@ def individual_summary(df, df_night, class_selection=None):
         df_class = df.loc[df.classname == classname]
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
         events = list(df_class.eventid.unique())
+        # str_events = [str(event) for event in events]
 
-        class_summary = pd.DataFrame(index=ids)
+        columns = ['name', 'club']
+        columns.extend(events)
+        columns.extend(['score','night','total'])
+        class_summary = pd.DataFrame(index=ids, columns=columns)
         for pid in ids:
             res_person = df_class.loc[df_class.personid == pid]
             class_summary.at[pid, 'name'] = res_person.name.iloc[0]
@@ -22,16 +26,24 @@ def individual_summary(df, df_night, class_selection=None):
 
             for pid in ids:
                 res_person = df_race.loc[df_race.personid == pid]
+                night_person = df_night.loc[df_night.personid == pid]
                 if len(res_person)==1:
                     class_summary.at[pid, event] = res_person.points.iloc[0]
                 else:
                     class_summary.at[pid, event] = 0
-        class_summary = add_total_score(class_summary, events)
+
+                if night_person.empty | (classname in ['D10', 'H10']):
+                    class_summary.at[pid, 'night'] = 0
+                else:
+                    class_summary.at[pid, 'night'] = max(night_person.points)
+                    
+        class_summary = add_best4_score(class_summary, events)
+        class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
         summary[classname] = class_summary
     return summary
 
 
-def add_total_score(df, events):
+def add_best4_score(df, events):
     points = df[events].values
     sorted_points =  -np.sort(-points, axis=1)  #Sort in descending order
 
@@ -68,5 +80,5 @@ def club_summary(df):
         summary = summary.assign(**{str(event): summary[str(event)].astype(int)})
 
     events_str = [str(event) for event in events]
-    summary = add_total_score(summary, events_str)
+    summary = add_best4_score(summary, events_str)
     return summary
