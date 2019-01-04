@@ -16,11 +16,14 @@ def individual_results_excel(dct):
     writer.save()
     return excel_file
 
-def club_results_excel(df):
+def club_results_excel(df, club_results):
     storage_path = rel2fullpath('output')
     excel_file = os.path.join(storage_path, 'ClubResults.xlsx')
     writer = pd.ExcelWriter(excel_file)
     df.to_excel(writer, 'Summary')
+    for club_result in club_results:
+        if not club_result.empty:
+            club_result.to_excel(writer, club_result.iloc[0].club, index=False)
     print('Saving ' + excel_file)
     writer.save()
     return excel_file
