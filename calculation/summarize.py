@@ -82,18 +82,21 @@ def club_summary(df):
     summary = add_best4_score(summary, events_str)
     summary = summary.sort_values(by='score', ascending=False, inplace=False)
 
-    clublist = club_points_per_event(df)
+    clublist = club_points_per_event(df, summary.index)
 
     return summary, clublist
 
 
-def club_points_per_event(df):
+def club_points_per_event(df, club_ids=None):
     """List all points per event for each club
 
     :return: List of dataframes, where each dataframe correspond to a club
     """
+    if club_ids is None:
+        club_ids=df.orgid.unique()
+
     lst = []
-    for clubid in df.orgid.unique():
+    for clubid in club_ids:
         df_club = df.loc[df.orgid==clubid]
         lst.append(df_club)
 
