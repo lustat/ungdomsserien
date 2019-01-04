@@ -10,7 +10,8 @@ def individual_results_excel(dct):
     writer = pd.ExcelWriter(excel_file)
     for class_name in dct.keys():
         df = dct[class_name]
-        df.to_excel(writer, class_name, index=False)
+        df = df.set_index(keys='position', drop=True, inplace=False)
+        df.to_excel(writer, class_name, index=True)
 
     print('Saving ' + excel_file)
     writer.save()

@@ -40,13 +40,15 @@ def individual_summary(df, df_night, class_selection=None):
         class_summary = add_best4_score(class_summary, events)
         class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
         class_summary = class_summary.sort_values(by='total', inplace=False, ascending=False)
+
+        class_summary = add_final_position(class_summary)
         summary[classname] = class_summary
     return summary
 
 
 def add_best4_score(df, events):
     points = df[events].values
-    sorted_points =  -np.sort(-points, axis=1)  #Sort in descending order
+    sorted_points = -np.sort(-points, axis=1)  #Sort in descending order
 
     # Sum over four best competitions
     np.sum(sorted_points[:,:4])
@@ -101,3 +103,11 @@ def club_points_per_event(df, club_ids=None):
         lst.append(df_club)
 
     return lst
+
+
+def add_final_position(df):
+    df = df.assign(position=0)
+    for (key, row) in df.iterrows():
+        df.at[key, 'position']= sum(df.total>row.total) + 1
+
+    return df
