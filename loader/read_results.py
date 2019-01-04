@@ -247,14 +247,15 @@ def extract_and_analyse(event_ids=None, night_ids=None):
 
     df = concatenate(event_ids)
 
-    sc = club_summary(df)
-    club_file = club_results_excel(sc)
+    df_club_summary, club_results = club_summary(df)
+    club_file = club_results_excel(df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(si)
     return club_file, indiv_file
 
 if __name__ == "__main__":
+    print('Extract and evaluate orienteering events')
     extract_and_analyse()
     print('Finished')
 
