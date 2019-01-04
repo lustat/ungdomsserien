@@ -76,6 +76,9 @@ def region_runners(df, region_id=16):
     for cname in region_runners_finished.classname.unique():
         df0 = region_runners_finished.loc[region_runners_finished.classname == cname]
         df0 = df0.reset_index(drop=True, inplace=False)
+        for pid in df0.personid.unique():
+            person=df0.loc[df0.personid==pid]
+
         df0 = df0.assign(region_position=df0.index + 1)
 
         # Append started but not finished runners

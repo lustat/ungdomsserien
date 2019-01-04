@@ -16,6 +16,7 @@ def individual_results_excel(dct):
     writer.save()
     return excel_file
 
+
 def club_results_excel(df, club_results):
     storage_path = rel2fullpath('output')
     excel_file = os.path.join(storage_path, 'ClubResults.xlsx')

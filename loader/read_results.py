@@ -79,7 +79,14 @@ def get_resultlist(root):
     else:
         date = datetime.strptime(event_date.text, '%Y-%m-%d')
         event_year = date.year
-    print(event_year)
+
+    obj_event = root.find('Event/Name')
+    if obj_event is None:
+        print('Warning, unknown competition name')
+        event_name = '?'
+    else:
+        event_name = obj_event.text
+    print(event_name)
 
     # Extract results from classes
     index = 0
@@ -168,6 +175,19 @@ def get_resultlist(root):
             else:
                 finished = False
 
+            seconds = 0
+            if finished:
+                obj_time=y.find('Result/Time')
+                if not (obj_time is None):
+                    time_string = obj_time.text
+                    t=time_string.split(':')
+                    if len(t) == 1:
+                        seconds = int(t[0])
+                    elif len(t) == 2:
+                        seconds = int(t[0]) * 60 + int(t[1])
+                    elif len(t) == 3:
+                        seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
+
             df.at[index, 'event_year'] = event_year
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
@@ -180,6 +200,7 @@ def get_resultlist(root):
             df.at[index, 'started'] = started
             df.at[index, 'finished'] = finished
             df.at[index, 'position'] = position
+            df.at[index, 'seconds'] = seconds
 
     return df
 
