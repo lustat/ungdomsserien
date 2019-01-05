@@ -202,14 +202,6 @@ def get_resultlist(root):
             df.at[index, 'position'] = position
             df.at[index, 'seconds'] = seconds
 
-    # df = df.assign(event_year=df.event_year.astype('int'))
-    # df = df.assign(personid=df.personid.astype('int'))
-    # df = df.assign(birthyear=df.birthyear.astype('int'))
-    # df = df.assign(age=df.age.astype('int'))
-    # df = df.assign(orgid=df.orgid.astype('int'))
-    # df = df.assign(region=df.region.astype('int'))
-    # df = df.assign(position=df.position.astype('int'))
-    # df = df.assign(seconds=df.seconds.astype('int'))
     return df
 
 

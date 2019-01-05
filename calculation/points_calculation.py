@@ -37,6 +37,9 @@ def add_points_to_event(res, class_selection=None, region_id=16):
     region_competition = region_runners(compres)
     region_open = valid_open_runners(openres)
 
+    # Remove runners in open classes that have run a competition class
+    region_open = remove_double_runners(region_open, region_competition)
+
     results1 = add_points_to_competion_class(region_competition)
     results2 = points_to_started_open(region_open)
 
@@ -64,7 +67,6 @@ def add_points_to_competion_class(res):
 def region_runners(df, region_id=16):
     df = df.assign(region=df.region.astype('int'))
     region_runners = df.loc[df.region == region_id]
-
 
     region_runners_finished = region_runners.loc[region_runners.finished]
     region_runners_notfinished = region_runners.loc[(~region_runners.finished) & (region_runners.started)]
@@ -121,3 +123,20 @@ def points_to_started_night(df, region_id=16):
     df_sta = df_sta.assign(points=5)
     df_out = df_fin.append(df_sta, sort=False)
     return df_out
+
+
+def remove_double_runners(df_open, df_compete):
+    df_open = df_open.reset_index(drop=True, inplace=False)  #Make sure runners (i.e. rows) have unique index
+    df_open = df_open.assign(keep=True)
+
+    for (key, person) in df_open.iterrows():
+        name = df_open.loc[key, 'name']
+        club = df_open.loc[key, 'club']
+
+        double_run = df_compete.loc[(df_compete.name==name) & (df_compete.club==club)]
+        if not double_run.empty:
+            df_open.at[key, 'keep'] = False
+
+    df_open = df_open.loc[df_open.keep]
+    return df_open
+
