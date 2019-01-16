@@ -102,3 +102,19 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.idea/
+
+# xsd schema and xml-files
+*.xsd
+*.xml
+
+/data
+
+*.parq
+*.xlsx
+*.xls
+
+# Auto saved Excel-files
+/output/~*
+*.xlsx#
