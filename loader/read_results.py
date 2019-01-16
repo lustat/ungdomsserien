@@ -26,23 +26,27 @@ def xmlstring2file(response, xmlname):
             print(response.text, file=text_file)
 
 
-def get_event(event_id):
+def get_event(event_id, apikey=None):
+    if apikey is None:
+        apikey = os.environ["apikey"]
+    print(apikey)
+
     storage_path = rel2fullpath('events_storage')
     output_file = os.path.join(storage_path, str(event_id) + '.parq')
-
+    print(output_file)
     if not os.path.exists(output_file):  #Load events
         url = "https://eventor.orientering.se/api/results/event"
-        apikey = os.environ["apikey"]
+
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root)
         print('Storing ' + output_file)
         df.to_parquet(output_file)
-
     else:  # Load already stored event
-        df = pd.read_parquet(output_file)
+        print('Reloading an already stored event: ' + output_file)
 
+    df = pd.read_parquet(output_file)
     return df
 
 
