@@ -4,12 +4,12 @@ import os
 import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
-from loader.loader_utils import rel2fullpath, included_class
+from loader.loader_utils import included_class
+from base_utils import rel2fullpath
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
-
 
 
 def get_events(event_list):
@@ -48,6 +48,7 @@ def get_event(event_id):
 
 def evaluate(event_list):
     storage_path = rel2fullpath('events_storage')
+    print(storage_path)
 
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')

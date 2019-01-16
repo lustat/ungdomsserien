@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-from loader.loader_utils import rel2fullpath
+from base_utils import rel2fullpath
 
 
 def individual_results_excel(dct):

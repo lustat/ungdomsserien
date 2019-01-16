@@ -1,11 +1,4 @@
 import os
-import sys
-
-
-def rel2fullpath(relpath):
-    path0 = os.path.dirname(os.path.abspath(__file__))
-    fullpath = os.path.join(path0[:path0.find('ungdomsserien')],'ungdomsserien',relpath)
-    return fullpath
 
 
 def getexample(filename='Example.xml'):

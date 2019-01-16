@@ -77,6 +77,7 @@ class MyWidget(QWidget):
         self.output1.setText('Saved: ' + club_file)
         self.output2.setText('Saved: ' + ind_file)
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
