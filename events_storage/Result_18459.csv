@@ -1,0 +1,35 @@
+,Unnamed: 0,event_year,classname,name,personid,birthyear,age,orgid,club,region,started,finished,position,seconds,region_position,points
+0,2,2018.0,D16,Moa Wallenborg,59528,2003.0,15.0,483.0,Lunds OK,16,True,True,2.0,2338.0,0,10
+1,6,2018.0,D16,Sofia Palm,37221,2002.0,16.0,54.0,FK Boken,16,True,True,6.0,2600.0,0,10
+2,8,2018.0,D16,Elin Nilsson,120709,2002.0,16.0,35.0,Andrarums IF,16,True,True,8.0,2677.0,0,10
+3,9,2018.0,D16,Nellie Rydlund,52616,2002.0,16.0,167.0,Hässleholms OK,16,True,True,9.0,2826.0,0,10
+4,10,2018.0,D16,Elin Hugosson,86078,2002.0,16.0,483.0,Lunds OK,16,True,True,10.0,2857.0,0,10
+5,11,2018.0,D16,Agnes Lindblom,117273,2002.0,16.0,258.0,Malmö OK,16,True,True,11.0,2990.0,0,10
+6,12,2018.0,D16,Alva Nystedt,92397,2003.0,15.0,639.0,Skåneslättens OL,16,True,True,12.0,3187.0,0,10
+7,14,2018.0,D16,Selma Larsson,126908,2003.0,15.0,483.0,Lunds OK,16,True,True,14.0,3290.0,0,10
+8,15,2018.0,D16,Kajsa Heyden,92887,2003.0,15.0,483.0,Lunds OK,16,True,True,15.0,3733.0,0,10
+9,16,2018.0,D16,Linnea Leijon,28781,2003.0,15.0,165.0,Härlövs IF,16,True,True,16.0,5788.0,0,10
+0,38,2018.0,H16,Albin Weiden,30186,2003.0,15.0,639.0,Skåneslättens OL,16,True,True,4.0,2409.0,0,10
+1,40,2018.0,H16,Loke Hedberg,62790,2003.0,15.0,483.0,Lunds OK,16,True,True,6.0,2730.0,0,10
+2,41,2018.0,H16,Edvin Selin,51000,2003.0,15.0,114.0,FK Göingarna,16,True,True,7.0,2732.0,0,10
+3,42,2018.0,H16,Carl Ås,62914,2002.0,16.0,483.0,Lunds OK,16,True,True,8.0,2734.0,0,10
+4,48,2018.0,H16,Johan Vinblad,69664,2002.0,16.0,483.0,Lunds OK,16,True,True,14.0,3914.0,0,10
+0,82,2018.0,D14,Tuva Selin,51001,2005.0,13.0,114.0,FK Göingarna,16,True,True,2.0,2401.0,0,10
+1,85,2018.0,D14,Alice Olvegård,83394,2004.0,14.0,114.0,FK Göingarna,16,True,True,5.0,2535.0,0,10
+2,88,2018.0,D14,Alice Persson,109632,2004.0,14.0,487.0,OK Tyringe,16,True,True,8.0,3127.0,0,10
+3,89,2018.0,D14,Johanna Ottosson,52313,2005.0,13.0,471.0,Örkelljunga FK,16,True,True,9.0,3463.0,0,10
+4,90,2018.0,D14,Joanna Persson,125643,2004.0,14.0,487.0,OK Tyringe,16,True,True,10.0,3477.0,0,10
+0,102,2018.0,H14,Svante Selin,51003,2005.0,13.0,114.0,FK Göingarna,16,True,True,2.0,2244.0,0,10
+1,104,2018.0,H14,Wilmer Selin,51002,2005.0,13.0,114.0,FK Göingarna,16,True,True,4.0,2537.0,0,10
+2,108,2018.0,H14,Elia Kämpe,135702,2005.0,13.0,471.0,Örkelljunga FK,16,True,True,8.0,4407.0,0,10
+0,141,2018.0,D12,Alice Johansson,94150,2006.0,12.0,54.0,FK Boken,16,True,True,4.0,2797.0,0,10
+0,151,2018.0,H12,Hjalmar Axelsson,85731,2006.0,12.0,114.0,FK Göingarna,16,True,True,1.0,2110.0,0,10
+1,155,2018.0,H12,Emil Andersson,121163,2006.0,12.0,483.0,Lunds OK,16,True,True,5.0,3878.0,0,10
+49,50,2018.0,H16,Erik Johansson,94151,2003.0,15.0,54.0,FK Boken,16,True,False,0.0,0.0,0,5
+50,51,2018.0,H16,Lucas Treldal,58545,2003.0,15.0,483.0,Lunds OK,16,True,False,0.0,0.0,0,5
+90,91,2018.0,D14,Linnea Rydlund,70211,2004.0,14.0,167.0,Hässleholms OK,16,True,False,0.0,0.0,0,5
+109,110,2018.0,H14,Isak Andersson,121162,2004.0,14.0,483.0,Lunds OK,16,True,False,0.0,0.0,0,5
+156,157,2018.0,H12,Nils Persson,109633,2007.0,11.0,487.0,OK Tyringe,16,True,False,0.0,0.0,0,5
+1,170,2018.0,Öppen motion 3,Gustav Andersson,17898,2004.0,14.0,294.0,OK Pan-Kristianstad,16,True,True,2.0,1894.0,0,10
+11,180,2018.0,Öppen motion 3,Olivia Svensson,115223,2008.0,10.0,461.0,FK Åsen,16,True,True,12.0,3399.0,0,10
+49,242,2018.0,Öppen motion 8,Melker Andersson,17901,2002.0,16.0,294.0,OK Pan-Kristianstad,16,True,True,3.0,3252.0,0,10

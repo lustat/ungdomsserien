@@ -8,17 +8,23 @@ def individual_summary(df, df_night, class_selection=None):
 
     summary = {}
     for classname in class_selection:
+        print(classname)
         df_class = df.loc[df.classname == classname]
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
+        #ids = [pid for pid in df_class.personid.unique() if not ((pid is None) | np.isnan(pid))]
         events = list(df_class.eventid.unique())
         # str_events = [str(event) for event in events]
 
         columns = ['name', 'club']
         columns.extend(events)
-        columns.extend(['score','night','total'])
+        columns.extend(['score', 'night', 'total'])
         class_summary = pd.DataFrame(index=ids, columns=columns)
         for pid in ids:
             res_person = df_class.loc[df_class.personid == pid]
+            if np.isnan(pid):
+                print(' -----  ')
+                print(pid)
+                print(res_person.name)
             class_summary.at[pid, 'name'] = res_person.name.iloc[0]
             class_summary.at[pid, 'club'] = res_person.club.iloc[0]
         for event in events:

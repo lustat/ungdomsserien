@@ -1,0 +1,475 @@
+,event_year,classname,name,personid,birthyear,age,orgid,club,region,started,finished,position,seconds
+1,2018.0,D16,Thea Bökman,77456,2003.0,15.0,125.0,Helsingborgs SOK,16.0,True,True,1.0,2230.0
+2,2018.0,D16,Moa Wallenborg,59528,2003.0,15.0,483.0,Lunds OK,16.0,True,True,2.0,2286.0
+3,2018.0,D16,Agnes Lindblom,117273,2002.0,16.0,258.0,Malmö OK,16.0,True,True,3.0,2339.0
+4,2018.0,D16,Elin Nilsson,120709,2002.0,16.0,35.0,Andrarums IF,16.0,True,True,4.0,2342.0
+5,2018.0,D16,Selma Larsson,126908,2003.0,15.0,483.0,Lunds OK,16.0,True,True,5.0,2535.0
+6,2018.0,D16,Nellie Rydlund,52616,2002.0,16.0,167.0,Hässleholms OK,16.0,True,True,6.0,2553.0
+7,2018.0,D16,Alva Nystedt,92397,2003.0,15.0,639.0,Skåneslättens OL,16.0,True,True,7.0,2646.0
+8,2018.0,D16,Hilma Holmström,125751,2002.0,16.0,165.0,Härlövs IF,16.0,True,True,8.0,2787.0
+9,2018.0,D16,Kajsa Heyden,92887,2003.0,15.0,483.0,Lunds OK,16.0,True,True,9.0,2988.0
+10,2018.0,D16,Hanna Larsson,57259,2003.0,15.0,544.0,Ystads OK,16.0,True,True,10.0,3025.0
+11,2018.0,D16,Elin Hugosson,86078,2002.0,16.0,483.0,Lunds OK,16.0,True,True,11.0,3045.0
+12,2018.0,D16,Linnea Leijon,28781,2003.0,15.0,165.0,Härlövs IF,16.0,True,True,12.0,3414.0
+13,2018.0,D16,Clara Ehrnborn,40635,2002.0,16.0,35.0,Andrarums IF,16.0,True,True,13.0,4057.0
+14,2018.0,D16,Ronja Gerad,58433,2003.0,15.0,507.0,OK Kontinent,16.0,True,True,14.0,5777.0
+15,2018.0,D16,Embla Cinthio,92632,2002.0,16.0,639.0,Skåneslättens OL,16.0,False,False,0.0,0.0
+16,2018.0,D16,Olivia Larsson,139117,2003.0,15.0,483.0,Lunds OK,16.0,False,False,0.0,0.0
+17,2018.0,D16,Sofia Palm,37221,2002.0,16.0,54.0,FK Boken,16.0,False,False,0.0,0.0
+18,2018.0,H16,Albin Weiden,30186,2003.0,15.0,639.0,Skåneslättens OL,16.0,True,True,1.0,2202.0
+19,2018.0,H16,Adam Lindblom,117271,2002.0,16.0,258.0,Malmö OK,16.0,True,True,2.0,2323.0
+20,2018.0,H16,Oscar David Broman Jensen,131319,2003.0,15.0,842.0,FarumTisvilde OK,650.0,True,True,3.0,2361.0
+21,2018.0,H16,Carl Ås,62914,2002.0,16.0,483.0,Lunds OK,16.0,True,True,4.0,2426.0
+22,2018.0,H16,Melker Andersson,17901,2002.0,16.0,294.0,OK Pan-Kristianstad,16.0,True,True,5.0,2543.0
+23,2018.0,H16,Loke Hedberg,62790,2003.0,15.0,483.0,Lunds OK,16.0,True,True,6.0,2580.0
+24,2018.0,H16,Edvin Selin,51000,2003.0,15.0,114.0,FK Göingarna,16.0,True,True,7.0,2599.0
+25,2018.0,H16,Theis Munktved,85640,2002.0,16.0,829.0,Allerød OK,650.0,True,True,8.0,2622.0
+26,2018.0,H16,Klas Ljungqvist,63644,2003.0,15.0,483.0,Lunds OK,16.0,True,True,9.0,2795.0
+27,2018.0,H16,Alfred Ahltin,99555,2003.0,15.0,258.0,Malmö OK,16.0,True,True,10.0,2848.0
+28,2018.0,H16,Ivar Helmersson,69562,2003.0,15.0,167.0,Hässleholms OK,16.0,True,True,11.0,2895.0
+29,2018.0,H16,Johan Vinblad,69664,2002.0,16.0,483.0,Lunds OK,16.0,True,True,12.0,3063.0
+30,2018.0,H16,Erik Johansson,94151,2003.0,15.0,54.0,FK Boken,16.0,True,True,13.0,3276.0
+31,2018.0,H16,Erik Thoresson,56219,2002.0,16.0,35.0,Andrarums IF,16.0,True,True,14.0,3529.0
+32,2018.0,H16,Brian Ahlm,40618,2002.0,16.0,35.0,Andrarums IF,16.0,True,True,15.0,3564.0
+33,2018.0,H16,Gabriel Steffert,133383,2003.0,15.0,487.0,OK Tyringe,16.0,True,True,16.0,3687.0
+34,2018.0,H16,Pontus Thuresson,60819,2002.0,16.0,639.0,Skåneslättens OL,16.0,True,True,17.0,3937.0
+35,2018.0,H16,Henning Karlberg,121279,2002.0,16.0,639.0,Skåneslättens OL,16.0,True,True,18.0,3992.0
+36,2018.0,H16,Lucas Treldal,58545,2003.0,15.0,483.0,Lunds OK,16.0,True,True,19.0,4076.0
+37,2018.0,H16,Stellan Gradin,40622,2003.0,15.0,35.0,Andrarums IF,16.0,True,True,20.0,4253.0
+38,2018.0,H16,Erik Albinsson,80425,2003.0,15.0,614.0,Hjärnarps OL,16.0,True,True,21.0,4403.0
+39,2018.0,H16,Melvin Nilsson,31477,2002.0,16.0,165.0,Härlövs IF,16.0,True,True,22.0,4960.0
+40,2018.0,H16,Erik Gottmo,160350,2003.0,15.0,483.0,Lunds OK,16.0,True,True,23.0,5853.0
+41,2018.0,H16,Agust Kronkvist,62327,2003.0,15.0,471.0,Örkelljunga FK,16.0,False,False,0.0,0.0
+42,2018.0,D16 Kort,Julia De Almeida,165039,2003.0,15.0,258.0,Malmö OK,16.0,True,True,1.0,3657.0
+43,2018.0,D16 Kort,Ebba Nilsson,123986,2002.0,16.0,471.0,Örkelljunga FK,16.0,True,True,2.0,5591.0
+44,2018.0,D14,Tuva Selin,51001,2005.0,13.0,114.0,FK Göingarna,16.0,True,True,1.0,2243.0
+45,2018.0,D14,Emmy Palm,37222,2004.0,14.0,54.0,FK Boken,16.0,True,True,2.0,2251.0
+46,2018.0,D14,Joanna Persson,125643,2004.0,14.0,487.0,OK Tyringe,16.0,True,True,3.0,2451.0
+47,2018.0,D14,Alice Olvegård,83394,2004.0,14.0,114.0,FK Göingarna,16.0,True,True,4.0,2510.0
+48,2018.0,D14,Alva Svensson,101995,2004.0,14.0,461.0,FK Åsen,16.0,True,True,5.0,2695.0
+49,2018.0,D14,Linnea Rydlund,70211,2004.0,14.0,167.0,Hässleholms OK,16.0,True,True,6.0,2844.0
+50,2018.0,D14,Viola Holmström,125752,2004.0,14.0,165.0,Härlövs IF,16.0,True,True,7.0,3127.0
+51,2018.0,D14,Alice Persson,109632,2004.0,14.0,487.0,OK Tyringe,16.0,True,True,8.0,3288.0
+52,2018.0,D14,Emelia Carlström,132572,2005.0,13.0,54.0,FK Boken,16.0,True,True,9.0,3875.0
+53,2018.0,D14,Rebecka Lindulf,122030,2005.0,13.0,639.0,Skåneslättens OL,16.0,True,True,10.0,4211.0
+54,2018.0,D14,Johanna Ottosson,52313,2005.0,13.0,471.0,Örkelljunga FK,16.0,True,True,11.0,4823.0
+55,2018.0,D14,Ida Meijer,135046,2004.0,14.0,461.0,FK Åsen,16.0,True,True,12.0,6247.0
+56,2018.0,D14,Elsa Wiberg,148346,2004.0,14.0,125.0,Helsingborgs SOK,16.0,False,False,0.0,0.0
+57,2018.0,D14,Ida Benatti,115079,2005.0,13.0,639.0,Skåneslättens OL,16.0,False,False,0.0,0.0
+58,2018.0,H14,Svante Selin,51003,2005.0,13.0,114.0,FK Göingarna,16.0,True,True,1.0,1753.0
+59,2018.0,H14,Hugo Cedervall,52314,2004.0,14.0,471.0,Örkelljunga FK,16.0,True,True,2.0,1792.0
+60,2018.0,H14,Elia Kämpe,135702,2005.0,13.0,471.0,Örkelljunga FK,16.0,True,True,3.0,1888.0
+61,2018.0,H14,Wilmer Selin,51002,2005.0,13.0,114.0,FK Göingarna,16.0,True,True,4.0,2012.0
+62,2018.0,H14,Isak Andersson,121162,2004.0,14.0,483.0,Lunds OK,16.0,True,True,5.0,2215.0
+63,2018.0,H14,Alfred Kjellén,124399,2005.0,13.0,125.0,Helsingborgs SOK,16.0,True,True,6.0,2219.0
+64,2018.0,H14,Love Persson,143355,2004.0,14.0,258.0,Malmö OK,16.0,True,True,7.0,2330.0
+65,2018.0,H14,David Morén,105663,2004.0,14.0,614.0,Hjärnarps OL,16.0,True,True,8.0,2440.0
+66,2018.0,H14,Victor Ericsson,106881,2004.0,14.0,125.0,Helsingborgs SOK,16.0,True,True,9.0,2495.0
+67,2018.0,H14,Adam Johansson,53569,2004.0,14.0,639.0,Skåneslättens OL,16.0,True,True,10.0,2713.0
+68,2018.0,H14,Viktor Ahltin,121255,2005.0,13.0,258.0,Malmö OK,16.0,True,True,11.0,2969.0
+69,2018.0,H14,Elias Nilsson,144218,2004.0,14.0,167.0,Hässleholms OK,16.0,True,True,12.0,3011.0
+70,2018.0,H14,Caspar Pegard,148884,2005.0,13.0,111.0,OK Gynge,16.0,True,True,13.0,3020.0
+71,2018.0,H14,William Steffert,122961,2005.0,13.0,487.0,OK Tyringe,16.0,True,True,14.0,3150.0
+72,2018.0,H14,Gustav Andersson,17898,2004.0,14.0,294.0,OK Pan-Kristianstad,16.0,True,True,15.0,3160.0
+73,2018.0,H14,Arvid Albinsson,80426,2005.0,13.0,614.0,Hjärnarps OL,16.0,True,True,16.0,3183.0
+74,2018.0,H14,Melker Karlberg,126751,2004.0,14.0,639.0,Skåneslättens OL,16.0,True,True,17.0,3231.0
+75,2018.0,H14,Gunnar Wessberg,106190,2005.0,13.0,165.0,Härlövs IF,16.0,True,True,18.0,3521.0
+76,2018.0,H14,Isak Levin,94642,2004.0,14.0,461.0,FK Åsen,16.0,True,True,19.0,3570.0
+77,2018.0,H14,Axel Nilsson,123985,2005.0,13.0,471.0,Örkelljunga FK,16.0,True,True,20.0,3697.0
+78,2018.0,H14,Edwin Falkstrand,138249,2005.0,13.0,400.0,Tormestorps IF,16.0,True,True,21.0,3869.0
+79,2018.0,H14,Casper Turesson,90261,2005.0,13.0,165.0,Härlövs IF,16.0,True,True,22.0,3899.0
+80,2018.0,H14,Isak Edholm,101746,2005.0,13.0,471.0,Örkelljunga FK,16.0,True,True,23.0,3941.0
+81,2018.0,H14,Erik Olsson,127824,2004.0,14.0,461.0,FK Åsen,16.0,True,True,24.0,3946.0
+82,2018.0,H14,Elliot Boy,163686,2005.0,13.0,507.0,OK Kontinent,16.0,True,True,25.0,4001.0
+83,2018.0,H14,David Persson,134786,2004.0,14.0,125.0,Helsingborgs SOK,16.0,True,True,26.0,4097.0
+84,2018.0,H14,Isak Thysell,139894,2005.0,13.0,507.0,OK Kontinent,16.0,True,True,27.0,4348.0
+85,2018.0,H14,Ludwig Andersson,61481,2004.0,14.0,35.0,Andrarums IF,16.0,True,True,28.0,5389.0
+86,2018.0,H14,Villyam Johansson,99223,2005.0,13.0,487.0,OK Tyringe,16.0,True,True,29.0,5523.0
+87,2018.0,H14,Viggo Ahlm,40624,2005.0,13.0,35.0,Andrarums IF,16.0,True,False,0.0,0.0
+88,2018.0,H14,Anton Elmerfjord,88306,2004.0,14.0,483.0,Lunds OK,16.0,False,False,0.0,0.0
+89,2018.0,H14,David Olander,86071,2004.0,14.0,483.0,Lunds OK,16.0,False,False,0.0,0.0
+90,2018.0,H14,Noah Krikström,120220,2005.0,13.0,614.0,Hjärnarps OL,16.0,False,False,0.0,0.0
+91,2018.0,D14 Kort,Sofia Edman,138865,2005.0,13.0,125.0,Helsingborgs SOK,16.0,True,True,1.0,1725.0
+92,2018.0,D14 Kort,Märta Henningsson,112418,2004.0,14.0,483.0,Lunds OK,16.0,True,True,2.0,2358.0
+93,2018.0,D14 Kort,Elin Edvinsson,101990,2005.0,13.0,461.0,FK Åsen,16.0,True,True,3.0,3261.0
+94,2018.0,D14 Kort,Moa Nordin,160705,2005.0,13.0,544.0,Ystads OK,16.0,True,True,4.0,4112.0
+95,2018.0,H14 Kort,Gustav Åkesson,112391,2004.0,14.0,639.0,Skåneslättens OL,16.0,True,True,1.0,1917.0
+96,2018.0,H14 Kort,Magnus Lundsgaard,128160,2004.0,14.0,507.0,OK Kontinent,16.0,True,True,2.0,3057.0
+97,2018.0,H14 Kort,Jon Wikström,108929,2005.0,13.0,169.0,Hästveda OK,16.0,False,False,0.0,0.0
+98,2018.0,D12,Lina Ås,76096,2006.0,12.0,483.0,Lunds OK,16.0,True,True,1.0,1123.0
+99,2018.0,D12,Aprilia Cinthio,92633,2006.0,12.0,639.0,Skåneslättens OL,16.0,True,True,2.0,1353.0
+100,2018.0,D12,Alice Johansson,94150,2006.0,12.0,54.0,FK Boken,16.0,True,True,3.0,1369.0
+101,2018.0,D12,Sara Ljungqvist,102843,2006.0,12.0,483.0,Lunds OK,16.0,True,True,4.0,1442.0
+102,2018.0,D12,Anna Benatti,115080,2006.0,12.0,639.0,Skåneslättens OL,16.0,True,True,5.0,1516.0
+103,2018.0,D12,Alma Kjellén,126714,2007.0,11.0,125.0,Helsingborgs SOK,16.0,True,True,6.0,1664.0
+104,2018.0,D12,Saga Palmertz,110338,2006.0,12.0,125.0,Helsingborgs SOK,16.0,True,True,7.0,1693.0
+105,2018.0,D12,Liv Lundsgaard,137092,2007.0,11.0,507.0,OK Kontinent,16.0,True,True,8.0,1844.0
+106,2018.0,D12,Saga Christensen,102549,2007.0,11.0,639.0,Skåneslättens OL,16.0,True,True,9.0,2046.0
+107,2018.0,D12,Mathea Yngve,137593,2007.0,11.0,507.0,OK Kontinent,16.0,True,True,10.0,2093.0
+108,2018.0,D12,Ebba Ranbro,88152,2006.0,12.0,125.0,Helsingborgs SOK,16.0,True,True,11.0,2095.0
+109,2018.0,D12,Moa Nilsson,39732,2006.0,12.0,132.0,Eslövs FK,16.0,True,True,12.0,2144.0
+110,2018.0,D12,Linnéa Bjärby,87232,2006.0,12.0,81.0,Frosta OK,16.0,True,True,13.0,2212.0
+111,2018.0,D12,Wilma Jönsson,135054,2006.0,12.0,471.0,Örkelljunga FK,16.0,True,True,14.0,2365.0
+112,2018.0,D12,My Wallenborg,91132,2007.0,11.0,483.0,Lunds OK,16.0,True,True,15.0,2421.0
+113,2018.0,D12,Linnea Lindulf,128749,2007.0,11.0,639.0,Skåneslättens OL,16.0,True,True,16.0,2433.0
+114,2018.0,D12,Olivia Tillander,130762,2007.0,11.0,544.0,Ystads OK,16.0,True,True,17.0,2515.0
+115,2018.0,D12,Linnea Stéen,155087,2007.0,11.0,125.0,Helsingborgs SOK,16.0,True,True,18.0,2523.0
+116,2018.0,D12,Tove Rosberg,108026,2007.0,11.0,471.0,Örkelljunga FK,16.0,True,True,19.0,2648.0
+117,2018.0,D12,Smilla Thomasson,127124,2007.0,11.0,114.0,FK Göingarna,16.0,True,True,20.0,2742.0
+118,2018.0,D12,Klara Möller,58442,2006.0,12.0,507.0,OK Kontinent,16.0,True,True,21.0,3056.0
+119,2018.0,D12,Viktoria Åkerlund,156821,2007.0,11.0,54.0,FK Boken,16.0,True,True,22.0,3500.0
+120,2018.0,D12,Märta Havenberg,136911,2006.0,12.0,507.0,OK Kontinent,16.0,True,True,23.0,3786.0
+121,2018.0,H12,Hjalmar Axelsson,85731,2006.0,12.0,114.0,FK Göingarna,16.0,True,True,1.0,1129.0
+122,2018.0,H12,Albin Granqvist,105821,2007.0,11.0,114.0,FK Göingarna,16.0,True,True,2.0,1373.0
+123,2018.0,H12,Benjamin Davidson,148254,2007.0,11.0,125.0,Helsingborgs SOK,16.0,True,True,3.0,1413.0
+124,2018.0,H12,Carl-Johan Olvegård,99847,2007.0,11.0,114.0,FK Göingarna,16.0,True,True,4.0,1421.0
+125,2018.0,H12,Kurt Sjöberg,135147,2007.0,11.0,125.0,Helsingborgs SOK,16.0,True,True,5.0,1549.0
+126,2018.0,H12,Arvid Falkstrand,126502,2007.0,11.0,400.0,Tormestorps IF,16.0,True,True,6.0,1573.0
+127,2018.0,H12,Hannes Värendh,168058,2006.0,12.0,639.0,Skåneslättens OL,16.0,True,True,7.0,1579.0
+128,2018.0,H12,Elias Persson,64323,2006.0,12.0,125.0,Helsingborgs SOK,16.0,True,True,8.0,1594.0
+129,2018.0,H12,Edvin Sander,121898,2006.0,12.0,639.0,Skåneslättens OL,16.0,True,True,9.0,1716.0
+130,2018.0,H12,Gustav Granqvist,105822,2007.0,11.0,114.0,FK Göingarna,16.0,True,True,10.0,1753.0
+131,2018.0,H12,Jonathan Edholm,114463,2007.0,11.0,471.0,Örkelljunga FK,16.0,True,True,11.0,1790.0
+132,2018.0,H12,Hugo Hjelm,129628,2006.0,12.0,483.0,Lunds OK,16.0,True,True,12.0,1874.0
+133,2018.0,H12,Hugo Thoresson,76013,2006.0,12.0,35.0,Andrarums IF,16.0,True,True,13.0,1930.0
+134,2018.0,H12,Alfred Olsson,61254,2007.0,11.0,483.0,Lunds OK,16.0,True,True,14.0,2029.0
+135,2018.0,H12,Emil Andersson,121163,2006.0,12.0,483.0,Lunds OK,16.0,True,True,15.0,2152.0
+136,2018.0,H12,Nils Persson,109633,2007.0,11.0,487.0,OK Tyringe,16.0,True,True,16.0,3544.0
+137,2018.0,H12,Eskil Soelberg,126962,2007.0,11.0,35.0,Andrarums IF,16.0,True,False,0.0,0.0
+138,2018.0,H12,Samuel Rasmussen,91240,2006.0,12.0,507.0,OK Kontinent,16.0,True,False,0.0,0.0
+139,2018.0,H12,Emil Mårtensson,144342,2006.0,12.0,471.0,Örkelljunga FK,16.0,False,False,0.0,0.0
+140,2018.0,H12,Oskar Elmerfjord,88307,2007.0,11.0,483.0,Lunds OK,16.0,False,False,0.0,0.0
+141,2018.0,H12,Otto Nyberg,146104,2006.0,12.0,471.0,Örkelljunga FK,16.0,False,False,0.0,0.0
+142,2018.0,D12 Kort,Siri Abrahamsson,148718,2007.0,11.0,258.0,Malmö OK,16.0,True,True,1.0,1553.0
+143,2018.0,D12 Kort,Emilia Cederquist,141652,2007.0,11.0,258.0,Malmö OK,16.0,True,True,2.0,1770.0
+144,2018.0,H12 Kort,Filip Persson,148270,2006.0,12.0,258.0,Malmö OK,16.0,True,True,1.0,1488.0
+145,2018.0,H12 Kort,Love Eneroth,86261,2007.0,11.0,483.0,Lunds OK,16.0,True,True,2.0,1785.0
+146,2018.0,H12 Kort,Albert Kylmä,162503,2007.0,11.0,125.0,Helsingborgs SOK,16.0,True,True,3.0,2072.0
+147,2018.0,H12 Kort,Jakob Åkesson,112392,2006.0,12.0,639.0,Skåneslättens OL,16.0,True,True,4.0,2259.0
+148,2018.0,D10,Felicia Persson,64324,2008.0,10.0,125.0,Helsingborgs SOK,16.0,True,True,1.0,987.0
+149,2018.0,D10,Klara Palm,94169,2008.0,10.0,54.0,FK Boken,16.0,True,True,2.0,1275.0
+150,2018.0,D10,Amelia Victor Mendes,148368,2008.0,10.0,614.0,Hjärnarps OL,16.0,True,True,3.0,1540.0
+151,2018.0,D10,Elin Anzelius,167974,2008.0,10.0,169.0,Hästveda OK,16.0,True,True,4.0,1683.0
+152,2018.0,D10,Alma Giese,124224,2008.0,10.0,471.0,Örkelljunga FK,16.0,True,True,5.0,1730.0
+153,2018.0,D10,Lisa Johnsson,122137,2008.0,10.0,138.0,FK Finn,2.0,True,True,6.0,1862.0
+154,2018.0,D10,Olivia Svensson,115223,2008.0,10.0,461.0,FK Åsen,16.0,True,True,7.0,1902.0
+155,2018.0,D10,Emma Wikström,108930,2008.0,10.0,169.0,Hästveda OK,16.0,True,True,8.0,1917.0
+156,2018.0,D10,Agnes Persson,145132,2008.0,10.0,125.0,Helsingborgs SOK,16.0,True,True,9.0,1924.0
+157,2018.0,D10,Kristina Nilsson Condori,161490,2008.0,10.0,169.0,Hästveda OK,16.0,True,True,10.0,2051.0
+158,2018.0,D10,Ellinor Åkerlund,156822,2010.0,8.0,54.0,FK Boken,16.0,True,True,11.0,2205.0
+159,2018.0,D10,Fifi Pegard,148878,2008.0,10.0,111.0,OK Gynge,16.0,True,True,12.0,2268.0
+160,2018.0,D10,Hanna Thysell,161401,2008.0,10.0,507.0,OK Kontinent,16.0,True,True,13.0,2287.0
+161,2018.0,D10,Emma Lundsgaard,137093,2010.0,8.0,507.0,OK Kontinent,16.0,True,True,14.0,2865.0
+162,2018.0,D10,Tuva Christensen,102550,2011.0,7.0,639.0,Skåneslättens OL,16.0,True,True,15.0,3054.0
+163,2018.0,D10,Linn Thuresson,106467,2008.0,10.0,639.0,Skåneslättens OL,16.0,True,True,16.0,3318.0
+164,2018.0,H10,Atle Kulstad,135150,2008.0,10.0,639.0,Skåneslättens OL,16.0,True,True,1.0,964.0
+165,2018.0,H10,Isak Eng,94497,2008.0,10.0,294.0,OK Pan-Kristianstad,16.0,True,True,2.0,1048.0
+166,2018.0,H10,Elias Palmertz,110483,2008.0,10.0,125.0,Helsingborgs SOK,16.0,True,True,3.0,1205.0
+167,2018.0,H10,Elis Olsson,145811,2008.0,10.0,125.0,Helsingborgs SOK,16.0,True,True,4.0,1227.0
+168,2018.0,H10,Milton Gunnarsson,133223,2008.0,10.0,471.0,Örkelljunga FK,16.0,True,True,5.0,1236.0
+169,2018.0,H10,Isak Gustafsson,161468,2009.0,9.0,483.0,Lunds OK,16.0,True,True,6.0,1348.0
+170,2018.0,H10,Valter Sander,121897,2008.0,10.0,639.0,Skåneslättens OL,16.0,True,True,7.0,1382.0
+171,2018.0,H10,Axel Falkstrand,126665,2009.0,9.0,400.0,Tormestorps IF,16.0,True,True,8.0,1401.0
+172,2018.0,H10,Fabian Tillander,139580,2009.0,9.0,544.0,Ystads OK,16.0,True,True,9.0,1563.0
+173,2018.0,H10,Teodor Edman,138866,2008.0,10.0,125.0,Helsingborgs SOK,16.0,True,True,10.0,1600.0
+174,2018.0,H10,Wiggo Jönsson,135055,2008.0,10.0,471.0,Örkelljunga FK,16.0,True,True,11.0,1764.0
+175,2018.0,H10,Arvid Olsson,160043,2008.0,10.0,507.0,OK Kontinent,16.0,True,True,12.0,1975.0
+176,2018.0,H10,Anton Soelberg,126967,2010.0,8.0,35.0,Andrarums IF,16.0,True,True,13.0,2050.0
+177,2018.0,H10,Hjalmar Härwell,80106,2011.0,7.0,35.0,Andrarums IF,16.0,False,False,0.0,0.0
+178,2018.0,Inskolning,Algot Olsson,,,,461.0,FK Åsen,16.0,True,True,0.0,1743.0
+179,2018.0,Inskolning,Alice Rosvall,133638,2010.0,8.0,81.0,Frosta OK,16.0,True,True,0.0,3070.0
+180,2018.0,Inskolning,Arvid Svensson,136634,2013.0,5.0,461.0,FK Åsen,16.0,True,True,0.0,2627.0
+181,2018.0,Inskolning,Bill Salomonsson,,,,639.0,Skåneslättens OL,16.0,True,True,0.0,2086.0
+182,2018.0,Inskolning,Carl Isgren,,,,258.0,Malmö OK,16.0,True,True,0.0,5667.0
+183,2018.0,Inskolning,CharlieRosvall ?,,,,81.0,Frosta OK,16.0,True,True,0.0,2911.0
+184,2018.0,Inskolning,Elsie Isgren,,,,258.0,Malmö OK,16.0,True,True,0.0,5690.0
+185,2018.0,Inskolning,Frans Bergvall,,,,258.0,Malmö OK,16.0,True,True,0.0,2425.0
+186,2018.0,Inskolning,Ivan Gustavsson,,,,0.0,Klubblös,0.0,True,True,0.0,2789.0
+187,2018.0,Inskolning,Julie Roos,,,,294.0,OK Pan-Kristianstad,16.0,True,True,0.0,1978.0
+188,2018.0,Inskolning,Leonel Alvarez Lönn,144333,2011.0,7.0,471.0,Örkelljunga FK,16.0,True,True,0.0,1747.0
+189,2018.0,Inskolning,Linnea Eng,110805,2013.0,5.0,294.0,OK Pan-Kristianstad,16.0,True,True,0.0,1974.0
+190,2018.0,Inskolning,Liv Palmertz,110339,2012.0,6.0,125.0,Helsingborgs SOK,16.0,True,True,0.0,1451.0
+191,2018.0,Inskolning,Noa Fridolf,167993,2011.0,7.0,639.0,Skåneslättens OL,16.0,True,True,0.0,2088.0
+192,2018.0,Inskolning,Selma Olsson,160054,2012.0,6.0,507.0,OK Kontinent,16.0,True,True,0.0,1751.0
+193,2018.0,Inskolning,Solveij Jensen,,,,258.0,Malmö OK,16.0,True,True,0.0,1817.0
+194,2018.0,Inskolning,Stina Svensson,,,,483.0,Lunds OK,16.0,True,True,0.0,2701.0
+195,2018.0,Inskolning,Vera Åberg,,,,483.0,Lunds OK,16.0,True,True,0.0,2411.0
+196,2018.0,Inskolning,Wilson Aspegren,,,,507.0,OK Kontinent,16.0,True,True,0.0,4055.0
+197,2018.0,U1,Valter Nelking,120745,2009.0,9.0,639.0,Skåneslättens OL,16.0,True,True,1.0,987.0
+198,2018.0,U1,Alvin Caesar,169886,2009.0,9.0,165.0,Härlövs IF,16.0,True,True,2.0,1068.0
+199,2018.0,U1,Philip Höglind,94375,2007.0,11.0,294.0,OK Pan-Kristianstad,16.0,True,True,3.0,1093.0
+200,2018.0,U1,Victoria Höglind,94376,2009.0,9.0,294.0,OK Pan-Kristianstad,16.0,True,True,4.0,1127.0
+201,2018.0,U1,Esther Krogh Nilsson,,,,483.0,Lunds OK,16.0,True,True,5.0,1170.0
+202,2018.0,U1,Hugo Granqvist,,,,114.0,FK Göingarna,16.0,True,True,6.0,1234.0
+203,2018.0,U1,Nora Linde,119654,2010.0,8.0,639.0,Skåneslättens OL,16.0,True,True,7.0,1379.0
+204,2018.0,U1,Alfons Mickelåker,144306,2011.0,7.0,35.0,Andrarums IF,16.0,True,True,8.0,1483.0
+205,2018.0,U1,Emilia Mattsson,99221,2008.0,10.0,487.0,OK Tyringe,16.0,True,True,9.0,1514.0
+206,2018.0,U1,Vincent Steffert,145812,2012.0,6.0,487.0,OK Tyringe,16.0,True,True,10.0,1569.0
+207,2018.0,U1,Persson ?,,,,0.0,Klubblös,0.0,True,True,11.0,1617.0
+208,2018.0,U1,Lowe Palmertz,110340,2010.0,8.0,125.0,Helsingborgs SOK,16.0,True,True,12.0,1644.0
+209,2018.0,U1,Isak Grönlund,,,,483.0,Lunds OK,16.0,True,True,13.0,1662.0
+210,2018.0,U1,Valter Isberg,,,,639.0,Skåneslättens OL,16.0,True,True,14.0,1685.0
+211,2018.0,U1,Albin Sjö,33948,2007.0,11.0,639.0,Skåneslättens OL,16.0,True,True,15.0,1710.0
+212,2018.0,U1,Elna Jönsson,131052,2008.0,10.0,461.0,FK Åsen,16.0,True,True,16.0,1723.0
+213,2018.0,U1,Erik Anzelius,167975,2010.0,8.0,169.0,Hästveda OK,16.0,True,True,17.0,1810.0
+214,2018.0,U1,Leonard Ekenskog,,,,54.0,FK Boken,16.0,True,True,18.0,1813.0
+215,2018.0,U1,Elvira Zellman,154653,2010.0,8.0,54.0,FK Boken,16.0,True,True,19.0,1817.0
+216,2018.0,U1,Terje Norsell,172467,2010.0,8.0,35.0,Andrarums IF,16.0,True,True,20.0,1847.0
+217,2018.0,U1,Jack Salomonsson,,,,639.0,Skåneslättens OL,16.0,True,True,21.0,1853.0
+218,2018.0,U1,Signe Johansson,,,,111.0,OK Gynge,16.0,True,True,22.0,1977.0
+219,2018.0,U1,Delia Condori,161501,2010.0,8.0,169.0,Hästveda OK,16.0,True,True,23.0,2279.0
+220,2018.0,U1,Linnea Svensson,146890,2007.0,11.0,483.0,Lunds OK,16.0,True,True,24.0,2696.0
+221,2018.0,U1,Astrid Ekecrantz,166552,2007.0,11.0,258.0,Malmö OK,16.0,True,True,25.0,3041.0
+222,2018.0,U1,Alfred Svensson,146891,2009.0,9.0,483.0,Lunds OK,16.0,True,False,0.0,0.0
+223,2018.0,U2D,Signe Ranbro,98194,2010.0,8.0,125.0,Helsingborgs SOK,16.0,True,True,1.0,1709.0
+224,2018.0,U2D,Oda Värendh,168059,2008.0,10.0,639.0,Skåneslättens OL,16.0,True,True,2.0,1792.0
+225,2018.0,U2D,Signe Davidson,162521,2009.0,9.0,125.0,Helsingborgs SOK,16.0,True,True,3.0,2045.0
+226,2018.0,U2D,Daga Abrahamsson,141653,2010.0,8.0,258.0,Malmö OK,16.0,True,True,4.0,2550.0
+227,2018.0,U2H,Albin Frodin,,,,125.0,Helsingborgs SOK,16.0,True,True,1.0,1495.0
+228,2018.0,U2H,Isak Kämpe,144757,2009.0,9.0,471.0,Örkelljunga FK,16.0,True,True,2.0,1530.0
+229,2018.0,U2H,Nikolai Alvarez Lönn,129140,2007.0,11.0,471.0,Örkelljunga FK,16.0,True,True,3.0,1578.0
+230,2018.0,U2H,Linus Lindgren,158522,2008.0,10.0,125.0,Helsingborgs SOK,16.0,True,True,4.0,1623.0
+231,2018.0,U2H,Theo Lindgren,168324,2010.0,8.0,125.0,Helsingborgs SOK,16.0,True,True,5.0,1682.0
+232,2018.0,U2H,Adrian Holgersson,,,,461.0,FK Åsen,16.0,True,True,6.0,1687.0
+233,2018.0,U2H,Oskar Ranbro,98193,2010.0,8.0,125.0,Helsingborgs SOK,16.0,True,True,7.0,1704.0
+234,2018.0,U2H,David Edberg,170209,2005.0,13.0,132.0,Eslövs FK,16.0,True,True,8.0,1869.0
+235,2018.0,U2H,Vidar Karlberg,128748,2009.0,9.0,639.0,Skåneslättens OL,16.0,True,True,9.0,2096.0
+236,2018.0,U2H,Casper Nilsson,157896,2008.0,10.0,35.0,Andrarums IF,16.0,True,True,10.0,2493.0
+237,2018.0,U2H,Hannes Lindström,155974,2010.0,8.0,125.0,Helsingborgs SOK,16.0,True,True,11.0,2761.0
+238,2018.0,Öppen motion 1,Hedda Åberg,,,,483.0,Lunds OK,16.0,True,True,1.0,1347.0
+239,2018.0,Öppen motion 1,Eva Edholm,156323,1975.0,43.0,471.0,Örkelljunga FK,16.0,True,True,2.0,1541.0
+240,2018.0,Öppen motion 1,Johanna Guth,,,,0.0,Klubblös,0.0,True,True,3.0,1567.0
+241,2018.0,Öppen motion 1,Maggan Pegard,,,,111.0,OK Gynge,16.0,True,True,4.0,1607.0
+242,2018.0,Öppen motion 1,Carina Isberg,172115,,,639.0,Skåneslättens OL,16.0,True,True,5.0,1877.0
+243,2018.0,Öppen motion 1,Viktor Ödén,167788,2010.0,8.0,483.0,Lunds OK,16.0,True,True,6.0,1989.0
+244,2018.0,Öppen motion 1,Sune Soelberg,126968,1977.0,41.0,35.0,Andrarums IF,16.0,True,True,7.0,1997.0
+245,2018.0,Öppen motion 1,Simon Malmkvist,120923,,,81.0,Frosta OK,16.0,True,True,8.0,2137.0
+246,2018.0,Öppen motion 1,Marlene Gran,148264,1974.0,44.0,471.0,Örkelljunga FK,16.0,True,True,9.0,2532.0
+247,2018.0,Öppen motion 1,Eva Gillsparr,158610,1952.0,66.0,81.0,Frosta OK,16.0,True,True,10.0,2620.0
+248,2018.0,Öppen motion 1,Karin Helmersson,6803,1942.0,76.0,483.0,Lunds OK,16.0,True,True,11.0,2730.0
+249,2018.0,Öppen motion 1,Helge Helmersson,37202,1942.0,76.0,483.0,Lunds OK,16.0,True,False,0.0,0.0
+250,2018.0,Öppen motion 2,Daniel Nilsson,,,,0.0,Klubblös,0.0,True,True,1.0,1613.0
+251,2018.0,Öppen motion 2,Fanni Gustafson Faegersten,157481,1968.0,50.0,483.0,Lunds OK,16.0,True,True,2.0,2202.0
+252,2018.0,Öppen motion 2,Tinna Nilsson,,,,0.0,Klubblös,0.0,True,True,3.0,2272.0
+253,2018.0,Öppen motion 2,Helle Ragnarsson,26699,1956.0,62.0,558.0,OK Kompassen,16.0,True,True,4.0,3071.0
+254,2018.0,Öppen motion 2,Marita Olofsson,124111,1956.0,62.0,558.0,OK Kompassen,16.0,True,True,5.0,3073.0
+255,2018.0,Öppen motion 2,Sussi Borggren,,,,81.0,Frosta OK,16.0,True,True,6.0,6966.0
+256,2018.0,Öppen motion 2,Phillip Borggren,,,,81.0,Frosta OK,16.0,True,True,7.0,6969.0
+257,2018.0,Öppen motion 3,Alexander Gamelius,166554,1975.0,43.0,258.0,Malmö OK,16.0,True,True,1.0,1806.0
+258,2018.0,Öppen motion 3,Marie Johansson,153124,,,111.0,OK Gynge,16.0,True,True,2.0,1887.0
+259,2018.0,Öppen motion 3,Anna Sjö,45128,1977.0,41.0,639.0,Skåneslättens OL,16.0,True,True,3.0,2012.0
+260,2018.0,Öppen motion 3,Lina Roos,,,,294.0,OK Pan-Kristianstad,16.0,True,True,4.0,2181.0
+261,2018.0,Öppen motion 3,Kerstin Martinsson,135123,1949.0,69.0,487.0,OK Tyringe,16.0,True,True,5.0,2268.0
+262,2018.0,Öppen motion 3,Lars Mattsson,125646,1965.0,53.0,487.0,OK Tyringe,16.0,True,True,6.0,2428.0
+263,2018.0,Öppen motion 3,Ida Husby,71108,2006.0,12.0,639.0,Skåneslättens OL,16.0,True,True,7.0,2464.0
+264,2018.0,Öppen motion 3,Anna Drakarve,172007,2006.0,12.0,483.0,Lunds OK,16.0,True,True,8.0,2685.0
+265,2018.0,Öppen motion 3,Edith Lind,,,,483.0,Lunds OK,16.0,True,True,9.0,2690.0
+266,2018.0,Öppen motion 3,Marianne Hallberg,41720,1950.0,68.0,54.0,FK Boken,16.0,True,True,10.0,2711.0
+267,2018.0,Öppen motion 3,Jonas Kylmä,165188,1969.0,49.0,125.0,Helsingborgs SOK,16.0,True,True,11.0,2735.0
+268,2018.0,Öppen motion 3,Anette Holmström,125754,1969.0,49.0,165.0,Härlövs IF,16.0,True,True,12.0,2752.0
+269,2018.0,Öppen motion 3,Lovisa Olsson,17371,1997.0,21.0,132.0,Eslövs FK,16.0,True,True,13.0,2763.0
+270,2018.0,Öppen motion 3,Anna-Lena Söderberg,160419,,,111.0,OK Gynge,16.0,True,True,14.0,2769.0
+271,2018.0,Öppen motion 3,Teo Wallin Ödén,167787,2006.0,12.0,483.0,Lunds OK,16.0,True,True,15.0,2771.0
+272,2018.0,Öppen motion 3,Anette Nilsson,144217,,,400.0,Tormestorps IF,16.0,True,True,16.0,2774.0
+273,2018.0,Öppen motion 3,Caroline Lindström,160559,1977.0,41.0,125.0,Helsingborgs SOK,16.0,True,True,17.0,2999.0
+274,2018.0,Öppen motion 3,Anna Karlsson,,,,0.0,Klubblös,0.0,True,True,18.0,3073.0
+275,2018.0,Öppen motion 3,Mikael Nilsson,48702,,,81.0,Frosta OK,16.0,True,True,19.0,3146.0
+276,2018.0,Öppen motion 3,Susanne Göransson,15863,,,81.0,Frosta OK,16.0,True,True,20.0,3224.0
+277,2018.0,Öppen motion 3,Tora Larsson,57258,,,544.0,Ystads OK,16.0,True,True,21.0,3640.0
+278,2018.0,Öppen motion 3,Karin Malmgren,3716,1948.0,70.0,614.0,Hjärnarps OL,16.0,True,True,22.0,3685.0
+279,2018.0,Öppen motion 3,Villemo Rönnblom,146034,2005.0,13.0,487.0,OK Tyringe,16.0,True,True,23.0,4068.0
+280,2018.0,Öppen motion 3,Asta Nilsson,75066,1942.0,76.0,165.0,Härlövs IF,16.0,True,True,24.0,4196.0
+281,2018.0,Öppen motion 3,Marie Carlström,135570,1972.0,46.0,54.0,FK Boken,16.0,True,True,25.0,4251.0
+282,2018.0,Öppen motion 3,Allan Hammar,7673,1940.0,78.0,558.0,OK Kompassen,16.0,True,True,26.0,4594.0
+283,2018.0,Öppen motion 3,Flor De M Villafuerte,,,,483.0,Lunds OK,16.0,True,True,27.0,5564.0
+284,2018.0,Öppen motion 3,Ivar Nilsson,22836,1937.0,81.0,167.0,Hässleholms OK,16.0,True,False,0.0,0.0
+285,2018.0,Öppen motion 4,Jonatan Höst,12049,1996.0,22.0,614.0,Hjärnarps OL,16.0,True,True,1.0,2115.0
+286,2018.0,Öppen motion 4,Henrik Värenh,,,,639.0,Skåneslättens OL,16.0,True,True,2.0,2972.0
+287,2018.0,Öppen motion 4,Mikael Andersson,147426,1979.0,39.0,125.0,Helsingborgs SOK,16.0,True,True,3.0,2982.0
+288,2018.0,Öppen motion 4,Cecilia Collryd,,,,0.0,Klubblös,0.0,True,True,4.0,3430.0
+289,2018.0,Öppen motion 4,Mia Åberg,19825,1966.0,52.0,132.0,Eslövs FK,16.0,True,True,5.0,3470.0
+290,2018.0,Öppen motion 4,Emma Anderberg,,,,0.0,Klubblös,0.0,True,True,6.0,3481.0
+291,2018.0,Öppen motion 4,Annika Nilsson,16430,,,132.0,Eslövs FK,16.0,True,True,7.0,3722.0
+292,2018.0,Öppen motion 4,Maria Värenh,,,,639.0,Skåneslättens OL,16.0,True,True,8.0,3731.0
+293,2018.0,Öppen motion 4,Una Larsson,28435,1959.0,59.0,483.0,Lunds OK,16.0,True,True,9.0,3760.0
+294,2018.0,Öppen motion 4,Olle Lindeberg,28442,1952.0,66.0,483.0,Lunds OK,16.0,True,True,10.0,4099.0
+295,2018.0,Öppen motion 4,Ida Danielson De Almeida,165041,1970.0,48.0,258.0,Malmö OK,16.0,True,True,11.0,4103.0
+296,2018.0,Öppen motion 4,Ross Peterson,,,,0.0,Klubblös,0.0,True,False,0.0,0.0
+297,2018.0,Öppen motion 4,Malin Malmkvist,120922,,,81.0,Frosta OK,16.0,True,False,0.0,0.0
+298,2018.0,Öppen motion 5,Gordon Gustafson,144965,2003.0,15.0,483.0,Lunds OK,16.0,True,True,1.0,1825.0
+299,2018.0,Öppen motion 5,Buechli Marion,,,,1120.0,OLG Suhr,650.0,True,True,2.0,1888.0
+300,2018.0,Öppen motion 5,Klas Bogsjö,124400,1979.0,39.0,125.0,Helsingborgs SOK,16.0,True,True,3.0,1986.0
+301,2018.0,Öppen motion 5,Niklas Gustafson,157484,1966.0,52.0,483.0,Lunds OK,16.0,True,True,4.0,2014.0
+302,2018.0,Öppen motion 5,Stefan Lindberg,139583,,,544.0,Ystads OK,16.0,True,True,5.0,2029.0
+303,2018.0,Öppen motion 5,Kjell Lönn,22640,1948.0,70.0,614.0,Hjärnarps OL,16.0,True,True,6.0,2049.0
+304,2018.0,Öppen motion 5,Per Pegard,28117,,,111.0,OK Gynge,16.0,True,True,7.0,2071.0
+305,2018.0,Öppen motion 5,Mikaela Johnsson,122138,1982.0,36.0,138.0,FK Finn,2.0,True,True,8.0,2325.0
+306,2018.0,Öppen motion 5,Hanna Elf,125931,1983.0,35.0,483.0,Lunds OK,16.0,True,True,9.0,2454.0
+307,2018.0,Öppen motion 5,Karin Hjelm,,,,483.0,Lunds OK,16.0,True,True,10.0,2474.0
+308,2018.0,Öppen motion 5,Caroline Lindulf,127130,1977.0,41.0,639.0,Skåneslättens OL,16.0,True,True,11.0,2618.0
+309,2018.0,Öppen motion 5,Martin Nelking,131460,1975.0,43.0,639.0,Skåneslättens OL,16.0,True,True,12.0,2639.0
+310,2018.0,Öppen motion 5,Annelie Thomasson,139989,1978.0,40.0,114.0,FK Göingarna,16.0,True,True,13.0,2694.0
+311,2018.0,Öppen motion 5,Kerstin Dahl,29874,1967.0,51.0,165.0,Härlövs IF,16.0,True,True,14.0,2696.0
+312,2018.0,Öppen motion 5,Helene Jensen,6790,1989.0,29.0,507.0,OK Kontinent,16.0,True,True,15.0,2841.0
+313,2018.0,Öppen motion 5,Jenny Danielson,150425,,,483.0,Lunds OK,16.0,True,True,16.0,2856.0
+314,2018.0,Öppen motion 5,Nina Tilander,130765,,,544.0,Ystads OK,16.0,True,True,17.0,2865.0
+315,2018.0,Öppen motion 5,Linas Zigmantas,,,,483.0,Lunds OK,16.0,True,True,18.0,2866.0
+316,2018.0,Öppen motion 5,Anders Möller,74810,1970.0,48.0,639.0,Skåneslättens OL,16.0,True,True,19.0,2898.0
+317,2018.0,Öppen motion 5,Roland Nilsson,22862,1962.0,56.0,639.0,Skåneslättens OL,16.0,True,True,20.0,2900.0
+318,2018.0,Öppen motion 5,Ellinor Hellrup,152550,1992.0,26.0,41.0,Avesta OK,8.0,True,True,21.0,2952.0
+319,2018.0,Öppen motion 5,Line Lundsgaard,129965,1978.0,40.0,507.0,OK Kontinent,16.0,True,True,22.0,3076.0
+320,2018.0,Öppen motion 5,Alfred Wessberg,106188,2001.0,17.0,165.0,Härlövs IF,16.0,True,True,23.0,3159.0
+321,2018.0,Öppen motion 5,Axel Tenghagen,42744,2004.0,14.0,165.0,Härlövs IF,16.0,True,True,24.0,3178.0
+322,2018.0,Öppen motion 5,Ludvig Beirup,,,,483.0,Lunds OK,16.0,True,True,25.0,3285.0
+323,2018.0,Öppen motion 5,Ing-Mari Persson,135825,1970.0,48.0,165.0,Härlövs IF,16.0,True,True,26.0,3425.0
+324,2018.0,Öppen motion 5,Sven-Otto Jönsson,470,1946.0,72.0,132.0,Eslövs FK,16.0,True,True,27.0,3991.0
+325,2018.0,Öppen motion 5,David Edberg,170209,2005.0,13.0,132.0,Eslövs FK,16.0,True,True,28.0,3996.0
+326,2018.0,Öppen motion 5,Maria Karlberg,126750,1973.0,45.0,639.0,Skåneslättens OL,16.0,True,False,0.0,0.0
+327,2018.0,Öppen motion 5,Sara Abrahamsson,141651,1977.0,41.0,258.0,Malmö OK,16.0,True,False,0.0,0.0
+328,2018.0,Öppen motion 6,Jörgen Andersson,,,,0.0,Klubblös,0.0,True,True,1.0,2879.0
+329,2018.0,Öppen motion 6,Gustav Svensson,,,,0.0,Klubblös,0.0,True,True,2.0,3022.0
+330,2018.0,Öppen motion 6,Victor Ingemansson,,,,0.0,Klubblös,0.0,True,True,3.0,3166.0
+331,2018.0,Öppen motion 6,Hans Kulstad,153272,1972.0,46.0,639.0,Skåneslättens OL,16.0,True,True,4.0,3249.0
+332,2018.0,Öppen motion 6,Rasmus Anderberg,131231,1988.0,30.0,258.0,Malmö OK,16.0,True,True,5.0,3475.0
+333,2018.0,Öppen motion 6,Andreas Winge,,,,0.0,Klubblös,0.0,True,True,6.0,3549.0
+334,2018.0,Öppen motion 6,Jakob Svensson,,,,0.0,Klubblös,0.0,True,True,7.0,3891.0
+335,2018.0,Öppen motion 6,Amanda Forsberg,,,,0.0,Klubblös,0.0,True,True,8.0,3892.0
+336,2018.0,Öppen motion 6,Lars Wallentin,,,,0.0,Klubblös,0.0,True,True,9.0,4451.0
+337,2018.0,Öppen motion 6,Micahel Sommarigen,,,,0.0,Klubblös,0.0,True,False,0.0,0.0
+338,2018.0,Öppen motion 6,Ragnhild Falkenhaug,,,,0.0,Klubblös,0.0,True,False,0.0,0.0
+339,2018.0,Öppen motion 7,Magnus Thuresson,60818,1972.0,46.0,639.0,Skåneslättens OL,16.0,True,True,1.0,1489.0
+340,2018.0,Öppen motion 7,Sara Snogerup Linse,1455,1962.0,56.0,483.0,Lunds OK,16.0,True,True,2.0,1499.0
+341,2018.0,Öppen motion 7,Ola Andertoft,38541,1965.0,53.0,261.0,Markaryds FK,2.0,True,True,3.0,1653.0
+342,2018.0,Öppen motion 7,Roland Bäcklin,115,1958.0,60.0,324.0,Sigtuna OK,4.0,True,True,4.0,1720.0
+343,2018.0,Öppen motion 7,Dan Jensen,4589,1966.0,52.0,258.0,Malmö OK,16.0,True,True,5.0,1793.0
+344,2018.0,Öppen motion 7,Stefan Magnusson,121184,1980.0,38.0,483.0,Lunds OK,16.0,True,True,6.0,1838.0
+345,2018.0,Öppen motion 7,Åsa Järvholm,,,,0.0,Klubblös,0.0,True,True,7.0,1871.0
+346,2018.0,Öppen motion 7,Marika Husby,24123,1969.0,49.0,639.0,Skåneslättens OL,16.0,True,True,8.0,1909.0
+347,2018.0,Öppen motion 7,Mattias Wallin,167786,1978.0,40.0,483.0,Lunds OK,16.0,True,True,9.0,2001.0
+348,2018.0,Öppen motion 7,Jesper Persson,148271,1972.0,46.0,258.0,Malmö OK,16.0,True,True,10.0,2003.0
+349,2018.0,Öppen motion 7,Arne Andersson,8377,,,482.0,OK Torfinn,16.0,True,True,11.0,2039.0
+350,2018.0,Öppen motion 7,Morgan Bjelk,36865,1966.0,52.0,169.0,Hästveda OK,16.0,True,True,12.0,2084.0
+351,2018.0,Öppen motion 7,Jenny Vinblad,47073,1972.0,46.0,483.0,Lunds OK,16.0,True,True,13.0,2093.0
+352,2018.0,Öppen motion 7,Charlie Fherm,161493,,,169.0,Hästveda OK,16.0,True,True,14.0,2105.0
+353,2018.0,Öppen motion 7,Maria Modig,4441,1971.0,47.0,294.0,OK Pan-Kristianstad,16.0,True,True,15.0,2107.0
+354,2018.0,Öppen motion 7,Ronny Fherm,155613,,,169.0,Hästveda OK,16.0,True,True,16.0,2108.0
+355,2018.0,Öppen motion 7,Widmer MARTIN,,,,1120.0,OLG Suhr,650.0,True,True,17.0,2130.0
+356,2018.0,Öppen motion 7,Göran Johansson,14226,1960.0,58.0,487.0,OK Tyringe,16.0,True,True,18.0,2173.0
+357,2018.0,Öppen motion 7,Pia-Maria Bondesson,46341,,,81.0,Frosta OK,16.0,True,True,19.0,2179.0
+358,2018.0,Öppen motion 7,Johanna Karlsson,21936,1979.0,39.0,294.0,OK Pan-Kristianstad,16.0,True,True,20.0,2183.0
+359,2018.0,Öppen motion 7,Rebecca Harden,34232,2002.0,16.0,54.0,FK Boken,16.0,True,True,21.0,2205.0
+360,2018.0,Öppen motion 7,Kenth Sundgren,1213,1949.0,69.0,639.0,Skåneslättens OL,16.0,True,True,22.0,2232.0
+361,2018.0,Öppen motion 7,Jan Wessberg,108359,1964.0,54.0,165.0,Härlövs IF,16.0,True,True,23.0,2255.0
+362,2018.0,Öppen motion 7,Göran Rylander,48728,,,639.0,Skåneslättens OL,16.0,True,True,24.0,2267.0
+363,2018.0,Öppen motion 7,Adrian Harden,47261,1970.0,48.0,54.0,FK Boken,16.0,True,True,25.0,2309.0
+364,2018.0,Öppen motion 7,Claes Linsefors,8616,1956.0,62.0,483.0,Lunds OK,16.0,True,True,26.0,2338.0
+365,2018.0,Öppen motion 7,Christian Johnsson,170309,1978.0,40.0,138.0,FK Finn,2.0,True,True,27.0,2396.0
+366,2018.0,Öppen motion 7,Maria Svensson,426,1977.0,41.0,483.0,Lunds OK,16.0,True,True,28.0,2398.0
+367,2018.0,Öppen motion 7,Claes Olvegård,131912,1963.0,55.0,114.0,FK Göingarna,16.0,True,True,29.0,2402.0
+368,2018.0,Öppen motion 7,Inger Frick,48330,,,114.0,FK Göingarna,16.0,True,True,30.0,2428.0
+369,2018.0,Öppen motion 7,Maritha Schön,2308,1962.0,56.0,35.0,Andrarums IF,16.0,True,True,31.0,2451.0
+370,2018.0,Öppen motion 7,Kerstin Olsson,9893,1964.0,54.0,132.0,Eslövs FK,16.0,True,True,32.0,2481.0
+371,2018.0,Öppen motion 7,Anna Freij,121183,1986.0,32.0,483.0,Lunds OK,16.0,True,True,33.0,2613.0
+372,2018.0,Öppen motion 7,Anette Bjelk,12546,1968.0,50.0,169.0,Hästveda OK,16.0,True,True,34.0,2647.0
+373,2018.0,Öppen motion 7,Lena Danielsson,58073,1966.0,52.0,165.0,Härlövs IF,16.0,True,True,35.0,2668.0
+374,2018.0,Öppen motion 7,Greger Ingemansson,52981,1946.0,72.0,544.0,Ystads OK,16.0,True,True,36.0,2695.0
+375,2018.0,Öppen motion 7,Roland Eriksson,19552,,,169.0,Hästveda OK,16.0,True,True,37.0,2699.0
+376,2018.0,Öppen motion 7,Thomas Vinblad,69665,1971.0,47.0,483.0,Lunds OK,16.0,True,True,38.0,2747.0
+377,2018.0,Öppen motion 7,Kerstin Wessberg,114382,1970.0,48.0,165.0,Härlövs IF,16.0,True,True,39.0,2760.0
+378,2018.0,Öppen motion 7,Ann-Katrin Almquist,79840,1976.0,42.0,114.0,FK Göingarna,16.0,True,True,40.0,2854.0
+379,2018.0,Öppen motion 7,Bert Olofsson,160763,1953.0,65.0,558.0,OK Kompassen,16.0,True,True,41.0,2877.0
+380,2018.0,Öppen motion 7,Lars-Erik Hallberg,2367,1950.0,68.0,54.0,FK Boken,16.0,True,True,42.0,2885.0
+381,2018.0,Öppen motion 7,Sven Törnkvist,49451,,,400.0,Tormestorps IF,16.0,True,True,43.0,2887.0
+382,2018.0,Öppen motion 7,Ingvar Schön,22556,1948.0,70.0,35.0,Andrarums IF,16.0,True,True,44.0,2894.0
+383,2018.0,Öppen motion 7,Fredy Schwyter,148156,1949.0,69.0,111.0,OK Gynge,16.0,True,True,45.0,2899.0
+384,2018.0,Öppen motion 7,Bengt-Åke Nilsson,48764,1944.0,74.0,482.0,OK Torfinn,16.0,True,True,46.0,2926.0
+385,2018.0,Öppen motion 7,Krister Lindeberg,1031,1944.0,74.0,258.0,Malmö OK,16.0,True,True,47.0,3052.0
+386,2018.0,Öppen motion 7,Thomas Persson,125355,1974.0,44.0,487.0,OK Tyringe,16.0,True,True,48.0,3077.0
+387,2018.0,Öppen motion 7,Kristoffer Brännström,161494,,,169.0,Hästveda OK,16.0,True,True,49.0,3080.0
+388,2018.0,Öppen motion 7,Roland Nilsson,1149,1948.0,70.0,558.0,OK Kompassen,16.0,True,True,50.0,3089.0
+389,2018.0,Öppen motion 7,Susanne Ingemansson,6968,1946.0,72.0,544.0,Ystads OK,16.0,True,True,51.0,3164.0
+390,2018.0,Öppen motion 7,Barbro Martinsson,22739,1949.0,69.0,487.0,OK Tyringe,16.0,True,True,52.0,3243.0
+391,2018.0,Öppen motion 7,Nils Persson,230,1940.0,78.0,331.0,IS Skanne,16.0,True,True,53.0,3261.0
+392,2018.0,Öppen motion 7,Ida Fast,135269,1987.0,31.0,294.0,OK Pan-Kristianstad,16.0,True,True,54.0,3305.0
+393,2018.0,Öppen motion 7,Johnny Malmgren,3208,1943.0,75.0,614.0,Hjärnarps OL,16.0,True,True,55.0,3329.0
+394,2018.0,Öppen motion 7,Mats Rosén,3676,,,169.0,Hästveda OK,16.0,True,True,56.0,3373.0
+395,2018.0,Öppen motion 7,Leif Magnusson,26248,1947.0,71.0,482.0,OK Torfinn,16.0,True,True,57.0,3409.0
+396,2018.0,Öppen motion 7,Anna Nilsson,161499,1977.0,41.0,169.0,Hästveda OK,16.0,True,True,58.0,3478.0
+397,2018.0,Öppen motion 7,Lisbeth Lindeberg,26402,1942.0,76.0,258.0,Malmö OK,16.0,True,True,59.0,3487.0
+398,2018.0,Öppen motion 7,Bengt Salomonsson,5205,1948.0,70.0,639.0,Skåneslättens OL,16.0,True,True,60.0,3504.0
+399,2018.0,Öppen motion 7,Sven-Erik Persson,25869,,,81.0,Frosta OK,16.0,True,True,61.0,3537.0
+400,2018.0,Öppen motion 7,Helén Åkesson,126752,1967.0,51.0,639.0,Skåneslättens OL,16.0,True,True,62.0,3569.0
+401,2018.0,Öppen motion 7,Ruben Edvardsson,3621,1939.0,79.0,169.0,Hästveda OK,16.0,True,True,63.0,3702.0
+402,2018.0,Öppen motion 7,Helen Nilsson,3707,1966.0,52.0,165.0,Härlövs IF,16.0,True,True,64.0,3737.0
+403,2018.0,Öppen motion 7,Ulrika Lindmark,164371,1981.0,37.0,483.0,Lunds OK,16.0,True,True,65.0,3758.0
+404,2018.0,Öppen motion 7,Laila Persson,48725,1942.0,76.0,331.0,IS Skanne,16.0,True,True,66.0,3950.0
+405,2018.0,Öppen motion 7,Rolf Nilsson,8415,1949.0,69.0,35.0,Andrarums IF,16.0,True,True,67.0,4090.0
+406,2018.0,Öppen motion 7,Marie Stål Nordström,106357,,,614.0,Hjärnarps OL,16.0,True,True,68.0,4163.0
+407,2018.0,Öppen motion 7,Gustaf Socheja,56429,,,81.0,Frosta OK,16.0,True,True,69.0,4172.0
+408,2018.0,Öppen motion 7,Kristin Lindberg,6808,1948.0,70.0,483.0,Lunds OK,16.0,True,True,70.0,4322.0
+409,2018.0,Öppen motion 7,Marianne Offrell,49524,1956.0,62.0,81.0,Frosta OK,16.0,True,True,71.0,4745.0
+410,2018.0,Öppen motion 7,Eivor Magnusson,121387,1957.0,61.0,294.0,OK Pan-Kristianstad,16.0,True,False,0.0,0.0
+411,2018.0,Öppen motion 8,Emil Hjalmarsson,30558,1989.0,29.0,639.0,Skåneslättens OL,16.0,True,True,1.0,1996.0
+412,2018.0,Öppen motion 8,Adam Segerslätt,27520,1998.0,20.0,639.0,Skåneslättens OL,16.0,True,True,2.0,2173.0
+413,2018.0,Öppen motion 8,Simon Yngve,6986,1981.0,37.0,507.0,OK Kontinent,16.0,True,True,3.0,2248.0
+414,2018.0,Öppen motion 8,Olof Bergvall,6664,1984.0,34.0,258.0,Malmö OK,16.0,True,True,4.0,2305.0
+415,2018.0,Öppen motion 8,Björn Hellrup,34012,1988.0,30.0,294.0,OK Pan-Kristianstad,16.0,True,True,5.0,2352.0
+416,2018.0,Öppen motion 8,Magnus Jönsson,6983,,,507.0,OK Kontinent,16.0,True,True,6.0,2384.0
+417,2018.0,Öppen motion 8,Staffan Haglen,,,,0.0,Klubblös,0.0,True,True,7.0,2397.0
+418,2018.0,Öppen motion 8,Stefan Collryd,2396,1988.0,30.0,60.0,Bredaryds SOK,2.0,True,True,8.0,2442.0
+419,2018.0,Öppen motion 8,Niklas Edvardsson,554,1967.0,51.0,114.0,FK Göingarna,16.0,True,True,9.0,2454.0
+420,2018.0,Öppen motion 8,Anna Lueger,,,,0.0,Klubblös,0.0,True,True,10.0,2550.0
+421,2018.0,Öppen motion 8,Magnus Linde,8411,1983.0,35.0,639.0,Skåneslättens OL,16.0,True,True,11.0,2565.0
+422,2018.0,Öppen motion 8,Victor Jensen,8708,1990.0,28.0,507.0,OK Kontinent,16.0,True,True,12.0,2632.0
+423,2018.0,Öppen motion 8,Matilda Olsson,4912,1989.0,29.0,639.0,Skåneslättens OL,16.0,True,True,13.0,2681.0
+424,2018.0,Öppen motion 8,Henrik Lindblom,117270,1975.0,43.0,258.0,Malmö OK,16.0,True,True,14.0,2783.0
+425,2018.0,Öppen motion 8,Lisel Arvidsson,35496,1961.0,57.0,450.0,Växjö OK,2.0,True,True,15.0,2794.0
+426,2018.0,Öppen motion 8,Simon Larsson,105911,1985.0,33.0,507.0,OK Kontinent,16.0,True,True,16.0,2848.0
+427,2018.0,Öppen motion 8,Magnus Sjö,,,,0.0,Klubblös,0.0,True,True,17.0,2853.0
+428,2018.0,Öppen motion 8,Mats Ranbro,19214,1970.0,48.0,125.0,Helsingborgs SOK,16.0,True,True,18.0,2864.0
+429,2018.0,Öppen motion 8,Anna Ås,76103,1973.0,45.0,483.0,Lunds OK,16.0,True,True,19.0,2959.0
+430,2018.0,Öppen motion 8,Mårten Mellby,41050,1977.0,41.0,258.0,Malmö OK,16.0,True,True,20.0,2976.0
+431,2018.0,Öppen motion 8,Anders Nilsson,28914,1961.0,57.0,167.0,Hässleholms OK,16.0,True,True,21.0,3050.0
+432,2018.0,Öppen motion 8,Torgny Holmström,111301,1969.0,49.0,165.0,Härlövs IF,16.0,True,True,22.0,3057.0
+433,2018.0,Öppen motion 8,Göran Mattsson,9954,,,639.0,Skåneslättens OL,16.0,True,True,23.0,3058.0
+434,2018.0,Öppen motion 8,Anna Brodin,6789,,,507.0,OK Kontinent,16.0,True,True,24.0,3074.0
+435,2018.0,Öppen motion 8,Frida Hildingsson,6875,1990.0,28.0,483.0,Lunds OK,16.0,True,True,25.0,3114.0
+436,2018.0,Öppen motion 8,Angelica Engström,9937,1993.0,25.0,639.0,Skåneslättens OL,16.0,True,True,26.0,3158.0
+437,2018.0,Öppen motion 8,Björn Andersson,2481,,,0.0,Klubblös,0.0,True,True,26.0,3158.0
+438,2018.0,Öppen motion 8,Magnus Rörstam,16936,1975.0,43.0,81.0,Frosta OK,16.0,True,True,28.0,3263.0
+439,2018.0,Öppen motion 8,Tomas Falkstrand,56494,,,400.0,Tormestorps IF,16.0,True,True,29.0,3284.0
+440,2018.0,Öppen motion 8,Jan Gradin,30726,1965.0,53.0,35.0,Andrarums IF,16.0,True,True,30.0,3311.0
+441,2018.0,Öppen motion 8,Jenny Gustafsson,99443,1972.0,46.0,483.0,Lunds OK,16.0,True,True,31.0,3313.0
+442,2018.0,Öppen motion 8,Ambjörn Lassing,25870,,,0.0,Klubblös,0.0,True,True,32.0,3323.0
+443,2018.0,Öppen motion 8,Carolina Nilsson,7390,1980.0,38.0,558.0,OK Kompassen,16.0,True,True,33.0,3335.0
+444,2018.0,Öppen motion 8,Hans-Inge Hansson,6432,1960.0,58.0,81.0,Frosta OK,16.0,True,True,34.0,3351.0
+445,2018.0,Öppen motion 8,Louise Rolander,4597,1987.0,31.0,294.0,OK Pan-Kristianstad,16.0,True,True,35.0,3415.0
+446,2018.0,Öppen motion 8,Lars-gunnar Skoog,35881,1952.0,66.0,450.0,Växjö OK,2.0,True,True,36.0,3427.0
+447,2018.0,Öppen motion 8,Henrik Andersson,146422,,,111.0,OK Gynge,16.0,True,True,37.0,3428.0
+448,2018.0,Öppen motion 8,Tobias Lindulf,128744,1976.0,42.0,639.0,Skåneslättens OL,16.0,True,True,38.0,3498.0
+449,2018.0,Öppen motion 8,Emma Nilsson Condori,161488,1979.0,39.0,169.0,Hästveda OK,16.0,True,True,39.0,3547.0
+450,2018.0,Öppen motion 8,Lars Dahl,27427,1970.0,48.0,165.0,Härlövs IF,16.0,True,True,40.0,3954.0
+451,2018.0,Öppen motion 8,Stein Østby,101386,1960.0,58.0,258.0,Malmö OK,16.0,True,True,41.0,4092.0
+452,2018.0,Öppen motion 8,Martin Carlström,135571,1972.0,46.0,54.0,FK Boken,16.0,True,True,42.0,4113.0
+453,2018.0,Öppen motion 8,Katarina Fast,110403,1959.0,59.0,294.0,OK Pan-Kristianstad,16.0,True,True,43.0,4707.0
+454,2018.0,Öppen motion 8,Liane Gunnarsson,144758,1980.0,38.0,471.0,Örkelljunga FK,16.0,True,True,44.0,4781.0
+455,2018.0,Öppen motion 8,Miklos Molnar,105583,1962.0,56.0,483.0,Lunds OK,16.0,True,True,45.0,5099.0
+456,2018.0,Öppen motion 8,Johan Ståhl,,,,614.0,Hjärnarps OL,16.0,True,True,46.0,5533.0
+457,2018.0,Öppen motion 8,Håkan Carlsson,30218,,,639.0,Skåneslättens OL,16.0,True,False,0.0,0.0
+458,2018.0,Öppen motion 8,Stefan Elf,73471,1982.0,36.0,483.0,Lunds OK,16.0,True,False,0.0,0.0
+459,2018.0,Öppen motion 9,Per-Ola Olsson,6358,1969.0,49.0,551.0,OK Vilse 87,7.0,True,True,1.0,2702.0
+460,2018.0,Öppen motion 9,Mattias Killander,3688,1987.0,31.0,169.0,Hästveda OK,16.0,True,True,2.0,2924.0
+461,2018.0,Öppen motion 9,Jonas Hjert,88583,,,635.0,Falköpings AIK OK,3.0,True,True,3.0,3016.0
+462,2018.0,Öppen motion 9,Johan Sander,1487,1976.0,42.0,639.0,Skåneslättens OL,16.0,True,True,4.0,3021.0
+463,2018.0,Öppen motion 9,Fredrik Stål,12492,,,614.0,Hjärnarps OL,16.0,True,True,5.0,3118.0
+464,2018.0,Öppen motion 9,Rasmus Grönlund,1861,,,483.0,Lunds OK,16.0,True,True,6.0,3128.0
+465,2018.0,Öppen motion 9,Mattias Åberg,2566,1972.0,46.0,483.0,Lunds OK,16.0,True,True,7.0,3296.0
+466,2018.0,Öppen motion 9,Daniel Nilsson,8145,1990.0,28.0,639.0,Skåneslättens OL,16.0,True,True,8.0,3305.0
+467,2018.0,Öppen motion 9,Robert Bertilsson,68879,1969.0,49.0,483.0,Lunds OK,16.0,True,True,9.0,3416.0
+468,2018.0,Öppen motion 9,Magnus Oscarsson,48314,1966.0,52.0,729.0,Søllerød OK,650.0,True,True,10.0,3482.0
+469,2018.0,Öppen motion 9,Mattias Kovacic,38392,1974.0,44.0,81.0,Frosta OK,16.0,True,True,11.0,3729.0
+470,2018.0,Öppen motion 9,Martin Heyden,150946,1992.0,26.0,483.0,Lunds OK,16.0,True,True,12.0,4084.0
+471,2018.0,Öppen motion 9,Håkan Jönsson,76267,1967.0,51.0,294.0,OK Pan-Kristianstad,16.0,True,True,13.0,4252.0
+472,2018.0,Öppen motion 9,Göran Fast,106463,1961.0,57.0,294.0,OK Pan-Kristianstad,16.0,True,True,14.0,4421.0
+473,2018.0,Öppen motion 9,Jörgen Göransson,20163,1962.0,56.0,114.0,FK Göingarna,16.0,True,True,15.0,4461.0
+474,2018.0,Öppen motion 9,Peter Rasmussen,82211,1973.0,45.0,507.0,OK Kontinent,16.0,True,True,16.0,4572.0
