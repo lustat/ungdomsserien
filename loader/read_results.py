@@ -41,7 +41,7 @@ def get_event(event_id, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         print('Storing ' + output_file)
-        df.to_csv(path=output_file, index=False)
+        df.to_csv(output_file, index=False)
     else:  # Load already stored event
         print('Reloading an already stored event: ' + output_file)
 
@@ -59,7 +59,7 @@ def evaluate(event_list, apikey):
             event_results = get_event(event, apikey)
             event_points = add_points_to_event(event_results)
             print('Storing ' + output_file)
-            event_points.to_csv(path=output_file, index=False)
+            event_points.to_csv(output_file, index=False)
 
 
 def evaluate_night(event_list, apikey):
@@ -124,7 +124,13 @@ def get_resultlist(root, apikey,debugmode=False):
             if obj_id is None:
                 person_id = 0
             else:
-                person_id = obj_id.text
+                if obj_id.text is None:
+                    person_id = 0
+                else:
+                    person_id = obj_id.text
+                # print(obj_id.text)
+                # print(name)
+                # print(' ')
 
             obj_birth = obj_person.find('BirthDate/Date')
             if obj_birth is None:

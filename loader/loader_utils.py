@@ -9,7 +9,7 @@ def getexample(filename='Example.xml'):
 
 def included_class(class_name,debugmode=False):
     if debugmode:
-        if class_name=='H10':
+        if class_name=='Öppen motion 12':
             output = True
         else:
             output = False

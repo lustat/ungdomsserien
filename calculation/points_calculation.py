@@ -138,5 +138,6 @@ def remove_double_runners(df_open, df_compete):
             df_open.at[key, 'keep'] = False
 
     df_open = df_open.loc[df_open.keep]
+    df_open = df_open.drop(columns='keep')
     return df_open
 
