@@ -41,7 +41,7 @@ def get_event(event_id, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         print('Storing ' + output_file)
-        df.to_csv(output_file)
+        df.to_csv(path=output_file, index=False)
     else:  # Load already stored event
         print('Reloading an already stored event: ' + output_file)
 
@@ -59,7 +59,7 @@ def evaluate(event_list, apikey):
             event_results = get_event(event, apikey)
             event_points = add_points_to_event(event_results)
             print('Storing ' + output_file)
-            event_points.to_csv(output_file)
+            event_points.to_csv(path=output_file, index=False)
 
 
 def evaluate_night(event_list, apikey):
@@ -207,10 +207,9 @@ def get_resultlist(root, apikey,debugmode=False):
             df.at[index, 'position'] = position
             df.at[index, 'seconds'] = seconds
 
-    numerical_columns=['event_year', 'personid', 'birthyear', 'position', 'region', 'orgid', 'seconds']
-    for col in numerical_columns:
+    integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds']
+    for col in integer_columns:
         if all(~df[col].isna()):
-            print(col)
             df = df.assign(**{col: df[col].astype('int')})
     return df
 
