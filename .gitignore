@@ -114,6 +114,7 @@ venv.bak/
 *.parq
 *.xlsx
 *.xls
+*.csv
 
 # Auto saved Excel-files
 /output/~*

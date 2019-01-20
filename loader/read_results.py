@@ -27,20 +27,19 @@ def xmlstring2file(response, xmlname):
             print(response.text, file=text_file)
 
 
-def get_event(event_id, apikey=None):
+def get_event(event_id, apikey=None, debugmode=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 
     storage_path = rel2fullpath('events_storage')
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
-    print(output_file)
     if not os.path.exists(output_file):  #Load events
         url = "https://eventor.orientering.se/api/results/event"
 
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
-        df = get_resultlist(root, apikey)
+        df = get_resultlist(root, apikey, debugmode)
         print('Storing ' + output_file)
         df.to_csv(output_file)
     else:  # Load already stored event
@@ -75,7 +74,7 @@ def evaluate_night(event_list, apikey):
             event_points.to_csv(output_file)
 
 
-def get_resultlist(root, apikey):
+def get_resultlist(root, apikey,debugmode=False):
     # Get year of competition
     event_date = root.find('Event/FinishDate/Date')
     if event_date is None:
@@ -99,7 +98,7 @@ def get_resultlist(root, apikey):
     for x in root.findall('ClassResult'):
         obj_eventclass = x.find('EventClass')
         class_name = obj_eventclass.find('Name').text
-        if not included_class(class_name):
+        if not included_class(class_name, debugmode):
             print('Skip ' + class_name)
             continue
         print('Loading ' + class_name)
@@ -194,7 +193,7 @@ def get_resultlist(root, apikey):
                     elif len(t) == 3:
                         seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
 
-            df.at[index, 'event_year'] = event_year
+            df.at[index, 'event_year'] = int(event_year)
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
@@ -208,6 +207,11 @@ def get_resultlist(root, apikey):
             df.at[index, 'position'] = position
             df.at[index, 'seconds'] = seconds
 
+    numerical_columns=['event_year', 'personid', 'birthyear', 'position', 'region', 'orgid', 'seconds']
+    for col in numerical_columns:
+        if all(~df[col].isna()):
+            print(col)
+            df = df.assign(**{col: df[col].astype('int')})
     return df
 
 

@@ -7,7 +7,14 @@ def getexample(filename='Example.xml'):
     return xmlfile
 
 
-def included_class(class_name):
+def included_class(class_name,debugmode=False):
+    if debugmode:
+        if class_name=='H10':
+            output = True
+        else:
+            output = False
+        return output
+
     if (not isinstance(class_name, str)) or (class_name == ''):
         return False
 
