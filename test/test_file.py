@@ -9,8 +9,9 @@ nightlist = [18459, 18485]
 
 key = input('Input api key: ')
 
-club_file, ind_file = extract_and_analyse(eventlist, nightlist, key)
-#get_event(eventlist[0], key, True)
+storage_path = 'C:\\Users\\Klas\\PycharmProjects\\output'
+
+club_file, ind_file = extract_and_analyse(storage_path, eventlist, nightlist, key)
 
 # storage_path = rel2fullpath('events_storage')
 # print(storage_path)

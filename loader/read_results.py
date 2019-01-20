@@ -5,7 +5,6 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import included_class
-from base_utils import rel2fullpath
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
@@ -13,25 +12,28 @@ from output.create_excel import individual_results_excel, club_results_excel
 import time
 
 
-def get_events(event_list, apikey):
+def get_events(storage_path, event_list, apikey):
     for event in event_list:
-        get_event(event, apikey)
+        get_event(event, storage_path, apikey)
 
 
-def xmlstring2file(response, xmlname):
-    # soup = BeautifulSoup(response.text, 'html.parser')
-    # text = soup.prettify()
-    if xmlname:
-        xmlfile = os.path.join(rel2fullpath('data'), xmlname)
-        with open(xmlfile, "w") as text_file:
-            print(response.text, file=text_file)
+# def xmlstring2file(response, xmlname):
+#     # soup = BeautifulSoup(response.text, 'html.parser')
+#     # text = soup.prettify()
+#     if xmlname:
+#         xmlfile = os.path.join(rel2fullpath('data'), xmlname)
+#         with open(xmlfile, "w") as text_file:
+#             print(response.text, file=text_file)
 
 
-def get_event(event_id, apikey=None, debugmode=False):
+def get_event(event_id, storage_path, apikey=None, debugmode=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    storage_path = rel2fullpath('events_storage')
+    if not os.path.exists(storage_path):
+        print(storage_path + ' is created')
+        os.makedirs(storage_path)
+
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
     if not os.path.exists(output_file):  #Load events
         url = "https://eventor.orientering.se/api/results/event"
@@ -49,32 +51,28 @@ def get_event(event_id, apikey=None, debugmode=False):
     return df
 
 
-def evaluate(event_list, apikey):
-    storage_path = rel2fullpath('events_storage')
-    print(storage_path)
+def evaluate(storage_path, event_list, apikey):
 
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         if not os.path.exists(output_file):
-            event_results = get_event(event, apikey)
+            event_results = get_event(event, storage_path, apikey)
             event_points = add_points_to_event(event_results)
             print('Storing ' + output_file)
             event_points.to_csv(output_file, index=False)
 
 
-def evaluate_night(event_list, apikey):
-    storage_path = rel2fullpath('events_storage')
-
+def evaluate_night(storage_path, event_list, apikey):
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         if not os.path.exists(output_file):
-            event_results = get_event(event, apikey)
+            event_results = get_event(event, storage_path,  apikey)
             event_points = add_night_points_to_event(event_results)
             print('Storing ' + output_file)
             event_points.to_csv(output_file)
 
 
-def get_resultlist(root, apikey,debugmode=False):
+def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
     event_date = root.find('Event/FinishDate/Date')
     if event_date is None:
@@ -99,10 +97,8 @@ def get_resultlist(root, apikey,debugmode=False):
         obj_eventclass = x.find('EventClass')
         class_name = obj_eventclass.find('Name').text
         if not included_class(class_name, debugmode):
-            print('Skip ' + class_name)
             continue
         print('Loading ' + class_name)
-        time.sleep(1)
         for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')
@@ -252,9 +248,7 @@ def get_region_table(apikey):
     return root, response
 
 
-def concatenate(event_list):
-    storage_path = rel2fullpath('events_storage')
-
+def concatenate(storage_path, event_list):
     df = pd.DataFrame()
     for event in event_list:
         file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
@@ -268,26 +262,26 @@ def concatenate(event_list):
     return df
 
 
-def extract_and_analyse(event_ids=None, night_ids=None, apikey=None):
+def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None):
     if event_ids is None:
         event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
     if night_ids is None:
         night_ids = [18459, 18485]
 
-    get_events(event_ids, apikey)
-    evaluate(event_ids, apikey)
+    get_events(storage_path, event_ids, apikey)
+    evaluate(storage_path, event_ids, apikey)
 
-    get_events(night_ids, apikey)
-    evaluate_night(night_ids, apikey)
-    df_night = concatenate(night_ids)
+    get_events(storage_path, night_ids, apikey)
+    evaluate_night(storage_path, night_ids, apikey)
+    df_night = concatenate(storage_path, night_ids)
 
-    df = concatenate(event_ids)
+    df = concatenate(storage_path, event_ids)
 
     df_club_summary, club_results = club_summary(df)
-    club_file = club_results_excel(df_club_summary, club_results)
+    club_file = club_results_excel(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
-    indiv_file = individual_results_excel(si)
+    indiv_file = individual_results_excel(storage_path, si)
     return club_file, indiv_file
 
 if __name__ == "__main__":
