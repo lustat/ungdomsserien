@@ -1,6 +1,10 @@
 import os
 
 
+def get_event_name(event_id):
+    name = 'Test'
+    return name
+
 def getexample(filename='Example.xml'):
     path = rel2fullpath('data')
     xmlfile = os.path.join(path,filename)

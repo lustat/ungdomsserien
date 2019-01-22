@@ -9,21 +9,12 @@ from calculation.points_calculation import add_points_to_event, add_night_points
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
-import time
+#import time
 
 
 def get_events(storage_path, event_list, apikey):
     for event in event_list:
         get_event(event, storage_path, apikey)
-
-
-# def xmlstring2file(response, xmlname):
-#     # soup = BeautifulSoup(response.text, 'html.parser')
-#     # text = soup.prettify()
-#     if xmlname:
-#         xmlfile = os.path.join(rel2fullpath('data'), xmlname)
-#         with open(xmlfile, "w") as text_file:
-#             print(response.text, file=text_file)
 
 
 def get_event(event_id, storage_path, apikey=None, debugmode=False):
@@ -124,9 +115,6 @@ def get_resultlist(root, apikey, debugmode=False):
                     person_id = 0
                 else:
                     person_id = obj_id.text
-                # print(obj_id.text)
-                # print(name)
-                # print(' ')
 
             obj_birth = obj_person.find('BirthDate/Date')
             if obj_birth is None:
@@ -263,6 +251,7 @@ def concatenate(storage_path, event_list):
 
 
 def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None):
+    print(apikey)
     if event_ids is None:
         event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
     if night_ids is None:
