@@ -1,9 +1,31 @@
 import os
+import requests
+import xml.etree.ElementTree as ET
+from datetime import datetime
 
+def get_event_name(event_id, apikey):
+    url = "https://eventor.orientering.se/api/results/event"
 
-def get_event_name(event_id):
-    name = 'Test'
-    return name
+    headers = {'ApiKey': apikey}
+    response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
+    root = ET.fromstringlist(response.text)
+    event_date = root.find('Event/FinishDate/Date')
+    if event_date is None:
+        print('Warning, unknown competition date')
+        event_year = 'Year?'
+    else:
+        date = datetime.strptime(event_date.text, '%Y-%m-%d')
+        event_year = date.year
+
+    obj_event = root.find('Event/Name')
+    if obj_event is None:
+        print('Warning, unknown competition name')
+        event_name = 'Name?'
+    else:
+        event_name = obj_event.text
+
+    return event_name, event_year
+
 
 def getexample(filename='Example.xml'):
     path = rel2fullpath('data')
