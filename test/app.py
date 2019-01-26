@@ -90,7 +90,7 @@ class MyWidget(QWidget):
         night_count = 0
         for id in self.children():
             if isinstance(id, PySide2.QtWidgets.QLabel):
-                if count<=5:
+                if count <= 5:
                     id.setText('Tävling: ' + str(count+1) +': ' + races[count])
                     count += 1
                 else:

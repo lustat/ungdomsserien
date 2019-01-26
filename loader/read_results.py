@@ -22,7 +22,7 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         apikey = os.environ["apikey"]
 
     if not os.path.exists(storage_path):
-        print(storage_path + ' is created')
+        print(storage_path + ' skapas')
         os.makedirs(storage_path)
 
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
@@ -33,10 +33,10 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
-        print('Storing ' + output_file)
+        print('Sparar ' + output_file)
         df.to_csv(output_file, index=False)
     else:  # Load already stored event
-        print('Reloading an already stored event: ' + output_file)
+        print('Laddar upp en redan inläst tävling: ' + output_file)
 
     df = pd.read_csv(output_file)
     return df
@@ -49,7 +49,7 @@ def evaluate(storage_path, event_list, apikey):
         if not os.path.exists(output_file):
             event_results = get_event(event, storage_path, apikey)
             event_points = add_points_to_event(event_results)
-            print('Storing ' + output_file)
+            print('Sparar ' + output_file)
             event_points.to_csv(output_file, index=False)
 
 
@@ -59,7 +59,7 @@ def evaluate_night(storage_path, event_list, apikey):
         if not os.path.exists(output_file):
             event_results = get_event(event, storage_path,  apikey)
             event_points = add_night_points_to_event(event_results)
-            print('Storing ' + output_file)
+            print('Sparar ' + output_file)
             event_points.to_csv(output_file)
 
 
@@ -67,7 +67,7 @@ def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
     event_date = root.find('Event/FinishDate/Date')
     if event_date is None:
-        print('Warning, unknown competition date')
+        print('Varning, okänt tävlingsdatum')
         event_year = np.nan
     else:
         date = datetime.strptime(event_date.text, '%Y-%m-%d')
@@ -75,7 +75,7 @@ def get_resultlist(root, apikey, debugmode=False):
 
     obj_event = root.find('Event/Name')
     if obj_event is None:
-        print('Warning, unknown competition name')
+        print('Varning, okänt tävlingsnamn')
         event_name = '?'
     else:
         event_name = obj_event.text
@@ -89,7 +89,7 @@ def get_resultlist(root, apikey, debugmode=False):
         class_name = obj_eventclass.find('Name').text
         if not included_class(class_name, debugmode):
             continue
-        print('Loading ' + class_name)
+        print('Läser in ' + class_name)
         for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')
@@ -104,7 +104,7 @@ def get_resultlist(root, apikey, debugmode=False):
                     name = name + ' ' + obj_last.text
                 else:
                     name = name + ' ' + '?'
-                    print('Unexpected name: ' + name)
+                    print('Oväntat namn: ' + name)
             else:
                 name = '?'
             obj_id = obj_person.find('PersonId')
@@ -155,7 +155,7 @@ def get_resultlist(root, apikey, debugmode=False):
                 if str_position.isdigit():
                     position = int(str_position)
                 else:
-                    print('Unknown position for ' + name)
+                    print('Okänd position för ' + name)
                     position = 0
 
             obj_status = y.find('Result/CompetitorStatus')
@@ -251,7 +251,6 @@ def concatenate(storage_path, event_list):
 
 
 def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None):
-    print(apikey)
     if event_ids is None:
         event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
     if night_ids is None:
