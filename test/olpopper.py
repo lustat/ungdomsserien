@@ -17,6 +17,20 @@ class MyWidget(QWidget):
         night_ids = [18459, 18485]
 
         self.layout = QVBoxLayout()
+
+        menubar = PySide2.QtWidgets.QMenuBar()
+        filemenu = menubar.addMenu('Meny')
+
+        exit_action = PySide2.QtWidgets.QAction('Avsluta', self)
+        exit_action.triggered.connect(exit)
+        filemenu.addAction(exit_action)
+
+        about_action = PySide2.QtWidgets.QAction('Om', self)
+        about_action.triggered.connect(self.info_window)
+        filemenu.addAction(about_action)
+
+        self.layout.addWidget(menubar)
+
         self.setWindowIconText('Test')
         self.setWindowIcon(QIcon("run.png"))
 
@@ -56,6 +70,18 @@ class MyWidget(QWidget):
         self.button_getname.clicked.connect(self.setnames)
         self.show()
 
+
+    def info_window(self):
+        print('Info ')
+        msg_box = PySide2.QtWidgets.QMessageBox()
+        msg_box.about(self, 'Information', 'Olpopper Version 0.9.0\n'
+                        'Poängberäknare för SKOF:s Ungdomsserie\n'
+                        ' \n'
+                       'Program icon by https://www.flaticon.com/authors/srip\n'
+                       '"Flaticon" www.flaticon.com is licensed by http://creativecommons.org/licenses/by/3.0/ \n"'
+                       'Creative Commons BY 3.0')
+        msg_box.setInformativeText()
+        msg_box.exec_()
 
     @Slot()
     def magic(self):
@@ -100,6 +126,8 @@ class MyWidget(QWidget):
         self.layout.addWidget(self.button_analyse)
         self.setLayout(self.layout)
 
+    def quit_function(self):
+        self.close()
 
     def list_input_events(self):
         events_str = [id.text() for id in self.children() if isinstance(id, PySide2.QtWidgets.QLineEdit)]
@@ -127,18 +155,3 @@ if __name__ == "__main__":
     widget.show()
 
     sys.exit(app.exec_())
-
-    # < div > Icons
-    # made
-    # by < a
-    # href = "https://www.flaticon.com/authors/srip"
-    # title = "srip" > srip < / a >
-    # from < a
-    # href = "https://www.flaticon.com/"
-    # title = "Flaticon" > www.flaticon.com < / a > is licensed
-    # by < a
-    # href = "http://creativecommons.org/licenses/by/3.0/"
-    # title = "Creative Commons BY 3.0"
-    # target = "_blank" > CC
-    # 3.0
-    # BY < / a > < / div >
