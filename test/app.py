@@ -22,58 +22,44 @@ class MyWidget(QWidget):
 
         for k in range(6):
             Qbox = QHBoxLayout()
-            text = QLabel("Tävling " + str(k+1))
-            name = QLabel(" ")
-
             w = QLineEdit(str(event_ids[k]), parent=self)
             w.setFixedWidth(120)
             w.setAlignment(Qt.AlignLeft)
-            Qbox.addWidget(text)
+            text = QLabel("Tävling " + str(k+1))
             Qbox.addWidget(w)
-            Qbox.addWidget(name)
+            Qbox.addWidget(text)
             self.layout.addLayout(Qbox)
 
         for k in range(2):
             Qbox = PySide2.QtWidgets.QHBoxLayout()
-            text = PySide2.QtWidgets.QLabel("Natt-tävling " + str(k+1))
-            name = PySide2.QtWidgets.QLabel(" ")
+            text = PySide2.QtWidgets.QLabel("Natt-tävling " + str(k+1), parent=None)
             w = PySide2.QtWidgets.QLineEdit(str(night_ids[k]), parent=self)
             w.setFixedWidth(120)
             w.setAlignment(PySide2.QtCore.Qt.AlignLeft)
-            Qbox.addWidget(text)
             Qbox.addWidget(w)
-            Qbox.addWidget(name)
+            Qbox.addWidget(text)
             self.layout.addLayout(Qbox)
 
         self.line = PySide2.QtWidgets.QFrame()
         self.layout.addWidget(self.line)
 
-        self.output1 = QLabel("--Inget analyserat än--")
-        self.output1.setAlignment(Qt.AlignRight)
-        self.layout.addWidget(self.output1)
-
-        self.output2 = QLabel(" ")
-        self.output2.setAlignment(Qt.AlignRight)
-        self.layout.addWidget(self.output2)
 
         self.button_getname = QPushButton("Hämta tävlingsnamn")
         self.layout.addWidget(self.button_getname)
 
         self.button_analyse = QPushButton("Extrahera och analysera tävlingsresultat")
-        self.layout.addWidget(self.button_analyse)
+        self.button_analyse.clicked.connect(self.magic)
 
         self.setLayout(self.layout)
 
         # Connecting the signal
-        self.button_analyse.clicked.connect(self.magic)
-        self.button_getname.clicked.connect(self.getnames)
+        self.button_getname.clicked.connect(self.setnames)
         self.show()
 
 
     @Slot()
     def magic(self):
         storage_path = str(QFileDialog.getExistingDirectory(self, "Välj mapp att lagra resultatfiler"))
-        self.output1.setText("Analyserar...")
         # Directory selector
         races, night_races = self.list_input_events()
 
@@ -81,18 +67,39 @@ class MyWidget(QWidget):
         night_races = [race for race in night_races if not (race == 0)]
 
         club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key)
-        self.output1.setText('Sparat: ' + club_file)
-        self.output2.setText('Sparat: ' + ind_file)
+        print('Sparat: ' + club_file)
+        print('Sparat: ' + ind_file)
 
     @Slot()
     def getnames(self):
-        self.output1.setText("Hämtar namn...")
         races, night_races = self.list_input_events()
+        namelist1 = []
         for race in races:
             name, year = get_event_name(race, self.key)
-            print(name + ' (' + str(year) + ')')
+            namelist1.append(name + ' (' + str(year) + ')')
 
-        self.output1.setText("Namn hämtade")
+        nightlist1 = []
+        for night_race in night_races:
+            name, year = get_event_name(night_race, self.key)
+            nightlist1.append(name + ' (' + str(year) + ')')
+        return namelist1, nightlist1
+
+    def setnames(self):
+        races, night_races = self.getnames()
+        count = 0
+        night_count = 0
+        for id in self.children():
+            if isinstance(id, PySide2.QtWidgets.QLabel):
+                if count<=5:
+                    id.setText('Tävling: ' + str(count+1) +': ' + races[count])
+                    count += 1
+                else:
+                    id.setText('Natt-tävling: ' + str(night_count + 1) + ': ' + night_races[night_count])
+                    night_count += 1
+
+        self.layout.addWidget(self.button_analyse)
+        self.setLayout(self.layout)
+
 
     def list_input_events(self):
         events_str = [id.text() for id in self.children() if isinstance(id, PySide2.QtWidgets.QLineEdit)]

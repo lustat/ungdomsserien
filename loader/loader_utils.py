@@ -3,26 +3,29 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-def get_event_name(event_id, apikey):
-    url = "https://eventor.orientering.se/api/results/event"
+def get_event_name(id, apikey):
+    if apikey==0:
+        return 'debug_mode', 2018
 
     headers = {'ApiKey': apikey}
-    response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
+
+    if not isinstance(id, str):
+        id = str(id)
+
+    response = requests.get('https://eventor.orientering.se/api/event/' + id, headers=headers)
     root = ET.fromstringlist(response.text)
-    event_date = root.find('Event/FinishDate/Date')
+    obj_name = root.find('Name')
+    if obj_name is None:
+        event_name = 'Okänt namn'
+    else:
+        event_name = obj_name.text
+
+    event_date = root.find('StartDate/Date')
     if event_date is None:
-        print('Warning, unknown competition date')
         event_year = 'Year?'
     else:
         date = datetime.strptime(event_date.text, '%Y-%m-%d')
         event_year = date.year
-
-    obj_event = root.find('Event/Name')
-    if obj_event is None:
-        print('Warning, unknown competition name')
-        event_name = 'Name?'
-    else:
-        event_name = obj_event.text
 
     return event_name, event_year
 
