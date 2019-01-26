@@ -22,7 +22,7 @@ class MyWidget(QWidget):
         filemenu = menubar.addMenu('Meny')
 
         exit_action = PySide2.QtWidgets.QAction('Avsluta', self)
-        exit_action.triggered.connect(exit)
+        exit_action.triggered.connect(sys.exit)
         filemenu.addAction(exit_action)
 
         about_action = PySide2.QtWidgets.QAction('Om', self)
