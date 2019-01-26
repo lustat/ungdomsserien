@@ -72,7 +72,6 @@ class MyWidget(QWidget):
 
 
     def info_window(self):
-        print('Info ')
         msg_box = PySide2.QtWidgets.QMessageBox()
         msg_box.about(self, 'Information', 'Olpopper Version 0.9.0\n'
                         'Poängberäknare för SKOF:s Ungdomsserie\n'
@@ -80,8 +79,6 @@ class MyWidget(QWidget):
                        'Program icon by https://www.flaticon.com/authors/srip\n'
                        '"Flaticon" www.flaticon.com is licensed by http://creativecommons.org/licenses/by/3.0/ \n"'
                        'Creative Commons BY 3.0')
-        msg_box.setInformativeText()
-        msg_box.exec_()
 
     @Slot()
     def magic(self):
