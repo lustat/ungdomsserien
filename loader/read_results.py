@@ -35,10 +35,10 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
-            print('Sparar ' + output_file)
+            print('Sparar resultat: ' + output_file)
             df.to_csv(output_file, index=False)
     else:  # Load already stored event
-        print('Laddar upp en redan inläst tävling: ' + output_file)
+        print('Läser in resultat från tävling: ' + output_file)
         df = pd.read_csv(output_file)
 
     return df
@@ -48,7 +48,7 @@ def evaluate(storage_path, event_list, apikey):
 
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
-        if not os.path.exists(output_file):
+        if not os.path.exists(output_file):  # Race not analysed
             event_results = get_event(event, storage_path, apikey)
             if not event_results.empty:  # Results exist in Eventor
                 event_points = add_points_to_event(event_results)
