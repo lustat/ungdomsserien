@@ -10,6 +10,7 @@ from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
 #import time
+from loader.club_to_region import get_parent_org_quick
 
 
 def get_events(storage_path, event_list, apikey):
@@ -205,20 +206,26 @@ def get_resultlist(root, apikey, debugmode=False):
 
 
 def get_parent_organisation(id, apikey):
-    headers = {'ApiKey': apikey}
 
-    if not isinstance(id, str):
-        id = str(id)
-
-    response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
-    root = ET.fromstringlist(response.text)
-    obj_parent = root.find('ParentOrganisation/OrganisationId')
-    if obj_parent is None:
-        parent_org = 0
+    parent_org = get_parent_org_quick(id)
+    if not (parent_org is None):
+        return parent_org
     else:
-        parent_org = int(obj_parent.text)
+        # Fetch organisation id from Eventor
+        headers = {'ApiKey': apikey}
 
-    return parent_org
+        if not isinstance(id, str):
+            id = str(id)
+
+        response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
+        root = ET.fromstringlist(response.text)
+        obj_parent = root.find('ParentOrganisation/OrganisationId')
+        if obj_parent is None:
+            parent_org = 0
+        else:
+            parent_org = int(obj_parent.text)
+
+        return parent_org
 
 
 def get_region_table(apikey):
@@ -271,6 +278,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(storage_path, si)
     return club_file, indiv_file
+
 
 if __name__ == "__main__":
     print('Extract and evaluate orienteering events')

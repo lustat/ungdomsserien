@@ -73,7 +73,7 @@ class MyWidget(QWidget):
 
     def info_window(self):
         msg_box = PySide2.QtWidgets.QMessageBox()
-        msg_box.about(self, 'Information', 'Olpopper Version 0.9.0\n'
+        msg_box.about(self, 'Information', 'SkofCounter Version 0.9\n'
                         'Poängberäknare för SKOF:s Ungdomsserie\n'
                         ' \n'
                        'Program icon by https://www.flaticon.com/authors/srip\n'
