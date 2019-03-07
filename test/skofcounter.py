@@ -19,8 +19,8 @@ class MyWidget(QWidget):
         night_ids = [18459, 18485]
 
         # 2019
-        event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
-        night_ids = [21851, 21961]
+        # event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+        # night_ids = [21851, 21961]
 
 
         self.layout = QVBoxLayout()
@@ -152,8 +152,8 @@ class MyWidget(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    #key = input('Ange API nyckel: ')
-    key = os.environ["apikey"]
+    key = input('Ange API nyckel: ')
+    #key = os.environ["apikey"]
     widget = MyWidget(key)
     widget.setWindowTitle('Beräknaren: Skånes ungdomsserie')
     widget.resize(800, 300)
