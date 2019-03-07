@@ -6,6 +6,7 @@ from PySide2.QtCore import Slot, Qt
 from loader.read_results import extract_and_analyse
 from PySide2.QtGui import QIcon
 from loader.loader_utils import get_event_name
+import os
 
 
 class MyWidget(QWidget):
@@ -13,8 +14,14 @@ class MyWidget(QWidget):
         self.key = api_key
         QWidget.__init__(self)
 
+        # 2018
         event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
         night_ids = [18459, 18485]
+
+        # 2019
+        event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+        night_ids = [21851, 21961]
+
 
         self.layout = QVBoxLayout()
 
@@ -145,7 +152,8 @@ class MyWidget(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    key = input('Ange API nyckel: ')
+    #key = input('Ange API nyckel: ')
+    key = os.environ["apikey"]
     widget = MyWidget(key)
     widget.setWindowTitle('Beräknaren: Skånes ungdomsserie')
     widget.resize(800, 300)

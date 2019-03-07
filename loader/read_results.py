@@ -34,12 +34,13 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
-        print('Sparar ' + output_file)
-        df.to_csv(output_file, index=False)
+        if not df.empty:
+            print('Sparar ' + output_file)
+            df.to_csv(output_file, index=False)
     else:  # Load already stored event
         print('Laddar upp en redan inläst tävling: ' + output_file)
+        df = pd.read_csv(output_file)
 
-    df = pd.read_csv(output_file)
     return df
 
 
@@ -49,9 +50,10 @@ def evaluate(storage_path, event_list, apikey):
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         if not os.path.exists(output_file):
             event_results = get_event(event, storage_path, apikey)
-            event_points = add_points_to_event(event_results)
-            print('Sparar ' + output_file)
-            event_points.to_csv(output_file, index=False)
+            if not event_results.empty:  # Results exist in Eventor
+                event_points = add_points_to_event(event_results)
+                print('Sparar ' + output_file)
+                event_points.to_csv(output_file, index=False)
 
 
 def evaluate_night(storage_path, event_list, apikey):
@@ -59,9 +61,10 @@ def evaluate_night(storage_path, event_list, apikey):
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         if not os.path.exists(output_file):
             event_results = get_event(event, storage_path,  apikey)
-            event_points = add_night_points_to_event(event_results)
-            print('Sparar ' + output_file)
-            event_points.to_csv(output_file)
+            if not event_results.empty:
+                event_points = add_night_points_to_event(event_results)
+                print('Sparar ' + output_file)
+                event_points.to_csv(output_file)
 
 
 def get_resultlist(root, apikey, debugmode=False):
@@ -198,10 +201,11 @@ def get_resultlist(root, apikey, debugmode=False):
             df.at[index, 'position'] = position
             df.at[index, 'seconds'] = seconds
 
-    integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds']
-    for col in integer_columns:
-        if all(~df[col].isna()):
-            df = df.assign(**{col: df[col].astype('int')})
+    if not df.empty:
+        integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds']
+        for col in integer_columns:
+            if all(~df[col].isna()):
+                df = df.assign(**{col: df[col].astype('int')})
     return df
 
 
@@ -229,7 +233,6 @@ def get_parent_organisation(id, apikey):
 
 
 def get_region_table(apikey):
-    # apikey = os.environ["apikey"]
     headers = {'ApiKey': apikey}
 
     url = "https://eventor.orientering.se/api/organisation"
@@ -247,12 +250,13 @@ def concatenate(storage_path, event_list):
     df = pd.DataFrame()
     for event in event_list:
         file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
-        df0 = pd.read_csv(file)
-        df0 = df0.assign(eventid=event)
-        if df.empty:
-            df = df0.copy()
-        else:
-            df = df.append(df0, sort=False)
+        if os.path.exists(file):
+            df0 = pd.read_csv(file)
+            df0 = df0.assign(eventid=event)
+            if df.empty:
+                df = df0.copy()
+            else:
+                df = df.append(df0, sort=False)
 
     return df
 

@@ -3,12 +3,15 @@ import numpy as np
 
 
 def individual_summary(df, df_night, class_selection=None):
+    if df.empty:
+        return {}
+
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
 
     summary = {}
     for classname in class_selection:
-        print(classname)
+        print('Individuell summering för ' + classname)
         df_class = df.loc[df.classname == classname]
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
         #ids = [pid for pid in df_class.personid.unique() if not ((pid is None) | np.isnan(pid))]
@@ -64,6 +67,9 @@ def add_best4_score(df, events):
 
 
 def club_summary(df):
+    if df.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
     df = df.loc[~df.orgid.isna()]
     df = df.assign(orgid=df.orgid.astype(int))
 
