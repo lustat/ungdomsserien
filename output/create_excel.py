@@ -12,7 +12,7 @@ def individual_results_excel(storage_path, dct):
             df = df.set_index(keys='position', drop=True, inplace=False)
             df.to_excel(writer, class_name, index=True)
 
-        print('Saving ' + excel_file)
+        print('Sparar ' + excel_file)
         writer.save()
         return excel_file
 

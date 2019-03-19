@@ -15,12 +15,12 @@ class MyWidget(QWidget):
         QWidget.__init__(self)
 
         # 2018
-        event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
-        night_ids = [18459, 18485]
+        # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
+        # night_ids = [18459, 18485]
 
         # 2019
-        # event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
-        # night_ids = [21851, 21961]
+        event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+        night_ids = [21851, 21961]
 
 
         self.layout = QVBoxLayout()
