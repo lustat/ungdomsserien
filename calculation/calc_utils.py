@@ -5,10 +5,12 @@ def valid_open_runners(df):
         include = False
         if runner.classname.lower().startswith('ö'):
             if runner.birthyear is not None:
-                if runner.age <= 16:
+                if (runner.age <= 16) & (runner.age >= 5):
                     include = True
         else:  #"inskolning" or U-class
-            include = True
+            if runner.birthyear is not None:
+                if (runner.age <= 16) & (runner.age >= 5):
+                    include = True
 
         df.at[key, 'include'] = include
 
