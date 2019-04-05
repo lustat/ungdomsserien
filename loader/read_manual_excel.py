@@ -22,8 +22,7 @@ def check_sheet_names(sheet_names):
     return ok_sheets
 
 
-def read_manual_input(manual_input_path='C:\\Users\\Klas\\Desktop', manual_input_name='Manuell lista.xlsx'):
-    manual_input_file = os.path.join(manual_input_path, manual_input_name)
+def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manuell lista.xlsx'):
     if not os.path.exists(manual_input_file):
         sys.exit('Input file is not found: ' + manual_input_file)
 
@@ -33,8 +32,8 @@ def read_manual_input(manual_input_path='C:\\Users\\Klas\\Desktop', manual_input
     race_to_manual_input = {}
     for sheet in accepted_sheets:
         df = pd.read_excel(manual_input_file, sheet)
+        sheet = sheet.replace(' ', '')
         df.columns = [col.lower() for col in df.columns]
-        print(df.name)
         if sheet.isdigit():
             race_to_manual_input[int(sheet)] = df
         else:

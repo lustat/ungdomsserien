@@ -261,7 +261,8 @@ def concatenate(storage_path, event_list):
     return df
 
 
-def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None):
+def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={}):
+    print(race_to_manual_info)
     if event_ids is None:
         # 2018
         # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]

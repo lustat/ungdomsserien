@@ -6,7 +6,9 @@ from PySide2.QtCore import Slot, Qt
 from loader.read_results import extract_and_analyse
 from PySide2.QtGui import QIcon
 from loader.loader_utils import get_event_name
+from loader.read_manual_excel import read_manual_input
 import os
+
 
 
 class MyWidget(QWidget):
@@ -22,7 +24,7 @@ class MyWidget(QWidget):
         event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
         night_ids = [21851, 21961]
 
-
+        self.manual_info = {}
         self.layout = QVBoxLayout()
 
         menubar = PySide2.QtWidgets.QMenuBar()
@@ -64,7 +66,6 @@ class MyWidget(QWidget):
         self.line = PySide2.QtWidgets.QFrame()
         self.layout.addWidget(self.line)
 
-
         self.button_getname = QPushButton("Hämta tävlingsnamn")
         self.layout.addWidget(self.button_getname)
 
@@ -82,7 +83,7 @@ class MyWidget(QWidget):
 
     def choose_excel_file(self):
         file_path = QFileDialog.getOpenFileName(self, "Välj Excel-fil med manuell input", '*.xlsx')
-        print(file_path[0])
+        self.manual_info = read_manual_input(file_path[0])
 
         self.layout.addWidget(self.button_analyse)
         self.setLayout(self.layout)
@@ -105,7 +106,7 @@ class MyWidget(QWidget):
         races = [race for race in races if not (race == 0)]
         night_races = [race for race in night_races if not (race == 0)]
 
-        club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key)
+        club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key, self.manual_info)
         print('Sparat: ' + club_file)
         print('Sparat: ' + ind_file)
 
