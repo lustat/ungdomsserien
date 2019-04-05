@@ -68,15 +68,24 @@ class MyWidget(QWidget):
         self.button_getname = QPushButton("Hämta tävlingsnamn")
         self.layout.addWidget(self.button_getname)
 
+        self.button_get_manual = QPushButton("Välj fil med manuell input")
+
         self.button_analyse = QPushButton("Extrahera och analysera tävlingsresultat")
         self.button_analyse.clicked.connect(self.magic)
 
         self.setLayout(self.layout)
 
         # Connecting the signal
+        self.button_get_manual.clicked.connect(self.choose_excel_file)
         self.button_getname.clicked.connect(self.setnames)
         self.show()
 
+    def choose_excel_file(self):
+        file_path = QFileDialog.getOpenFileName(self, "Välj Excel-fil med manuell input", '*.xlsx')
+        print(file_path[0])
+
+        self.layout.addWidget(self.button_analyse)
+        self.setLayout(self.layout)
 
     def info_window(self):
         msg_box = PySide2.QtWidgets.QMessageBox()
@@ -127,7 +136,7 @@ class MyWidget(QWidget):
                     id.setText('Natt-tävling: ' + str(night_count + 1) + ': ' + night_races[night_count])
                     night_count += 1
 
-        self.layout.addWidget(self.button_analyse)
+        self.layout.addWidget(self.button_get_manual)
         self.setLayout(self.layout)
 
     def quit_function(self):
