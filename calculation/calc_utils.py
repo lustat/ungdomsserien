@@ -43,8 +43,33 @@ def valid_open_runners(df, manual=pd.DataFrame()):
 
 
 def add_manual_night_runners(manual_df, night_df):
-    print(manual_df)
-    print(night_df)
+    night_df = night_df.reset_index(drop=True, inplace=False)
+    columns = list(night_df.columns)
+    for (key, row) in manual_df.iterrows():
+        new_key = len(night_df)
+        row = pd.Series()
+        row.at['event_year'] = 0
+        row.at['classname'] = manual_df.loc[key, 'u-series']
+        row.at['name'] = manual_df.loc[key, 'name']
+        row.at['personid'] = manual_df.loc[key, 'personid']
+        row.at['birthyear'] = 0
+        row.at['age'] = 0
+        row.at['orgid'] = 0
+        row.at['club'] = manual_df.loc[key, 'club']
+        row.at['region'] = 0
+        row.at['started'] = True
+        row.at['finished'] = manual_df.loc[key, 'finished']==1
+        row.at['position'] = 0
+        row.at['seconds'] = 0
+        row.at['region_position'] = 0
+        if row.at['finished']:
+            row.at['points'] = 10
+        else:
+            row.at['points'] = 5
+        row.at['eventid'] = manual_df.loc[key, 'race id']
+        row.name = new_key
+        night_df = night_df.append(row, ignore_index=True)
+    return night_df
 
 
 def add_person_id(manual_df, daily_df):

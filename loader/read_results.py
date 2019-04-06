@@ -182,7 +182,7 @@ def get_resultlist(root, apikey, debugmode=False):
                 obj_time=y.find('Result/Time')
                 if not (obj_time is None):
                     time_string = obj_time.text
-                    t=time_string.split(':')
+                    t = time_string.split(':')
                     if len(t) == 1:
                         seconds = int(t[0])
                     elif len(t) == 2:
@@ -254,13 +254,15 @@ def concatenate(storage_path, event_list):
     for event in event_list:
         file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         if os.path.exists(file):
-            df0 = pd.read_csv(file)
+            df0 = pd.read_csv(file, index_col=False)
+            if 'Unnamed: 0' in df0.columns:
+                df0 = df0.drop(columns=['Unnamed: 0'])
             df0 = df0.assign(eventid=event)
             if df.empty:
                 df = df0.copy()
             else:
-                df = df.append(df0, sort=False)
-
+                df = df.append(df0, sort=False, ignore_index=True)
+    df = df.reset_index(drop=True, inplace=False)
     return df
 
 
@@ -298,9 +300,6 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    print('Extract and evaluate orienteering events')
     manual = read_manual_input()
-
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual)
-    print('Finished')
 
