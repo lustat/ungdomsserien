@@ -10,6 +10,7 @@ from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
 from loader.club_to_region import get_parent_org_quick
+from calculation.calc_utils import add_manual_night_runners
 
 
 def get_events(storage_path, event_list, apikey):
@@ -86,7 +87,6 @@ def get_resultlist(root, apikey, debugmode=False):
         event_name = '?'
     else:
         event_name = obj_event.text
-    print(event_name)
 
     # Extract results from classes
     index = 0
@@ -281,6 +281,9 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     get_events(storage_path, night_ids, apikey)
     evaluate_night(storage_path, night_ids, apikey)
     df_night = concatenate(storage_path, night_ids)
+
+    if 'night' in race_to_manual_info.keys():
+        df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
     df = concatenate(storage_path, event_ids)
 

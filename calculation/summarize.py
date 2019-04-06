@@ -14,9 +14,7 @@ def individual_summary(df, df_night, class_selection=None):
         print('Individuell summering för ' + classname)
         df_class = df.loc[df.classname == classname]
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
-        #ids = [pid for pid in df_class.personid.unique() if not ((pid is None) | np.isnan(pid))]
         events = list(df_class.eventid.unique())
-        # str_events = [str(event) for event in events]
 
         columns = ['name', 'club']
         columns.extend(events)

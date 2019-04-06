@@ -85,8 +85,6 @@ class MyWidget(QWidget):
         file_path = QFileDialog.getOpenFileName(self, "Välj Excel-fil med manuell input", '*.xlsx')
         self.manual_info = read_manual_input(file_path[0])
 
-        self.layout.addWidget(self.button_analyse)
-        self.setLayout(self.layout)
 
     def info_window(self):
         msg_box = PySide2.QtWidgets.QMessageBox()
@@ -138,6 +136,7 @@ class MyWidget(QWidget):
                     night_count += 1
 
         self.layout.addWidget(self.button_get_manual)
+        self.layout.addWidget(self.button_analyse)
         self.setLayout(self.layout)
 
     def quit_function(self):

@@ -40,3 +40,8 @@ def valid_open_runners(df, manual=pd.DataFrame()):
     df = df.loc[df.include]
     df = df.drop(columns=['include'])
     return df, un_identified
+
+
+def add_manual_night_runners(manual_df, night_df):
+    print(manual_df)
+    print(night_df)
