@@ -9,7 +9,6 @@ from calculation.points_calculation import add_points_to_event, add_night_points
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
-#import time
 from loader.club_to_region import get_parent_org_quick
 
 
@@ -44,16 +43,20 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
     return df
 
 
-def evaluate(storage_path, event_list, apikey):
+def evaluate(storage_path, event_list, apikey, event_to_manual):
 
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
+        unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
         if not os.path.exists(output_file):  # Race not analysed
             event_results = get_event(event, storage_path, apikey)
+            if event in event_to_manual.keys():
+                manual_df = event_to_manual[event]
             if not event_results.empty:  # Results exist in Eventor
-                event_points = add_points_to_event(event_results)
+                event_points, unidentified = add_points_to_event(event_results, manual=manual_df)
                 print('Sparar ' + output_file)
                 event_points.to_csv(output_file, index=False)
+                unidentified.to_excel(unidentified_file, index=False)
 
 
 def evaluate_night(storage_path, event_list, apikey):
@@ -93,7 +96,6 @@ def get_resultlist(root, apikey, debugmode=False):
         class_name = obj_eventclass.find('Name').text
         if not included_class(class_name, debugmode):
             continue
-        print('Läser in ' + class_name)
         for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')
@@ -262,7 +264,6 @@ def concatenate(storage_path, event_list):
 
 
 def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={}):
-    print(race_to_manual_info)
     if event_ids is None:
         # 2018
         # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
@@ -275,7 +276,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
         night_ids = [21851, 21961]
 
     get_events(storage_path, event_ids, apikey)
-    evaluate(storage_path, event_ids, apikey)
+    evaluate(storage_path, event_ids, apikey, race_to_manual_info)
 
     get_events(storage_path, night_ids, apikey)
     evaluate_night(storage_path, night_ids, apikey)
