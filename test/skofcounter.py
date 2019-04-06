@@ -85,7 +85,6 @@ class MyWidget(QWidget):
         file_path = QFileDialog.getOpenFileName(self, "Välj Excel-fil med manuell input", '*.xlsx')
         self.manual_info = read_manual_input(file_path[0])
 
-
     def info_window(self):
         msg_box = PySide2.QtWidgets.QMessageBox()
         msg_box.about(self, 'Information', 'SkofCounter Version 0.9\n'

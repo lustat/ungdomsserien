@@ -10,7 +10,8 @@ from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
 from loader.club_to_region import get_parent_org_quick
-from calculation.calc_utils import add_manual_night_runners
+from calculation.calc_utils import add_manual_night_runners, add_person_id
+from loader.read_manual_excel import read_manual_input
 
 
 def get_events(storage_path, event_list, apikey):
@@ -282,10 +283,11 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     evaluate_night(storage_path, night_ids, apikey)
     df_night = concatenate(storage_path, night_ids)
 
-    if 'night' in race_to_manual_info.keys():
-        df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
-
     df = concatenate(storage_path, event_ids)
+
+    if 'night' in race_to_manual_info.keys():
+        race_to_manual_info['night'] = add_person_id(race_to_manual_info['night'], df)
+        df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
     df_club_summary, club_results = club_summary(df)
     club_file = club_results_excel(storage_path, df_club_summary, club_results)
@@ -297,6 +299,8 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 if __name__ == "__main__":
     print('Extract and evaluate orienteering events')
-    extract_and_analyse()
+    manual = read_manual_input()
+
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual)
     print('Finished')
 

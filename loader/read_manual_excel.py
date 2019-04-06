@@ -22,7 +22,7 @@ def check_sheet_names(sheet_names):
     return ok_sheets
 
 
-def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manuell lista.xlsx'):
+def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx'):
     if not os.path.exists(manual_input_file):
         sys.exit('Input file is not found: ' + manual_input_file)
 

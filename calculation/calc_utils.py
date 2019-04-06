@@ -45,3 +45,16 @@ def valid_open_runners(df, manual=pd.DataFrame()):
 def add_manual_night_runners(manual_df, night_df):
     print(manual_df)
     print(night_df)
+
+
+def add_person_id(manual_df, daily_df):
+    daily_df = daily_df.assign(simplename=[name.replace(' ', '').lower() for name in daily_df.name])
+    daily_df = daily_df.assign(simpleclub=[name.replace(' ', '').lower() for name in daily_df.club])
+    manual_df = manual_df.reset_index(drop=True, inplace=False)
+    manual_df = manual_df.assign(personid=0)
+    for (key, runner) in manual_df.iterrows():
+        identified = daily_df.loc[(runner['name'].replace(' ','').lower() == daily_df.simplename) &
+                     (runner['club'].replace(' ','').lower() == daily_df.simpleclub)]
+        if not identified.empty:
+            manual_df.at[key, 'personid'] = identified['personid'].iloc[0]
+    return manual_df
