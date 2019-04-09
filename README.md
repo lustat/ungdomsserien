@@ -6,4 +6,4 @@ PATH\ungdomsserien>venv\Script\activate
 ## 3. Go to skofcounter folder
 PATH\ungdomsserien\test
 ## 4. Run pyinstaller
-PATH\ungdomsserien\test>pyinstaller skofcounter.py --onefile
+PATH\ungdomsserien\test>pyinstaller --onefile skofcounter.py

@@ -49,7 +49,7 @@ def add_manual_night_runners(manual_df, night_df):
         new_key = len(night_df)
         row = pd.Series()
         row.at['event_year'] = 0
-        row.at['classname'] = manual_df.loc[key, 'u-series']
+        row.at['classname'] = manual_df.loc[key, 'useries']
         row.at['name'] = manual_df.loc[key, 'name']
         row.at['personid'] = manual_df.loc[key, 'personid']
         row.at['birthyear'] = 0
@@ -66,7 +66,7 @@ def add_manual_night_runners(manual_df, night_df):
             row.at['points'] = 10
         else:
             row.at['points'] = 5
-        row.at['eventid'] = manual_df.loc[key, 'race id']
+        row.at['eventid'] = manual_df.loc[key, 'eventid']
         row.name = new_key
         night_df = night_df.append(row, ignore_index=True)
     return night_df

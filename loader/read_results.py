@@ -272,11 +272,16 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
         # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
         # 2019
         event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+        print('Temporary change in extract_and_analyse:')
+        event_ids = [20550]
+
     if night_ids is None:
         # 2018
         # night_ids = [18459, 18485]
         # 2019
         night_ids = [21851, 21961]
+        print('Temporary change in extract_and_analyse:')
+        night_ids = [21851]
 
     get_events(storage_path, event_ids, apikey)
     evaluate(storage_path, event_ids, apikey, race_to_manual_info)
@@ -288,7 +293,6 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     df = concatenate(storage_path, event_ids)
 
     if 'night' in race_to_manual_info.keys():
-        race_to_manual_info['night'] = add_person_id(race_to_manual_info['night'], df)
         df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
     df_club_summary, club_results = club_summary(df)
