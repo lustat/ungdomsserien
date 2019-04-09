@@ -3,6 +3,7 @@ import numpy as np
 
 
 def individual_summary(df, df_night, class_selection=None):
+    df_night = df_night.assign(found=False)
     if df.empty:
         return {}
 
@@ -43,6 +44,8 @@ def individual_summary(df, df_night, class_selection=None):
                     class_summary.at[pid, 'night'] = 0
                 else:
                     class_summary.at[pid, 'night'] = max(night_person.points)
+                    for index in night_person.index:
+                        df_night.at[index, 'found']=True
 
         class_summary = add_best4_score(class_summary, events)
         class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
@@ -50,6 +53,8 @@ def individual_summary(df, df_night, class_selection=None):
 
         class_summary = add_final_position(class_summary)
         summary[classname] = class_summary
+
+    #df_only_night = df_night[(~df_night.found) & (~(df_night.classname=='H10')) & (~(df_night.classname=='D10'))]
     return summary
 
 
