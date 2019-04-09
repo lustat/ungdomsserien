@@ -1,9 +1,15 @@
-from loader.read_results import extract_and_analyse
+from loader.read_results import extract_and_analyse, get_events, get_event
+import os
 
 print('Test file: ')
 
-eventlist = [18218, 17412, 18308, 18106, 16981, 18995]
-nightlist = [18459, 18485]
+event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+night_ids = [21851, 21961]
 
-club_file, ind_file = extract_and_analyse(eventlist, nightlist)
-input('Press any button to exit')
+#key = input('Input api key: ')
+key = os.environ["apikey"]
+storage_path = 'C:\\Users\\Klas\\PycharmProjects\\output'
+
+club_file, ind_file = extract_and_analyse(storage_path, event_ids, night_ids, key)
+
+input('Press Enter to exit')

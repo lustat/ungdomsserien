@@ -2,7 +2,7 @@ import pandas as pd
 from calculation.calc_utils import valid_open_runners
 
 
-def add_night_points_to_event(res, class_selection=None, region_id=16):
+def add_night_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataFrame()):
     if class_selection is None:
         class_selection = ['H12', 'H14', 'H16', 'D12', 'D14', 'D16']
 
@@ -14,7 +14,7 @@ def add_night_points_to_event(res, class_selection=None, region_id=16):
 
     # Pick out runners from Skåne
     region_competition = region_runners(compres)
-    region_open = valid_open_runners(openres)
+    region_open, unidentified = valid_open_runners(openres)
 
     results1 = points_to_started_night(region_competition)
     results2 = points_to_started_night(region_open)
@@ -23,7 +23,7 @@ def add_night_points_to_event(res, class_selection=None, region_id=16):
     return results
 
 
-def add_points_to_event(res, class_selection=None, region_id=16):
+def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataFrame()):
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
 
@@ -35,16 +35,16 @@ def add_points_to_event(res, class_selection=None, region_id=16):
     
     # Pick out runners from Skåne
     region_competition = region_runners(compres)
-    region_open = valid_open_runners(openres)
+    region_open, unidentified_manual = valid_open_runners(openres, manual)
 
-    # Remove runners in open classes that have run a competition class
+    # Remove runners in open classes that have already run a competition class
     region_open = remove_double_runners(region_open, region_competition)
 
     results1 = add_points_to_competion_class(region_competition)
     results2 = points_to_started_open(region_open)
 
     results = results1.append(results2, sort=False)
-    return results
+    return results, unidentified_manual
 
 
 def add_points_to_competion_class(res):
@@ -95,7 +95,7 @@ def region_runners(df, region_id=16):
     return df_all
 
 
-def points_to_started_open(df, region_id=16):
+def points_to_started_open(df, region_id=16, manual=pd.DataFrame()):
     df = df.assign(region=df.region.astype('int'))
     df = df.loc[df.region == region_id]
 
@@ -138,5 +138,6 @@ def remove_double_runners(df_open, df_compete):
             df_open.at[key, 'keep'] = False
 
     df_open = df_open.loc[df_open.keep]
+    df_open = df_open.drop(columns='keep')
     return df_open
 

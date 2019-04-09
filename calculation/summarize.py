@@ -3,22 +3,30 @@ import numpy as np
 
 
 def individual_summary(df, df_night, class_selection=None):
+    df_night = df_night.assign(found=False)
+    if df.empty:
+        return {}
+
     if class_selection is None:
         class_selection = ['H10', 'H12', 'H14', 'H16', 'D10', 'D12', 'D14', 'D16']
 
     summary = {}
     for classname in class_selection:
+        print('Individuell summering för ' + classname)
         df_class = df.loc[df.classname == classname]
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
         events = list(df_class.eventid.unique())
-        # str_events = [str(event) for event in events]
 
         columns = ['name', 'club']
         columns.extend(events)
-        columns.extend(['score','night','total'])
+        columns.extend(['score', 'night', 'total'])
         class_summary = pd.DataFrame(index=ids, columns=columns)
         for pid in ids:
             res_person = df_class.loc[df_class.personid == pid]
+            if np.isnan(pid):
+                print(' -----  ')
+                print(pid)
+                print(res_person.name)
             class_summary.at[pid, 'name'] = res_person.name.iloc[0]
             class_summary.at[pid, 'club'] = res_person.club.iloc[0]
         for event in events:
@@ -36,6 +44,8 @@ def individual_summary(df, df_night, class_selection=None):
                     class_summary.at[pid, 'night'] = 0
                 else:
                     class_summary.at[pid, 'night'] = max(night_person.points)
+                    for index in night_person.index:
+                        df_night.at[index, 'found']=True
 
         class_summary = add_best4_score(class_summary, events)
         class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
@@ -43,6 +53,8 @@ def individual_summary(df, df_night, class_selection=None):
 
         class_summary = add_final_position(class_summary)
         summary[classname] = class_summary
+
+    #df_only_night = df_night[(~df_night.found) & (~(df_night.classname=='H10')) & (~(df_night.classname=='D10'))]
     return summary
 
 
@@ -58,6 +70,9 @@ def add_best4_score(df, events):
 
 
 def club_summary(df):
+    if df.empty:
+        return pd.DataFrame(), pd.DataFrame()
+
     df = df.loc[~df.orgid.isna()]
     df = df.assign(orgid=df.orgid.astype(int))
 

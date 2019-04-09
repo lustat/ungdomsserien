@@ -5,77 +5,78 @@ import pandas as pd
 from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import included_class
-from base_utils import rel2fullpath
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel
+from loader.club_to_region import get_parent_org_quick
+from calculation.calc_utils import add_manual_night_runners, add_person_id
+from loader.read_manual_excel import read_manual_input
 
 
-def get_events(event_list):
+def get_events(storage_path, event_list, apikey):
     for event in event_list:
-        get_event(event)
+        get_event(event, storage_path, apikey)
 
 
-def xmlstring2file(response, xmlname):
-    # soup = BeautifulSoup(response.text, 'html.parser')
-    # text = soup.prettify()
-    if xmlname:
-        xmlfile = os.path.join(rel2fullpath('data'), xmlname)
-        with open(xmlfile, "w") as text_file:
-            print(response.text, file=text_file)
+def get_event(event_id, storage_path, apikey=None, debugmode=False):
+    if apikey is None:
+        apikey = os.environ["apikey"]
 
+    if not os.path.exists(storage_path):
+        print(storage_path + ' skapas')
+        os.makedirs(storage_path)
 
-def get_event(event_id):
-    storage_path = rel2fullpath('events_storage')
-    output_file = os.path.join(storage_path, str(event_id) + '.parq')
-
+    output_file = os.path.join(storage_path, str(event_id) + '.csv')
     if not os.path.exists(output_file):  #Load events
         url = "https://eventor.orientering.se/api/results/event"
-        apikey = os.environ["apikey"]
+
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
-        df = get_resultlist(root)
-        print('Storing ' + output_file)
-        df.to_parquet(output_file)
-
+        df = get_resultlist(root, apikey, debugmode)
+        if not df.empty:
+            print('Sparar resultat: ' + output_file)
+            df.to_csv(output_file, index=False)
     else:  # Load already stored event
-        df = pd.read_parquet(output_file)
+        print('Läser in resultat från tävling: ' + output_file)
+        df = pd.read_csv(output_file)
 
     return df
 
 
-def evaluate(event_list):
-    storage_path = rel2fullpath('events_storage')
-    print(storage_path)
+def evaluate(storage_path, event_list, apikey, event_to_manual):
 
     for event in event_list:
-        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
-        if not os.path.exists(output_file):
-            event_results = get_event(event)
-            event_points = add_points_to_event(event_results)
-            print('Storing ' + output_file)
-            event_points.to_parquet(output_file)
+        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
+        unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
+        if not os.path.exists(output_file):  # Race not analysed
+            event_results = get_event(event, storage_path, apikey)
+            if event in event_to_manual.keys():
+                manual_df = event_to_manual[event]
+            if not event_results.empty:  # Results exist in Eventor
+                event_points, unidentified = add_points_to_event(event_results, manual=manual_df)
+                print('Sparar ' + output_file)
+                event_points.to_csv(output_file, index=False)
+                unidentified.to_excel(unidentified_file, index=False)
 
 
-def evaluate_night(event_list):
-    storage_path = rel2fullpath('events_storage')
-
+def evaluate_night(storage_path, event_list, apikey):
     for event in event_list:
-        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
+        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         if not os.path.exists(output_file):
-            event_results = get_event(event)
-            event_points = add_night_points_to_event(event_results)
-            print('Storing ' + output_file)
-            event_points.to_parquet(output_file)
+            event_results = get_event(event, storage_path,  apikey)
+            if not event_results.empty:
+                event_points = add_night_points_to_event(event_results)
+                print('Sparar ' + output_file)
+                event_points.to_csv(output_file)
 
 
-def get_resultlist(root):
+def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
     event_date = root.find('Event/FinishDate/Date')
     if event_date is None:
-        print('Warning, unknown competition date')
+        print('Varning, okänt tävlingsdatum')
         event_year = np.nan
     else:
         date = datetime.strptime(event_date.text, '%Y-%m-%d')
@@ -83,11 +84,10 @@ def get_resultlist(root):
 
     obj_event = root.find('Event/Name')
     if obj_event is None:
-        print('Warning, unknown competition name')
+        print('Varning, okänt tävlingsnamn')
         event_name = '?'
     else:
         event_name = obj_event.text
-    print(event_name)
 
     # Extract results from classes
     index = 0
@@ -95,10 +95,8 @@ def get_resultlist(root):
     for x in root.findall('ClassResult'):
         obj_eventclass = x.find('EventClass')
         class_name = obj_eventclass.find('Name').text
-        if not included_class(class_name):
-            print('Skip ' + class_name)
+        if not included_class(class_name, debugmode):
             continue
-        print('Loading ' + class_name)
         for y in x.findall('PersonResult'):  # Get result for each person
             index += 1
             obj_person = y.find('Person')
@@ -113,14 +111,17 @@ def get_resultlist(root):
                     name = name + ' ' + obj_last.text
                 else:
                     name = name + ' ' + '?'
-                    print('Unexpected name: ' + name)
+                    print('Oväntat namn: ' + name)
             else:
                 name = '?'
             obj_id = obj_person.find('PersonId')
             if obj_id is None:
                 person_id = 0
             else:
-                person_id = obj_id.text
+                if obj_id.text is None:
+                    person_id = 0
+                else:
+                    person_id = obj_id.text
 
             obj_birth = obj_person.find('BirthDate/Date')
             if obj_birth is None:
@@ -151,7 +152,7 @@ def get_resultlist(root):
                     else:
                         club = obj_org.find('Name').text
 
-            parent_org_id = get_parent_organisation(orgid)
+            parent_org_id = get_parent_organisation(orgid, apikey)
 
             obj_res = y.find('Result/ResultPosition')
             if obj_res is None:
@@ -161,7 +162,7 @@ def get_resultlist(root):
                 if str_position.isdigit():
                     position = int(str_position)
                 else:
-                    print('Unknown position for ' + name)
+                    print('Okänd position för ' + name)
                     position = 0
 
             obj_status = y.find('Result/CompetitorStatus')
@@ -181,7 +182,7 @@ def get_resultlist(root):
                 obj_time=y.find('Result/Time')
                 if not (obj_time is None):
                     time_string = obj_time.text
-                    t=time_string.split(':')
+                    t = time_string.split(':')
                     if len(t) == 1:
                         seconds = int(t[0])
                     elif len(t) == 2:
@@ -189,7 +190,7 @@ def get_resultlist(root):
                     elif len(t) == 3:
                         seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
 
-            df.at[index, 'event_year'] = event_year
+            df.at[index, 'event_year'] = int(event_year)
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
@@ -203,28 +204,38 @@ def get_resultlist(root):
             df.at[index, 'position'] = position
             df.at[index, 'seconds'] = seconds
 
+    if not df.empty:
+        integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds']
+        for col in integer_columns:
+            if all(~df[col].isna()):
+                df = df.assign(**{col: df[col].astype('int')})
     return df
 
 
-def get_parent_organisation(id):
-    apikey = os.environ["apikey"]
-    headers = {'ApiKey': apikey}
-    if not isinstance(id, str):
-        id = str(id)
+def get_parent_organisation(id, apikey):
 
-    response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
-    root = ET.fromstringlist(response.text)
-    obj_parent = root.find('ParentOrganisation/OrganisationId')
-    if obj_parent is None:
-        parent_org = 0
+    parent_org = get_parent_org_quick(id)
+    if not (parent_org is None):
+        return parent_org
     else:
-        parent_org = int(obj_parent.text)
+        # Fetch organisation id from Eventor
+        headers = {'ApiKey': apikey}
 
-    return parent_org
+        if not isinstance(id, str):
+            id = str(id)
+
+        response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
+        root = ET.fromstringlist(response.text)
+        obj_parent = root.find('ParentOrganisation/OrganisationId')
+        if obj_parent is None:
+            parent_org = 0
+        else:
+            parent_org = int(obj_parent.text)
+
+        return parent_org
 
 
-def get_region_table():
-    apikey = os.environ["apikey"]
+def get_region_table(apikey):
     headers = {'ApiKey': apikey}
 
     url = "https://eventor.orientering.se/api/organisation"
@@ -238,46 +249,58 @@ def get_region_table():
     return root, response
 
 
-def concatenate(event_list):
-    storage_path = rel2fullpath('events_storage')
-
+def concatenate(storage_path, event_list):
     df = pd.DataFrame()
     for event in event_list:
-        file = os.path.join(storage_path, 'Result_' + str(event) + '.parq')
-        df0 = pd.read_parquet(file)
-        df0 = df0.assign(eventid=event)
-        if df.empty:
-            df = df0.copy()
-        else:
-            df = df.append(df0, sort=False)
-
+        file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
+        if os.path.exists(file):
+            df0 = pd.read_csv(file, index_col=False)
+            if 'Unnamed: 0' in df0.columns:
+                df0 = df0.drop(columns=['Unnamed: 0'])
+            df0 = df0.assign(eventid=event)
+            if df.empty:
+                df = df0.copy()
+            else:
+                df = df.append(df0, sort=False, ignore_index=True)
+    df = df.reset_index(drop=True, inplace=False)
     return df
 
 
-def extract_and_analyse(event_ids=None, night_ids=None):
+def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={}):
     if event_ids is None:
-        event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
+        # 2018
+        # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
+        # 2019
+        event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+
     if night_ids is None:
-        night_ids = [18459, 18485]
+        # 2018
+        # night_ids = [18459, 18485]
+        # 2019
+        night_ids = [21851, 21961]
 
-    get_events(event_ids)
-    evaluate(event_ids)
+    get_events(storage_path, event_ids, apikey)
+    evaluate(storage_path, event_ids, apikey, race_to_manual_info)
 
-    get_events(night_ids)
-    evaluate_night(night_ids)
-    df_night = concatenate(night_ids)
+    get_events(storage_path, night_ids, apikey)
+    evaluate_night(storage_path, night_ids, apikey)
+    df_night = concatenate(storage_path, night_ids)
 
-    df = concatenate(event_ids)
+    df = concatenate(storage_path, event_ids)
+
+    if 'night' in race_to_manual_info.keys():
+        df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
     df_club_summary, club_results = club_summary(df)
-    club_file = club_results_excel(df_club_summary, club_results)
+    club_file = club_results_excel(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
-    indiv_file = individual_results_excel(si)
+    indiv_file = individual_results_excel(storage_path, si)
     return club_file, indiv_file
 
+
 if __name__ == "__main__":
-    print('Extract and evaluate orienteering events')
-    extract_and_analyse()
-    print('Finished')
+    manual = read_manual_input()
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
+                        event_ids=[20550], night_ids=[21851])
 
