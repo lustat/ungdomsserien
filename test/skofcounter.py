@@ -7,6 +7,7 @@ from loader.read_results import extract_and_analyse
 from PySide2.QtGui import QIcon
 from loader.loader_utils import get_event_name
 from loader.read_manual_excel import read_manual_input
+from base_utils import get_version
 import os
 
 
@@ -86,13 +87,11 @@ class MyWidget(QWidget):
         self.manual_info = read_manual_input(file_path[0])
 
     def info_window(self):
+        version = get_version()
         msg_box = PySide2.QtWidgets.QMessageBox()
-        msg_box.about(self, 'Information', 'SkofCounter Version 0.9\n'
-                        'Poängberäknare för SKOF:s Ungdomsserie\n'
-                        ' \n'
-                       'Program icon by https://www.flaticon.com/authors/srip\n'
-                       '"Flaticon" www.flaticon.com is licensed by http://creativecommons.org/licenses/by/3.0/ \n"'
-                       'Creative Commons BY 3.0')
+        msg_str = """SkofCounter Version {0} \n
+                        Poängberäknare för SKOF:s Ungdomsserie""".format(version)
+        msg_box.about(self, 'Information', msg_str)
 
     @Slot()
     def magic(self):
