@@ -54,6 +54,8 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
             event_results = get_event(event, storage_path, apikey)
             if event in event_to_manual.keys():
                 manual_df = event_to_manual[event]
+            else:
+                manual_df = pd.DataFrame()
             if not event_results.empty:  # Results exist in Eventor
                 event_points, unidentified = add_points_to_event(event_results, manual=manual_df)
                 print('Sparar ' + output_file)
@@ -300,7 +302,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual = read_manual_input()
+    manual = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results2.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
                         event_ids=[20550], night_ids=[21851])
 
