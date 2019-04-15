@@ -302,7 +302,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results2.xlsx')
+    manual = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
                         event_ids=[20550], night_ids=[21851])
 
