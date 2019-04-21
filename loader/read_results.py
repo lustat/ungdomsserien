@@ -60,7 +60,8 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
                 event_points, unidentified = add_points_to_event(event_results, manual=manual_df)
                 print('Sparar ' + output_file)
                 event_points.to_csv(output_file, index=False)
-                unidentified.to_excel(unidentified_file, index=False)
+                if not unidentified.empty:
+                    unidentified.to_excel(unidentified_file, index=False)
 
 
 def evaluate_night(storage_path, event_list, apikey):

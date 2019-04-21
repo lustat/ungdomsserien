@@ -67,6 +67,6 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual result
     return race_to_manual_input
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     dct = read_manual_input()
     print(dct)
