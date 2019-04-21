@@ -119,3 +119,6 @@ venv.bak/
 # Auto saved Excel-files
 /output/~*
 *.xlsx#
+
+*.png
+*.ico
