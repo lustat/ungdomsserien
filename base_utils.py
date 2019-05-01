@@ -9,4 +9,4 @@ def rel2fullpath(relative_path):
 
 
 def get_version():
-    return '1.0'
+    return '1.3'

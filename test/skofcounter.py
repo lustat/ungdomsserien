@@ -11,9 +11,8 @@ from base_utils import get_version
 import os
 
 
-
 class MyWidget(QWidget):
-    def __init__(self, api_key):
+    def __init__(self, api_key, icon_file=''):
         self.key = api_key
         QWidget.__init__(self)
 
@@ -42,7 +41,9 @@ class MyWidget(QWidget):
         self.layout.addWidget(menubar)
 
         self.setWindowIconText('Test')
-        self.setWindowIcon(QIcon("run.png"))
+        if icon_file:
+            #print('Trying to set icon: ' + icon_file)
+            self.setWindowIcon(QIcon(icon_file))
 
         for k in range(6):
             Qbox = QHBoxLayout()
@@ -87,10 +88,10 @@ class MyWidget(QWidget):
         self.manual_info = read_manual_input(file_path[0])
 
     def info_window(self):
-        version = get_version()
+        version_number = get_version()
         msg_box = PySide2.QtWidgets.QMessageBox()
         msg_str = """SkofCounter Version {0} \n
-                        Poängberäknare för SKOF:s Ungdomsserie""".format(version)
+                        Poängberäknare för SKOF:s Ungdomsserie""".format(version_number)
         msg_box.about(self, 'Information', msg_str)
 
     @Slot()
@@ -159,10 +160,13 @@ class MyWidget(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    version = get_version()
     key = input('Ange API nyckel: ')
     #key = os.environ["apikey"]
-    widget = MyWidget(key)
-    widget.setWindowTitle('Beräknaren: Skånes ungdomsserie')
+
+    icon_file_name = 'run1.ico'
+    widget = MyWidget(key, icon_file_name)
+    widget.setWindowTitle('Skofcounter Version ' + version + ': Skånes ungdomsserie-beräknare')
     widget.resize(800, 300)
     widget.show()
 
