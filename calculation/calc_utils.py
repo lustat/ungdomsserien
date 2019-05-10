@@ -4,8 +4,8 @@ import pandas as pd
 
 def valid_open_runners(df, manual=pd.DataFrame()):
     if not manual.empty:
-        manual = manual.assign(simplename=[name.replace(' ', '').lower() for name in manual.name])
-        manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual.club])
+        manual = manual.assign(simplename=[name.replace(' ', '').lower() for name in manual['name']])
+        manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual['club']])
         manual = manual.assign(identified=False)
 
     missing_age = pd.DataFrame()
@@ -17,20 +17,24 @@ def valid_open_runners(df, manual=pd.DataFrame()):
         if runner.birthyear is not None:
             if (runner.age <= 16) & (runner.age >= 5):
                 include = True
-            elif (np.isnan(runner.age)) & (not manual.empty):  # unknown birth year: Look in manual information
-                runner_match = manual.loc[(manual.simplename == runner['name'].replace(' ', '').lower()) &
-                                          (manual.simpleclub == runner['club'].replace(' ', '').lower())]
-                if not runner_match.empty:
-                    if len(runner_match) == 1:
-                        include = True
-                        manual.at[runner_match.index, 'identified'] = True
-                    else:
-                        print('  ')
-                        print('Löpare ' + runner['name'] + ' är listad på flera ställen')
-                        print('  ')
-                        print('  ')
-                else:
+            elif np.isnan(runner.age):
+                if not manual.empty:  # unknown birth year: Look in manual information
+                    runner_match = manual.loc[(manual.simplename == runner['name'].replace(' ', '').lower()) &
+                                              (manual.simpleclub == runner['club'].replace(' ', '').lower())]
+                    if not runner_match.empty:
+                        if len(runner_match) == 1:
+                            include = True
+                            manual.at[runner_match.index, 'identified'] = True
+                        else:
+                            print('  ')
+                            print('Löpare ' + runner['name'] + ' är listad på flera ställen')
+                            print('  ')
+                            print('  ')
+                    else:  # Missing-age runner not in manual list
+                        missing_age = missing_age.append(runner)
+                else:  # No manual list, so save all Missing-age runners
                     missing_age = missing_age.append(runner)
+
         df.at[key, 'include'] = include
 
     if not manual.empty:

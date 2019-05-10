@@ -63,8 +63,10 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
                 print('Sparar ' + output_file)
                 event_points.to_csv(output_file, index=False)
                 if not unidentified.empty:
+                    print('Listar oidentifierade manuella löpare i ' + unidentified_file)
                     unidentified.to_excel(unidentified_file, index=False)
                 if not missing_age.empty:
+                    print('Listar okänd ålder löpare i ' + missing_age_file)
                     missing_age.to_excel(missing_age_file, index=False)
 
 def evaluate_night(storage_path, event_list, apikey):
@@ -313,5 +315,5 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 if __name__ == "__main__":
     manual = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
-                        event_ids=[20550], night_ids=[21851])
+                        event_ids=[20550, 21406], night_ids=[21851])
 
