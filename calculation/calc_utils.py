@@ -8,6 +8,8 @@ def valid_open_runners(df, manual=pd.DataFrame()):
         manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual.club])
         manual = manual.assign(identified=False)
 
+    missing_age = pd.DataFrame()
+
     df = df.loc[df.started]  # Keep only started
     df = df.reset_index(drop=True, inplace=False)  # Make sure runners (i.e. rows) have unique index
     for (key, runner) in df.iterrows():
@@ -23,7 +25,12 @@ def valid_open_runners(df, manual=pd.DataFrame()):
                         include = True
                         manual.at[runner_match.index, 'identified'] = True
                     else:
+                        print('  ')
                         print('Löpare ' + runner['name'] + ' är listad på flera ställen')
+                        print('  ')
+                        print('  ')
+                else:
+                    missing_age = missing_age.append(runner)
         df.at[key, 'include'] = include
 
     if not manual.empty:
@@ -34,7 +41,11 @@ def valid_open_runners(df, manual=pd.DataFrame()):
 
     df = df.loc[df.include]
     df = df.drop(columns=['include'])
-    return df, un_identified
+
+    if not missing_age.empty:
+        missing_age = missing_age[['name', 'classname', 'club']]
+
+    return df, un_identified, missing_age
 
 
 def add_manual_night_runners(manual_df, night_df):

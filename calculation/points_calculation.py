@@ -14,13 +14,13 @@ def add_night_points_to_event(res, class_selection=None, region_id=16, manual=pd
 
     # Pick out runners from Skåne
     region_competition = region_runners(compres)
-    region_open, unidentified = valid_open_runners(openres)
+    region_open, unidentified, missing_age = valid_open_runners(openres)
 
     results1 = points_to_started_night(region_competition)
     results2 = points_to_started_night(region_open)
 
     results = results1.append(results2, sort=False)
-    return results
+    return results, unidentified, missing_age
 
 
 def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataFrame()):
@@ -35,7 +35,7 @@ def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataF
     
     # Pick out runners from Skåne
     region_competition = region_runners(compres)
-    region_open, unidentified_manual = valid_open_runners(openres, manual)
+    region_open, unidentified_manual, missing_age = valid_open_runners(openres, manual)
 
     # Remove runners in open classes that have already run a competition class
     region_open = remove_double_runners(region_open, region_competition)
@@ -44,7 +44,7 @@ def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataF
     results2 = points_to_started_open(region_open)
 
     results = results1.append(results2, sort=False)
-    return results, unidentified_manual
+    return results, unidentified_manual, missing_age
 
 
 def add_points_to_competion_class(res):
