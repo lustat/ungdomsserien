@@ -68,7 +68,7 @@ def club_results_excel_adjust_width(storage_path, df, club_results):
                 if 'name' in club_result.columns:
                     name_first_list = ['name']
                     name_first_list.extend([col for col in club_result.columns if col != 'name'])
-                    club_result.columns = name_first_list
+                    club_result = club_result[name_first_list]
 
                 worksheet = wb.create_sheet(club_result.iloc[0].club)
                 for r in dataframe_to_rows(club_result, index=False, header=True):
@@ -83,6 +83,10 @@ def club_results_excel_adjust_width(storage_path, df, club_results):
                     else:
                         adjusted_width = 10
                     worksheet.column_dimensions[column].width = adjusted_width
+
+                # Freeze panes
+                c = worksheet['B2']
+                worksheet.freeze_panes = c
         wb.save(excel_file)
         print('Sparar ' + excel_file)
 
