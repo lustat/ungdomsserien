@@ -307,7 +307,6 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
         df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
     df_club_summary, club_results = club_summary(df)
-    club_file = club_results_excel(storage_path, df_club_summary, club_results)
     club_file = club_results_excel_adjust_width(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)

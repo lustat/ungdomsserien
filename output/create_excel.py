@@ -42,7 +42,7 @@ def club_results_excel(storage_path, df, club_results):
 def club_results_excel_adjust_width(storage_path, df, club_results):
     if not df.empty:
         today = datetime.today().strftime('%y%m%d')
-        excel_name = 'ClubResults2_' + today + '.xlsx'
+        excel_name = 'ClubResults_' + today + '.xlsx'
         excel_file = os.path.join(storage_path, excel_name)
 
         wb = openpyxl.Workbook()
