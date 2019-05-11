@@ -8,7 +8,7 @@ from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
-from output.create_excel import individual_results_excel, club_results_excel
+from output.create_excel import individual_results_excel, club_results_excel, club_results_excel_adjust_width
 from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, add_person_id
 from loader.read_manual_excel import read_manual_input
@@ -69,6 +69,7 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
                     print('Listar okänd ålder löpare i ' + missing_age_file)
                     missing_age.to_excel(missing_age_file, index=False)
 
+
 def evaluate_night(storage_path, event_list, apikey):
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
@@ -84,6 +85,7 @@ def evaluate_night(storage_path, event_list, apikey):
                     unidentified.to_excel(unidentified_file, index=False)
                 if not missing_age.empty:
                     missing_age.to_excel(missing_age_file, index=False)
+
 
 def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
@@ -306,6 +308,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
     df_club_summary, club_results = club_summary(df)
     club_file = club_results_excel(storage_path, df_club_summary, club_results)
+    club_file = club_results_excel_adjust_width(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(storage_path, si)
