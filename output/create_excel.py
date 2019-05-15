@@ -89,4 +89,5 @@ def club_results_excel_adjust_width(storage_path, df, club_results):
                 worksheet.freeze_panes = c
         wb.save(excel_file)
         print('Sparar ' + excel_file)
+    return excel_file
 

@@ -104,8 +104,6 @@ class MyWidget(QWidget):
         night_races = [race for race in night_races if not (race == 0)]
 
         club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key, self.manual_info)
-        print('Sparat: ' + club_file)
-        print('Sparat: ' + ind_file)
 
     @Slot()
     def getnames(self):
