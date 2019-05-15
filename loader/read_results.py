@@ -52,22 +52,21 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
         unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
         missing_age_file = os.path.join(storage_path, 'Missing_age_' + str(event) + '.xlsx')
 
-        if not os.path.exists(output_file):  # Race not analysed
-            event_results = get_event(event, storage_path, apikey)
-            if event in event_to_manual.keys():
-                manual_df = event_to_manual[event]
-            else:
-                manual_df = pd.DataFrame()
-            if not event_results.empty:  # Results exist in Eventor
-                event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
-                print('Sparar ' + output_file)
-                event_points.to_csv(output_file, index=False)
-                if not unidentified.empty:
-                    print('Listar oidentifierade manuella löpare i ' + unidentified_file)
-                    unidentified.to_excel(unidentified_file, index=False)
-                if not missing_age.empty:
-                    print('Listar okänd ålder löpare i ' + missing_age_file)
-                    missing_age.to_excel(missing_age_file, index=False)
+        event_results = get_event(event, storage_path, apikey)
+        if event in event_to_manual.keys():
+            manual_df = event_to_manual[event]
+        else:
+            manual_df = pd.DataFrame()
+        if not event_results.empty:  # Results exist in Eventor
+            event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
+            print('Sparar ' + output_file)
+            event_points.to_csv(output_file, index=False)
+            if not unidentified.empty:
+                print('Listar oidentifierade manuella löpare i ' + unidentified_file)
+                unidentified.to_excel(unidentified_file, index=False)
+            if not missing_age.empty:
+                print('Listar okänd ålder löpare i ' + missing_age_file)
+                missing_age.to_excel(missing_age_file, index=False)
 
 
 def evaluate_night(storage_path, event_list, apikey):
@@ -75,16 +74,16 @@ def evaluate_night(storage_path, event_list, apikey):
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
         missing_age_file = os.path.join(storage_path, 'Missing_age_' + str(event) + '.xlsx')
-        if not os.path.exists(output_file):
-            event_results = get_event(event, storage_path,  apikey)
-            if not event_results.empty:
-                event_points, unidentified, missing_age = add_night_points_to_event(event_results)
-                print('Sparar ' + output_file)
-                event_points.to_csv(output_file)
-                if not unidentified.empty:
-                    unidentified.to_excel(unidentified_file, index=False)
-                if not missing_age.empty:
-                    missing_age.to_excel(missing_age_file, index=False)
+
+        event_results = get_event(event, storage_path,  apikey)
+        if not event_results.empty:
+            event_points, unidentified, missing_age = add_night_points_to_event(event_results)
+            print('Sparar ' + output_file)
+            event_points.to_csv(output_file)
+            if not unidentified.empty:
+                unidentified.to_excel(unidentified_file, index=False)
+            if not missing_age.empty:
+                missing_age.to_excel(missing_age_file, index=False)
 
 
 def get_resultlist(root, apikey, debugmode=False):
