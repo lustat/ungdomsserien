@@ -134,13 +134,18 @@ def remove_double_runners(df_open, df_compete):
     df_open = df_open.reset_index(drop=True, inplace=False)  #Make sure runners (i.e. rows) have unique index
     df_open = df_open.assign(keep=True)
 
-    for (key, person) in df_open.iterrows():
-        person_id_open = df_open.loc[key, 'personid']
-        double_run = df_compete.loc[df_compete.personid == person_id_open]
-        if not double_run.empty:
-            df_open.at[key, 'keep'] = False
+    if df_compete.empty:
+        print('Oväntat fel. Tom data-frame i "remove_double_runners"')
+        return None
+    else:
+        for (key, person) in df_open.iterrows():
+            person_id_open = df_open.loc[key, 'personid']
 
-    df_open = df_open.loc[df_open.keep]
-    df_open = df_open.drop(columns='keep')
-    return df_open
+            double_run = df_compete.loc[df_compete.personid == person_id_open]
+            if not double_run.empty:
+                df_open.at[key, 'keep'] = False
+
+        df_open = df_open.loc[df_open.keep]
+        df_open = df_open.drop(columns='keep')
+        return df_open
 

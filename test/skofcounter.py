@@ -103,7 +103,8 @@ class MyWidget(QWidget):
         races = [race for race in races if not (race == 0)]
         night_races = [race for race in night_races if not (race == 0)]
 
-        club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key, self.manual_info)
+        if os.path.exists(storage_path):
+            club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key, self.manual_info)
 
     @Slot()
     def getnames(self):
@@ -159,8 +160,12 @@ class MyWidget(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     version = get_version()
-    key = input('Ange API nyckel: ')
-    #key = os.environ["apikey"]
+
+    debug = True
+    if debug:
+        key = os.environ["apikey"]
+    else:
+        key = input('Ange API nyckel: ')
 
     icon_file_name = 'run1.ico'
     widget = MyWidget(key, icon_file_name)

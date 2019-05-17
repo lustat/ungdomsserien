@@ -49,7 +49,10 @@ def check_columns_in_sheets(excel_file, sheets):
 def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx'):
     race_to_manual_input = {}
     if not os.path.exists(manual_input_file):
-        print('Input file is not found: ' + manual_input_file)
+        if manual_input_file:
+            print('Ingen Excel-fil identifierad: ' + manual_input_file)
+        else:
+            print('Ingen Excel-fil vald')
     else:
         all_sheets = get_excel_sheets(manual_input_file)
         accepted_sheets = check_sheet_names(all_sheets)

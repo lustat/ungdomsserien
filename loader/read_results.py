@@ -36,10 +36,10 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
-            print('Sparar resultat: ' + output_file)
-            df.to_csv(output_file, index=False)
+            if sum(df.finished) > 0:
+                print('Sparar resultat: ' + output_file)
+                df.to_csv(output_file, index=False)
     else:  # Load already stored event
-        print('Läser in resultat från tävling: ' + output_file)
         df = pd.read_csv(output_file)
 
     return df
@@ -58,15 +58,16 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
         else:
             manual_df = pd.DataFrame()
         if not event_results.empty:  # Results exist in Eventor
-            event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
-            print('Sparar ' + output_file)
-            event_points.to_csv(output_file, index=False)
-            if not unidentified.empty:
-                print('Listar oidentifierade manuella löpare i ' + unidentified_file)
-                unidentified.to_excel(unidentified_file, index=False)
-            if not missing_age.empty:
-                print('Listar okänd ålder löpare i ' + missing_age_file)
-                missing_age.to_excel(missing_age_file, index=False)
+            if sum(event_results.finished)>0: # Minst en har gått i mål
+                event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
+                print('Sparar ' + output_file)
+                event_points.to_csv(output_file, index=False)
+                if not unidentified.empty:
+                    print('Listar oidentifierade manuella löpare i ' + unidentified_file)
+                    unidentified.to_excel(unidentified_file, index=False)
+                if not missing_age.empty:
+                    print('Listar okänd ålder löpare i ' + missing_age_file)
+                    missing_age.to_excel(missing_age_file, index=False)
 
 
 def evaluate_night(storage_path, event_list, apikey):
