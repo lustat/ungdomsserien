@@ -140,10 +140,10 @@ def remove_double_runners(df_open, df_compete):
     else:
         for (key, person) in df_open.iterrows():
             person_id_open = df_open.loc[key, 'personid']
-
-            double_run = df_compete.loc[df_compete.personid == person_id_open]
-            if not double_run.empty:
-                df_open.at[key, 'keep'] = False
+            if person_id_open>0:
+                double_run = df_compete.loc[df_compete.personid == person_id_open]
+                if not double_run.empty:
+                    df_open.at[key, 'keep'] = False
 
         df_open = df_open.loc[df_open.keep]
         df_open = df_open.drop(columns='keep')
