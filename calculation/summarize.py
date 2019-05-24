@@ -69,7 +69,7 @@ def add_best4_score(df, events):
     return df
 
 
-def club_summary(df):
+def club_summary(df, division_df):
     if df.empty:
         return pd.DataFrame(), pd.DataFrame()
 

@@ -1,5 +1,6 @@
 import sys
 import PySide2
+import pandas as pd
 from PySide2.QtWidgets import (QApplication, QLabel, QPushButton, QFileDialog,
                                QVBoxLayout, QWidget, QLineEdit, QHBoxLayout)
 from PySide2.QtCore import Slot, Qt
@@ -25,6 +26,7 @@ class MyWidget(QWidget):
         night_ids = [21851, 21961]
 
         self.manual_info = {}
+        self.division_df = pd.DataFrame()
         self.layout = QVBoxLayout()
 
         menubar = PySide2.QtWidgets.QMenuBar()
@@ -85,7 +87,7 @@ class MyWidget(QWidget):
 
     def choose_excel_file(self):
         file_path = QFileDialog.getOpenFileName(self, "Välj Excel-fil med manuell input", '*.xlsx')
-        self.manual_info = read_manual_input(file_path[0])
+        self.manual_info, self.division_df = read_manual_input(file_path[0])
 
     def info_window(self):
         version_number = get_version()
@@ -104,7 +106,8 @@ class MyWidget(QWidget):
         night_races = [race for race in night_races if not (race == 0)]
 
         if os.path.exists(storage_path):
-            club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key, self.manual_info)
+            club_file, ind_file = extract_and_analyse(storage_path, races, night_races, self.key, self.manual_info,
+                                                      self.division_df)
 
     @Slot()
     def getnames(self):

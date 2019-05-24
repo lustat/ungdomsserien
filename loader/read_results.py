@@ -281,7 +281,8 @@ def concatenate(storage_path, event_list):
     return df
 
 
-def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={}):
+def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={},
+                        club_division_df = pd.DataFrame()):
     if event_ids is None:
         # 2018
         # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
@@ -306,7 +307,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     if 'night' in race_to_manual_info.keys():
         df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
-    df_club_summary, club_results = club_summary(df)
+    df_club_summary, club_results = club_summary(df, club_division_df)
     club_file = club_results_excel_adjust_width(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
@@ -315,7 +316,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx')
+    manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
                         event_ids=[20550, 21406], night_ids=[21851])
 
