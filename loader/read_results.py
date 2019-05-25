@@ -282,7 +282,7 @@ def concatenate(storage_path, event_list):
 
 
 def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={},
-                        club_division_df = pd.DataFrame()):
+                        club_division_df=pd.DataFrame()):
     if event_ids is None:
         # 2018
         # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
@@ -316,7 +316,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx')
+    manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
-                        event_ids=[20550, 21406], night_ids=[21851])
+                        event_ids=[20550, 21406], night_ids=[21851], club_division_df=club_division)
 

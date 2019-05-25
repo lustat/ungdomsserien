@@ -76,6 +76,7 @@ def club_summary(df, division_df):
     df = df.loc[~df.orgid.isna()]
     df = df.assign(orgid=df.orgid.astype(int))
 
+    # TODO join division data to club summary
     events = list(df.eventid.unique())
     organisations = list(df.orgid.unique())
 

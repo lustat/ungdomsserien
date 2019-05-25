@@ -59,6 +59,7 @@ def check_columns_in_sheets(excel_file, sheets):
 
 def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx'):
     race_to_manual_input = {}
+    division_table = pd.DataFrame()
     if not os.path.exists(manual_input_file):
         if manual_input_file:
             print('Ingen Excel-fil identifierad: ' + manual_input_file)
@@ -71,7 +72,7 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual result
 
         for sheet in accepted_sheets:
             df = pd.read_excel(manual_input_file, sheet)
-            sheet = sheet.replace(' ', '')
+            sheet = sheet.replace(' ', '').lower()
             df.columns = [col.lower().replace(' ', '').replace('-', '') for col in df.columns]
             if sheet.isdigit():
                 race_to_manual_input[int(sheet)] = df
