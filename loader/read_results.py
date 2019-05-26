@@ -8,9 +8,9 @@ from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary
 from datetime import datetime
-from output.create_excel import individual_results_excel, club_results_excel, club_results_excel_adjust_width
+from output.create_excel import individual_results_excel, club_results_excel_adjust_width
 from loader.club_to_region import get_parent_org_quick
-from calculation.calc_utils import add_manual_night_runners, add_person_id
+from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 
 
@@ -307,7 +307,9 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     if 'night' in race_to_manual_info.keys():
         df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
-    df_club_summary, club_results = club_summary(df, club_division_df)
+    cleaned_division_df = clean_division_input(club_division_df)
+
+    df_club_summary, club_results = club_summary(df, cleaned_division_df)
     club_file = club_results_excel_adjust_width(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)

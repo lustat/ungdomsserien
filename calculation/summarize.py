@@ -76,7 +76,6 @@ def club_summary(df, division_df):
     df = df.loc[~df.orgid.isna()]
     df = df.assign(orgid=df.orgid.astype(int))
 
-    # TODO join division data to club summary
     events = list(df.eventid.unique())
     organisations = list(df.orgid.unique())
 
@@ -101,6 +100,9 @@ def club_summary(df, division_df):
     summary = summary.sort_values(by='score', ascending=False, inplace=False)
 
     clublist = club_points_per_event(df, summary.index)
+
+    # TODO add orgid in summary data frame, to be able to merge with division_df
+    summary = summary.merge(division_df, how='left', on=['orgid'])
 
     return summary, clublist
 

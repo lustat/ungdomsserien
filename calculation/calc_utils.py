@@ -93,3 +93,11 @@ def add_person_id(manual_df, daily_df):
         if not identified.empty:
             manual_df.at[key, 'personid'] = identified['personid'].iloc[0]
     return manual_df
+
+
+def clean_division_input(div_df):
+    division_df = div_df.loc[~div_df.clubid.isna()]
+    division_df = division_df.assign(orgid=division_df.clubid.astype(int))
+    division_df = division_df.drop(columns=['clubid'])
+
+    return division_df
