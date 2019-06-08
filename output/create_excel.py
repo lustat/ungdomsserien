@@ -28,32 +28,45 @@ def individual_results_excel(storage_path, dct):
         excel_name = 'IndividualResults_' + today + '.xlsx'
         excel_file = os.path.join(storage_path, excel_name)
 
-        writer = pd.ExcelWriter(excel_file)
+        wb = openpyxl.Workbook()
+        standard_sheets = wb.get_sheet_names()
         for class_name in dct.keys():
+            worksheet = wb.create_sheet(class_name)
+
             df = dct[class_name]
-            df = df.set_index(keys='position', drop=True, inplace=False)
-            df.to_excel(writer, class_name, index=True)
+            if not df.empty:
+                if sum(df.night) == 0:
+                    df = df.drop(columns=['night'])
 
+                if all(df.score == df.total):
+                    df = df.drop(columns=['score'])
+
+                for r in dataframe_to_rows(df, index=False, header=True):
+                    worksheet.append(r)
+
+                for (df_col, col) in zip(df.columns, worksheet.columns):
+                    column = col[0].column
+                    header_cell = col[0]
+                    header_cell.font = Font(bold=True)
+                    if isinstance(df[df_col].iloc[0], str):
+                        adjusted_width = 1.4 * df[df_col].str.len().max()
+                    elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
+                        adjusted_width = 30
+                    else:
+                        adjusted_width = 10
+                    worksheet.column_dimensions[column].width = adjusted_width
+
+                # Freeze panes
+                c = worksheet['B2']
+                worksheet.freeze_panes = c
+
+        # Remove standard sheets
+        for standard_sheet in standard_sheets:
+            std = wb.get_sheet_by_name(standard_sheet)
+            wb.remove(std)
+
+        wb.save(excel_file)
         print('Sparar ' + excel_file)
-        writer.save()
-        return excel_file
-
-
-def individual_results_excel_2(storage_path, dct):
-    if dct:  # if dictionary is non-empty
-        # One Excel sheet per class
-        today = datetime.today().strftime('%y%m%d')
-        excel_name = 'IndividualResults_' + today + '.xlsx'
-        excel_file = os.path.join(storage_path, excel_name)
-
-        writer = pd.ExcelWriter(excel_file)
-        for class_name in dct.keys():
-            df = dct[class_name]
-            df = df.set_index(keys='position', drop=True, inplace=False)
-            df.to_excel(writer, class_name, index=True)
-
-        print('Sparar ' + excel_file)
-        writer.save()
         return excel_file
 
 
@@ -75,6 +88,8 @@ def club_results_excel_adjust_width(storage_path, df, club_results):
             header_cell.font = Font(bold=True)
             if isinstance(df[df_col].iloc[0], str):
                 adjusted_width = 1.4 * df[df_col].str.len().max()
+                if adjusted_width < 10:
+                    adjusted_width = 10
             elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
                 adjusted_width = 30
             else:
