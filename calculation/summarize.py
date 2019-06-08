@@ -130,7 +130,7 @@ def club_points_per_event(df, club_ids=None):
 
     lst = []
     for clubid in club_ids:
-        df_club = df.loc[df.orgid==clubid]
+        df_club = df.loc[df.orgid == clubid]
         lst.append(df_club)
 
     return lst
@@ -152,10 +152,22 @@ def sort_based_on_division(summary):
     if all(summary.division.isna()):
         return summary
 
-    ok_division_names = ['Elit', 'Division 1']
-
+    ok_division_names = ['Elit', 'Okänd division']
     for (key, row) in summary.iterrows():
-        print(key)
+        if not isinstance(row.division, str):
+            summary.at[key, 'division'] = 'Okänd division'
+        else:
+            # Make sure division value starts with capital letter
+            summary.at[key, 'division'] = row.division.capitalize()
+
+            if summary.at[key, 'division'].startswith('Division') or (
+                    summary.at[key, 'division'] in ok_division_names):
+                print(summary.at[key, 'division'])
+            else:
+                summary.at[key, 'division'] = 'Okänd division'
     print(summary)
 
+    division_order = ['Elit', 'Division 1', 'Division 2', 'Division 3']
+
+    # TODO create ordered categorical column
     return summary
