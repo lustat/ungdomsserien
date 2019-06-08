@@ -79,8 +79,21 @@ def club_results_excel_adjust_width(storage_path, df, club_results):
         wb = openpyxl.Workbook()
         worksheet = wb.active
         worksheet.title = "Summary"
+        df = df.reset_index(drop=True, inplace=False)
+        previous_division = ''
         for r in dataframe_to_rows(df, index=False, header=True):
-            worksheet.append(r)
+            current_division = r[-1]
+            if previous_division:
+                if (current_division == previous_division) or (previous_division == 'division'):
+                    worksheet.append(r)
+                else:
+                    empty_row = [' ' for str in r]
+                    worksheet.append(empty_row)
+                    worksheet.append(r)
+            else:
+                worksheet.append(r)
+
+            previous_division = current_division
 
         for (df_col, col) in zip(df.columns, worksheet.columns):
             column = col[0].column

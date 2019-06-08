@@ -152,7 +152,6 @@ def sort_based_on_division(summary):
     if all(summary.division.isna()):
         return summary
 
-    ok_division_names = ['Elit', 'Okänd division']
     for (key, row) in summary.iterrows():
         if not isinstance(row.division, str):
             summary.at[key, 'division'] = 'Okänd division'
@@ -160,14 +159,26 @@ def sort_based_on_division(summary):
             # Make sure division value starts with capital letter
             summary.at[key, 'division'] = row.division.capitalize()
 
-            if summary.at[key, 'division'].startswith('Division') or (
-                    summary.at[key, 'division'] in ok_division_names):
-                print(summary.at[key, 'division'])
-            else:
-                summary.at[key, 'division'] = 'Okänd division'
-    print(summary)
+    dct = {'Elit': 0}
+    summary = summary.assign(division_number=-1)
+    for (key, row) in summary.iterrows():
+        if row.division in dct.keys():
+            summary.at[key, 'division_number'] = dct[row.division]
+        else:
+            if row.division.startswith('Division '):
+                number = row.division.replace('Division ', '')
+                if number.isdigit():
+                    summary.at[key, 'division_number'] = int(number)
 
-    division_order = ['Elit', 'Division 1', 'Division 2', 'Division 3']
+    # Set unknown divisions to "max+1" division
+    number_for_unknown = summary.division_number.max() + 1
+    summary.loc[summary.division_number == -1, 'division_number'] = number_for_unknown
 
-    # TODO create ordered categorical column
-    return summary
+    sorted_summary = pd.DataFrame()
+    for number in summary.division_number.unique():
+        df_temp = summary.loc[summary.division_number==number]
+        df_temp = df_temp.sort_values(by='score', ascending=False)
+        sorted_summary = sorted_summary.append(df_temp)
+
+    sorted_summary = sorted_summary.drop(columns=['division_number'])
+    return sorted_summary
