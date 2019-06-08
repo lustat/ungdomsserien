@@ -107,12 +107,15 @@ def club_summary(df, division_df):
 
     clublist = club_points_per_event(df, summary.index)
 
-    # TODO add orgid in summary data frame, to be able to merge with division_df
     if division_df.empty:
-        print('Add empty division?')
-        #TODO handle case when no division data frame is present
+        summary = summary.assign(division=np.nan)
     else:
-        summary = summary.merge(division_df, how='left', on=['orgid'])
+        if 'orgid' in division_df.columns:
+            division_df = division_df.set_index('orgid', drop=True)
+            summary = summary.merge(division_df, how='left')
+            summary.loc[summary.division.isna(), 'division'] = 'Okänd division'
+        else:
+            raise ValueError('orgid missing in data frame')
 
     return summary, clublist
 
@@ -139,3 +142,20 @@ def add_final_position(df):
         df.at[key, 'position']= sum(df.total>row.total) + 1
 
     return df
+
+
+def sort_based_on_division(summary):
+    if summary.empty:
+        return summary
+    if 'division' not in summary.columns:
+        return summary
+    if all(summary.division.isna()):
+        return summary
+
+    ok_division_names = ['Elit', 'Division 1']
+
+    for (key, row) in summary.iterrows():
+        print(key)
+    print(summary)
+
+    return summary

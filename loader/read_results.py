@@ -6,7 +6,7 @@ from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
-from calculation.summarize import individual_summary, club_summary
+from calculation.summarize import individual_summary, club_summary, sort_based_on_division
 from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_excel_adjust_width
 from loader.club_to_region import get_parent_org_quick
@@ -311,6 +311,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     cleaned_division_df = clean_division_input(club_division_df)
 
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
+    df_club_summary = sort_based_on_division(df_club_summary)
     club_file = club_results_excel_adjust_width(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
@@ -319,7 +320,8 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    # manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
-    # extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
-    #                     event_ids=[25944, 25993], night_ids=[], club_division_df=club_division)
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])
+    manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
+                        event_ids=[20550, 21406, 21376, 21988, 21732, 21644], night_ids=[21851, 21961],
+                        club_division_df=club_division)
+    #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])
