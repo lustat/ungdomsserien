@@ -96,8 +96,10 @@ def add_person_id(manual_df, daily_df):
 
 
 def clean_division_input(div_df):
-    division_df = div_df.loc[~div_df.clubid.isna()]
-    division_df = division_df.assign(orgid=division_df.clubid.astype(int))
-    division_df = division_df.drop(columns=['clubid'])
-
+    if div_df.empty:
+        division_df = pd.DataFrame()
+    else:
+        division_df = div_df.loc[~div_df.clubid.isna()]
+        division_df = division_df.assign(orgid=division_df.clubid.astype(int))
+        division_df = division_df.drop(columns=['clubid'])
     return division_df

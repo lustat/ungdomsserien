@@ -293,7 +293,8 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
         # 2018
         # night_ids = [18459, 18485]
         # 2019
-        night_ids = [21851, 21961]
+        # night_ids = [21851, 21961]
+        night_ids = []
 
     get_events(storage_path, event_ids, apikey)
     evaluate(storage_path, event_ids, apikey, race_to_manual_info)
@@ -318,7 +319,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
-                        event_ids=[20550, 21406], night_ids=[21851], club_division_df=club_division)
-
+    # manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
+    # extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
+    #                     event_ids=[25944, 25993], night_ids=[], club_division_df=club_division)
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])
