@@ -112,8 +112,18 @@ def club_summary(df, division_df):
     else:
         if 'orgid' in division_df.columns:
             division_df = division_df.set_index('orgid', drop=True)
-            summary = summary.merge(division_df, how='left')
+            summary = summary.join(division_df, how='left', lsuffix='', rsuffix='_division')
             summary.loc[summary.division.isna(), 'division'] = 'Okänd division'
+            if 'club_division' in summary.columns:
+                mismatch = summary.loc[summary.club != summary.club_division]
+                if not mismatch.empty:
+                    print(' ')
+                    print('Klubbnamn i divisionstabell matchar ej')
+                    print('Dubbelkolla Excel-fil')
+                    for (key, row) in mismatch.iterrows():
+                        print(row.club + '  =?   ' + row.club_division)
+                    print(' ')
+                summary = summary.drop(columns=['club_division'])
         else:
             raise ValueError('orgid missing in data frame')
 
