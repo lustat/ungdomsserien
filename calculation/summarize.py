@@ -139,7 +139,7 @@ def club_points_per_event(df, club_ids=None):
 def add_final_position(df):
     df = df.assign(position=0)
     for (key, row) in df.iterrows():
-        df.at[key, 'position']= sum(df.total>row.total) + 1
+        df.at[key, 'position'] = sum(df.total > row.total) + 1
 
     return df
 

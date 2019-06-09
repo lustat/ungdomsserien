@@ -8,7 +8,7 @@ from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary, sort_based_on_division
 from datetime import datetime
-from output.create_excel import individual_results_excel, club_results_excel_adjust_width
+from output.create_excel import individual_results_excel, club_results_to_excel
 from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
@@ -312,7 +312,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
     df_club_summary = sort_based_on_division(df_club_summary)
-    club_file = club_results_excel_adjust_width(storage_path, df_club_summary, club_results)
+    club_file = club_results_to_excel(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(storage_path, si)
@@ -321,6 +321,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 if __name__ == "__main__":
     manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
+    # manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual_input_without_division.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
                         event_ids=[20550, 21406, 21376, 21988, 21732, 21644], night_ids=[21851, 21961],
                         club_division_df=club_division)
