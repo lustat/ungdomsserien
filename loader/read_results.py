@@ -12,6 +12,7 @@ from output.create_excel import individual_results_excel, club_results_to_excel
 from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
+from loader.loader_utils import get_event_name
 
 
 def get_events(storage_path, event_list, apikey):
@@ -281,10 +282,8 @@ def concatenate(storage_path, event_list):
     return df
 
 
-def get_user_events(user_input, value='event_ids'):
-    # Get event ID:S
+def get_user_events(user_input, value='event_ids', apikey=''):
     event_ids = []
-
     if value in user_input.keys():
         event_strings = user_input[value].split(',')
         for id in event_strings:
@@ -292,14 +291,33 @@ def get_user_events(user_input, value='event_ids'):
             if id.isdigit():
                 event_ids.append(int(id))
 
-    return event_ids
+        event_names = []
+        for race in event_ids:
+            name, year = get_event_name(race, apikey)
+            event_names.append(name + ' (' + str(year) + ')')
+
+    return event_ids, event_names
+
+
+def print_event_names(day_events, night_events):
+    print('Listade ordinarie tävlingar (dag)')
+    for event in day_events:
+        print(event)
+    print(' ')
+    if night_events:
+        print('Listade natt-tävlingar')
+        for event in night_events:
+            print(event)
+    print(' ')
+
 
 def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, user_input, apikey=None):
     if 'event_ids' not in user_input.keys():
         raise ValueError('event_ids is missing in user_input dataframe')
 
-    event_ids = get_user_events(user_input, 'event_ids')
-    night_ids = get_user_events(user_input, 'night_ids')
+    event_ids, day_names = get_user_events(user_input, 'event_ids', apikey)
+    night_ids, night_names = get_user_events(user_input, 'night_ids', apikey)
+    print_event_names(day_names, night_names)
 
     get_events(storage_path, event_ids, apikey)
     evaluate(storage_path, event_ids, apikey, race_to_manual_info)

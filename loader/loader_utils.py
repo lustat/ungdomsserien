@@ -3,9 +3,10 @@ import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
 
-def get_event_name(id, apikey):
-    if apikey==0:
-        return 'debug_mode', 2018
+
+def get_event_name(id, apikey=None):
+    if apikey is None:
+        apikey = os.environ["apikey"]
 
     headers = {'ApiKey': apikey}
 

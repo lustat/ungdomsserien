@@ -6,7 +6,6 @@ from PySide2.QtWidgets import (QApplication, QLabel, QPushButton, QFileDialog,
 from PySide2.QtCore import Slot, Qt
 from loader.read_results import extract_and_analyse
 from PySide2.QtGui import QIcon
-from loader.loader_utils import get_event_name
 from loader.read_manual_excel import read_manual_input
 from base_utils import get_version
 import os
@@ -37,18 +36,16 @@ class SimpleWidget(QWidget):
 
         self.setWindowIconText('Test')
         if icon_file:
-            #print('Trying to set icon: ' + icon_file)
             self.setWindowIcon(QIcon(icon_file))
 
         self.button_get_manual = QPushButton("Välj fil med manuell input")
-
         self.button_analyse = QPushButton("Extrahera och analysera tävlingsresultat")
-        self.button_analyse.clicked.connect(self.magic)
 
         self.layout.addWidget(self.button_get_manual)
         self.setLayout(self.layout)
 
         # Connecting the signal
+        self.button_analyse.clicked.connect(self.magic)
         self.button_get_manual.clicked.connect(self.choose_excel_file)
         self.show()
 
@@ -79,8 +76,6 @@ class SimpleWidget(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     version = get_version()
-
-    # TODO Add event_get_names somewhere
 
     debug = True
     if debug:
