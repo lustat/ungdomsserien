@@ -7,3 +7,5 @@ PATH\ungdomsserien>venv\Script\activate
 PATH\ungdomsserien\test
 #### 4. Run pyinstaller
 pyinstaller --onefile --icon=run1.ico --clean skofcounter.py
+
+pyinstaller --onefile --icon=run1.ico --clean simple_gui.py
