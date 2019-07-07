@@ -77,7 +77,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     version = get_version()
 
-    debug = True
+    debug = False
     if debug:
         print('Debug mode')
         key = os.environ["apikey"]

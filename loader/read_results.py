@@ -284,14 +284,21 @@ def concatenate(storage_path, event_list):
 
 def get_user_events(user_input, value='event_ids', apikey=''):
     event_ids = []
+    event_names = []
     if value in user_input.keys():
-        event_strings = user_input[value].split(',')
-        for id in event_strings:
-            id = id.replace(' ', '')
-            if id.isdigit():
-                event_ids.append(int(id))
+        if isinstance(user_input[value], float) | isinstance(user_input[value], int):
+            event_ids = [int(user_input[value])]
+        else:
+            if ',' in user_input[value]:
+                event_strings = user_input[value].split(',')
+                for id in event_strings:
+                    id = id.replace(' ', '')
+                    if id.isdigit():
+                        event_ids.append(int(id))
+            else:
+                if user_input[value].isdigit():
+                    event_ids = [int(user_input[value])]
 
-        event_names = []
         for race in event_ids:
             name, year = get_event_name(race, apikey)
             event_names.append(name + ' (' + str(year) + ')')
@@ -343,7 +350,7 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 
 if __name__ == "__main__":
-    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual_input_with_par.xlsx')
+    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
     #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])

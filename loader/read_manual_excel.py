@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import sys
 import xlrd
+import numpy as np
 
 
 def get_excel_sheets(excel_file):
@@ -33,7 +34,6 @@ def check_columns_in_sheets(excel_file, sheets):
     parameter_columns = ['parameter', 'value']
 
     filename = os.path.split(excel_file)[1]
-    print('Kollar kolumner i ' + filename)
     column_missing = False
     for sheet in sheets:
         df = pd.read_excel(excel_file, sheet)
@@ -60,9 +60,8 @@ def check_columns_in_sheets(excel_file, sheets):
                         print('Varning: ' + column + ' saknas i ' + sheet)
                         column_missing = True
 
-    if not column_missing:
-        print('Ingen kolumn saknas i Excel-fil')
-        print(' ')
+    if column_missing:
+        print('Excel-fil:' + filename + ' saknar data')
 
 
 def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx'):
@@ -93,6 +92,17 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual result
                     user_input = df
                     user_input = user_input.set_index('parameter')
                     user_input = user_input.to_dict()['value']
+                    if 'night_ids' in user_input.keys():
+                        if isinstance(user_input['night_ids'], float):
+                            if np.isnan(user_input['night_ids']):
+                                user_input.pop('night_ids', None)
+                    if 'event_ids' not in user_input.keys():
+                        raise ImportError('Parameter "event_ids" saknas i Excel-fil. Lägg till i fliken "Parameters"')
+                    else:
+                        if isinstance(user_input['event_ids'], float):
+                            if np.isnan(user_input['event_ids']):
+                                raise ImportError(
+                                    'Parameter "event_ids" måste fyllas i ' + manual_input_file)
 
     return race_to_manual_input, division_table, user_input
 
