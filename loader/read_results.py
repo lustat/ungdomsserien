@@ -281,20 +281,25 @@ def concatenate(storage_path, event_list):
     return df
 
 
-def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={},
-                        club_division_df=pd.DataFrame()):
-    if event_ids is None:
-        # 2018
-        # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
-        # 2019
-        event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+def get_user_events(user_input, value='event_ids'):
+    # Get event ID:S
+    event_ids = []
 
-    if night_ids is None:
-        # 2018
-        # night_ids = [18459, 18485]
-        # 2019
-        # night_ids = [21851, 21961]
-        night_ids = []
+    if value in user_input.keys():
+        event_strings = user_input[value].split(',')
+        for id in event_strings:
+            id = id.replace(' ', '')
+            if id.isdigit():
+                event_ids.append(int(id))
+
+    return event_ids
+
+def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, user_input, apikey=None):
+    if 'event_ids' not in user_input.keys():
+        raise ValueError('event_ids is missing in user_input dataframe')
+
+    event_ids = get_user_events(user_input, 'event_ids')
+    night_ids = get_user_events(user_input, 'night_ids')
 
     get_events(storage_path, event_ids, apikey)
     evaluate(storage_path, event_ids, apikey, race_to_manual_info)
@@ -320,9 +325,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual input.xlsx')
-    # manual, club_division = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual_input_without_division.xlsx')
+    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual_input_with_par.xlsx')
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
-                        event_ids=[20550, 21406, 21376, 21988, 21732, 21644], night_ids=[21851, 21961],
-                        club_division_df=club_division)
+                        club_division_df=club_division, user_input=user_dct)
     #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])

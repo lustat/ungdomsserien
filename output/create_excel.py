@@ -35,10 +35,12 @@ def individual_results_excel(storage_path, dct):
                     header_cell.font = Font(bold=True)
                     if isinstance(df[df_col].iloc[0], str):
                         adjusted_width = 1.4 * df[df_col].str.len().max()
+                        adjusted_width = min(adjusted_width, 40)
                     elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
-                        adjusted_width = 30
+                        adjusted_width = 10
                     else:
                         adjusted_width = 10
+                    # print(str(df_col) + ': ' + str(adjusted_width))
                     worksheet.column_dimensions[column].width = adjusted_width
 
                 # Freeze panes

@@ -21,6 +21,8 @@ def check_sheet_names(sheet_names):
                 ok_sheets.append(original_sheet)
             elif sheet.lower().startswith('division'):
                 ok_sheets.append(original_sheet)
+            elif sheet.lower().startswith('parameters'):
+                ok_sheets.append(original_sheet)
     return ok_sheets
 
 
@@ -28,6 +30,7 @@ def check_columns_in_sheets(excel_file, sheets):
     day_columns = ['name', 'class', 'club']
     night_columns = ['personid', 'name', 'club', 'useries', 'nightclass', 'eventid', 'finished']
     division_columns = ['division', 'clubid', 'club']
+    parameter_columns = ['parameter', 'value']
 
     filename = os.path.split(excel_file)[1]
     print('Kollar kolumner i ' + filename)
@@ -48,6 +51,11 @@ def check_columns_in_sheets(excel_file, sheets):
                         column_missing = True
             if sheet.lower().startswith('division'):
                 for column in division_columns:
+                    if column not in current_columns:
+                        print('Varning: ' + column + ' saknas i ' + sheet)
+                        column_missing = True
+            if sheet.lower().startswith('parameters'):
+                for column in parameter_columns:
                     if column not in current_columns:
                         print('Varning: ' + column + ' saknas i ' + sheet)
                         column_missing = True
@@ -81,11 +89,15 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual result
                     division_table = df
                 elif sheet.startswith('night'):
                     race_to_manual_input['night'] = df
+                elif sheet.startswith('parameters'):
+                    user_input = df
+                    user_input = user_input.set_index('parameter')
+                    user_input = user_input.to_dict()['value']
 
-    return race_to_manual_input, division_table
+    return race_to_manual_input, division_table, user_input
 
 
 if __name__ == '__main__':
-    dct, div_df = read_manual_input()
+    dct, div_df, user_dct = read_manual_input()
     print(dct)
     print(div_df)
