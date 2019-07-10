@@ -1,8 +1,8 @@
 import sys
 import PySide2
 import pandas as pd
-from PySide2.QtWidgets import (QApplication, QLabel, QPushButton, QFileDialog,
-                               QVBoxLayout, QWidget, QLineEdit, QHBoxLayout)
+from PySide2.QtWidgets import (QApplication, QPushButton, QFileDialog,
+                               QVBoxLayout, QWidget)
 from PySide2.QtCore import Slot, Qt
 from loader.read_results import extract_and_analyse
 from PySide2.QtGui import QIcon
@@ -24,13 +24,17 @@ class SimpleWidget(QWidget):
         menubar = PySide2.QtWidgets.QMenuBar()
         filemenu = menubar.addMenu('Meny')
 
-        exit_action = PySide2.QtWidgets.QAction('Avsluta', self)
-        exit_action.triggered.connect(sys.exit)
-        filemenu.addAction(exit_action)
+        help_action = PySide2.QtWidgets.QAction('Hjälp', self)
+        help_action.triggered.connect(self.help_window)
+        filemenu.addAction(help_action)
 
         about_action = PySide2.QtWidgets.QAction('Om', self)
         about_action.triggered.connect(self.info_window)
         filemenu.addAction(about_action)
+
+        exit_action = PySide2.QtWidgets.QAction('Avsluta', self)
+        exit_action.triggered.connect(sys.exit)
+        filemenu.addAction(exit_action)
 
         self.layout.addWidget(menubar)
 
@@ -59,9 +63,20 @@ class SimpleWidget(QWidget):
     def info_window(self):
         version_number = get_version()
         msg_box = PySide2.QtWidgets.QMessageBox()
-        msg_str = """SkofCounter Version {0} \n
-                        Poängberäknare för SKOF:s Ungdomsserie""".format(version_number)
+        msg_str = """SkofCounter Version {0} \n\nPoängberäknare för SKOF:s Ungdomsserie \nKällkod: https://github.com/lustat/ungdomsserien""".format(version_number)
         msg_box.about(self, 'Information', msg_str)
+
+    def help_window(self):
+        msgBox = PySide2.QtWidgets.QMessageBox()
+        msgBox.setIcon(PySide2.QtWidgets.QMessageBox.Question)
+        msgBox.setText("Vill du skapa en Excel-mall?")
+        msgBox.setInformativeText('Input till beräkningen sker via en Excel-fil. Denna Excel-fil måste följa ett givet format.')
+        msgBox.setStandardButtons(PySide2.QtWidgets.QMessageBox.Yes | PySide2.QtWidgets.QMessageBox.No)
+        msgBox.setDefaultButton(PySide2.QtWidgets.QMessageBox.No)
+        reply = msgBox.exec_()
+        if reply == PySide2.QtWidgets.QMessageBox.Yes:
+            print("yes")
+
 
     @Slot()
     def magic(self):
