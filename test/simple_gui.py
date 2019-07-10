@@ -70,7 +70,7 @@ class SimpleWidget(QWidget):
         msgBox = PySide2.QtWidgets.QMessageBox()
         msgBox.setIcon(PySide2.QtWidgets.QMessageBox.Question)
         msgBox.setText("Vill du skapa en Excel-mall?")
-        msgBox.setInformativeText('Input till beräkningen sker via en Excel-fil. Denna Excel-fil måste följa ett givet format.')
+        msgBox.setInformativeText('Input till beräkningen sker via Excel-fil. Excel-filen måste följa en given mall.')
         msgBox.setStandardButtons(PySide2.QtWidgets.QMessageBox.Yes | PySide2.QtWidgets.QMessageBox.No)
         msgBox.setDefaultButton(PySide2.QtWidgets.QMessageBox.No)
         reply = msgBox.exec_()
