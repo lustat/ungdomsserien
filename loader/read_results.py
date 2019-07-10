@@ -307,12 +307,19 @@ def get_user_events(user_input, value='event_ids', apikey=''):
 
 
 def print_event_names(day_events, night_events):
-    print('Listade ordinarie tävlingar (dag)')
+    print(' ')
+    if len(day_events)>1:
+        print('Listade ordinarie tävlingar (dag):')
+    else:
+        print('Listad tävling (dag):')
     for event in day_events:
         print(event)
     print(' ')
     if night_events:
-        print('Listade natt-tävlingar')
+        if len(day_events) > 1:
+            print('Listade natt-tävlingar:')
+        else:
+            print('Listad natt-tävling:')
         for event in night_events:
             print(event)
     print(' ')

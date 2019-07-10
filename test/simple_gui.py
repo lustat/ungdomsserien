@@ -67,6 +67,7 @@ class SimpleWidget(QWidget):
     def magic(self):
         storage_path = str(QFileDialog.getExistingDirectory(self, "Välj mapp att lagra resultatfiler"))
         if os.path.exists(storage_path):
+            self.quit_function()
             extract_and_analyse(storage_path, self.manual_info, self.division_df, self.user_input, self.key)
 
     def quit_function(self):
@@ -77,17 +78,17 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     version = get_version()
 
-    debug = False
+    debug = True
     if debug:
         print('Debug mode')
-        key = os.environ["apikey"]
+        api_key = os.environ["apikey"]
     else:
-        key = input('Ange API nyckel: ')
+        api_key = input('Ange API nyckel: ')
 
     icon_file_name = 'run1.ico'
-    widget = SimpleWidget(key, icon_file_name)
+    widget = SimpleWidget(api_key, icon_file_name)
     widget.setWindowTitle('Skofcounter Version ' + version + ': Skånes ungdomsserie-beräknare')
     widget.resize(800, 90)
     widget.show()
-
     sys.exit(app.exec_())
+
