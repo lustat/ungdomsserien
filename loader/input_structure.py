@@ -59,14 +59,14 @@ def get_input_structure():
     return structure
 
 
-def create_excel_template(structure, storage_path=''):
+def create_excel_template(structure, template_path=''):
     # TODO get storage path
-    if not storage_path:
+    if not template_path:
         # Debug
-        storage_path = os.getcwd()
+        template_path = os.getcwd()
 
     excel_name = 'Input_Example.xlsx'
-    excel_file = os.path.join(storage_path, excel_name)
+    excel_file = os.path.join(template_path, excel_name)
 
     wb = openpyxl.Workbook()
     standard_sheets = wb.get_sheet_names()

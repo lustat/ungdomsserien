@@ -9,7 +9,7 @@ from PySide2.QtGui import QIcon
 from loader.read_manual_excel import read_manual_input
 from base_utils import get_version
 import os
-
+from loader.input_structure import create_excel_template, get_input_structure
 
 class SimpleWidget(QWidget):
     def __init__(self, api_key, icon_file=''):
@@ -75,8 +75,10 @@ class SimpleWidget(QWidget):
         msgBox.setDefaultButton(PySide2.QtWidgets.QMessageBox.No)
         reply = msgBox.exec_()
         if reply == PySide2.QtWidgets.QMessageBox.Yes:
-            print("yes")
-
+            storage_path = str(QFileDialog.getExistingDirectory(self, "Välj mapp att spara Excel-mall"))
+            if os.path.exists(storage_path):
+                template = get_input_structure()
+                create_excel_template(structure=template, template_path=storage_path)
 
     @Slot()
     def magic(self):
