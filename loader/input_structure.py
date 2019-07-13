@@ -1,5 +1,9 @@
 import pandas as pd
 import numpy as np
+import os
+import openpyxl
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.styles import Font, Color
 
 
 def get_input_structure():
@@ -55,12 +59,36 @@ def get_input_structure():
     return structure
 
 
-def create_excel_template(structure):
-    # TODO create excel template here
-    return None
+def create_excel_template(structure, storage_path=''):
+    # TODO get storage path
+    if not storage_path:
+        # Debug
+        storage_path = os.getcwd()
+
+    excel_name = 'Input_Example.xlsx'
+    excel_file = os.path.join(storage_path, excel_name)
+
+    wb = openpyxl.Workbook()
+    standard_sheets = wb.get_sheet_names()
+    for sheet in structure.keys():
+        worksheet = wb.create_sheet(sheet)
+        df = structure[sheet]['example_df']
+
+        for r in dataframe_to_rows(df, index=False, header=True):
+            worksheet.append(r)
+
+    # Remove standard sheets
+    for standard_sheet in standard_sheets:
+        std = wb.get_sheet_by_name(standard_sheet)
+        wb.remove(std)
+
+    wb.save(excel_file)
+    print('Skapar exempel-fil enligt mall: ' + excel_file)
+    return excel_file
+
 
 if __name__ == '__main__':
     template = get_input_structure()
-    file = create_excel_template(template
+    file = create_excel_template(structure=template)
 
     print('Finished')
