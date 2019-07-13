@@ -46,7 +46,8 @@ def get_input_structure():
                                   'Club': ['Skåneslättens OL', 'Lunds OK'],
                                   'U-series': ['D12', 'H14'],
                                   'Night-class': ['U2', 'Öppen Motion 5'],
-                                  'Event ID': [21930, 22921]})
+                                  'Event ID': [21930, 22921],
+                                  'Finished': [1, 0]})
     dct_night = {'example_df': df_night,
                  'compulsory': False,
                  'description': 'Anger deltagande i natt-tävling, i natt-tävlingar som inte listats via "night_ids" i "Parameters"-flik.'}

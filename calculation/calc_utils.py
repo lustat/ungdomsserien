@@ -68,7 +68,7 @@ def add_manual_night_runners(manual_df, night_df):
         row.at['club'] = manual_df.loc[key, 'club']
         row.at['region'] = 0
         row.at['started'] = True
-        row.at['finished'] = manual_df.loc[key, 'finished']==1
+        row.at['finished'] = manual_df.loc[key, 'finished'] == 1
         row.at['position'] = 0
         row.at['seconds'] = 0
         row.at['region_position'] = 0
