@@ -60,6 +60,7 @@ class SimpleWidget(QWidget):
             self.manual_info, self.division_df, self.user_input = read_manual_input(file_path[0])
             self.layout.addWidget(self.button_analyse)
             self.setLayout(self.layout)
+            # TODO check Excel input using structure-function
 
     def info_window(self):
         version_number = get_version()
