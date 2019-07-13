@@ -11,6 +11,7 @@ from base_utils import get_version
 import os
 from loader.input_structure import create_excel_template, get_input_structure
 
+
 class SimpleWidget(QWidget):
     def __init__(self, api_key, icon_file=''):
         self.key = api_key
@@ -67,13 +68,13 @@ class SimpleWidget(QWidget):
         msg_box.about(self, 'Information', msg_str)
 
     def help_window(self):
-        msgBox = PySide2.QtWidgets.QMessageBox()
-        msgBox.setIcon(PySide2.QtWidgets.QMessageBox.Question)
-        msgBox.setText("Vill du skapa en Excel-mall?")
-        msgBox.setInformativeText('Input till beräkningen sker via Excel-fil. Excel-filen måste följa en given mall.')
-        msgBox.setStandardButtons(PySide2.QtWidgets.QMessageBox.Yes | PySide2.QtWidgets.QMessageBox.No)
-        msgBox.setDefaultButton(PySide2.QtWidgets.QMessageBox.No)
-        reply = msgBox.exec_()
+        msg_box = PySide2.QtWidgets.QMessageBox()
+        msg_box.setIcon(PySide2.QtWidgets.QMessageBox.Question)
+        msg_box.setText("Vill du skapa en Excel-mall?")
+        msg_box.setInformativeText('Input till beräkningen sker via Excel-fil. Excel-filen måste följa en given mall.')
+        msg_box.setStandardButtons(PySide2.QtWidgets.QMessageBox.Yes | PySide2.QtWidgets.QMessageBox.No)
+        msg_box.setDefaultButton(PySide2.QtWidgets.QMessageBox.No)
+        reply = msg_box.exec_()
         if reply == PySide2.QtWidgets.QMessageBox.Yes:
             storage_path = str(QFileDialog.getExistingDirectory(self, "Välj mapp att spara Excel-mall"))
             if os.path.exists(storage_path):
@@ -95,7 +96,7 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     version = get_version()
 
-    debug = True
+    debug = False
     if debug:
         print('Debug mode')
         api_key = os.environ["apikey"]

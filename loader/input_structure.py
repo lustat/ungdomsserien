@@ -13,7 +13,7 @@ def get_input_structure():
 
     dct_parameters = {'example_df': df_parameters,
                       'compulsory': True,
-                      'description': 'Listar input-parametrar till beräkning (t ex Event ID)'}
+                      'description': 'Listar input-parametrar till beräkning (t ex tävlingars Event ID)'}
 
     division = list(np.tile(['Elit'], 6))
     division.extend(list(np.tile(['Division 1'], 7)))
@@ -50,8 +50,7 @@ def get_input_structure():
                                   'Finished': [1, 0]})
     dct_night = {'example_df': df_night,
                  'compulsory': False,
-                 'description': 'Anger deltagande i natt-tävling, i natt-tävlingar som inte listats via "night_ids" i "Parameters"-flik.'}
-
+                 'description': 'Anger deltagande i natt-tävling, i natt-tävlingar som inte listats via "night_ids" i Parameters-flik.'}
 
     structure = {'Parameters': dct_parameters,
                  'Division': dct_division,
@@ -61,10 +60,24 @@ def get_input_structure():
 
 
 def create_excel_template(structure, template_path=''):
-    # TODO get storage path
+    def adjust_columns(max_column_width=40):
+        for (df_col, col) in zip(df.columns, worksheet.columns):
+            column = col[0].column
+            header_cell = col[0]
+            header_cell.font = Font(bold=True)
+            if isinstance(df[df_col].iloc[0], str):
+                adjusted_width = 1.4 * df[df_col].str.len().max()
+                adjusted_width = min(adjusted_width, max_column_width)
+                adjusted_width = max(adjusted_width, 10)
+            elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
+                adjusted_width = 10
+            else:
+                adjusted_width = 10
+            worksheet.column_dimensions[column].width = adjusted_width
+
     if not template_path:
-        # Debug
-        template_path = os.getcwd()
+        print('Debug-mode in ' + __name__)
+        template_path = os.path.split(os.getcwd())[0]
 
     excel_name = 'Input_Example.xlsx'
     excel_file = os.path.join(template_path, excel_name)
@@ -77,6 +90,19 @@ def create_excel_template(structure, template_path=''):
 
         for r in dataframe_to_rows(df, index=False, header=True):
             worksheet.append(r)
+        adjust_columns()
+
+    # Add description sheet
+    worksheet = wb.create_sheet('Description')
+    df = pd.DataFrame()
+    for sheet in structure.keys():
+        if 'description' in structure[sheet].keys():
+            df.at[sheet, 'Sheet'] = sheet
+            df.at[sheet, 'Comment'] = structure[sheet]['description']
+
+    for r in dataframe_to_rows(df, index=False, header=True):
+        worksheet.append(r)
+    adjust_columns(max_column_width=100)
 
     # Remove standard sheets
     for standard_sheet in standard_sheets:
