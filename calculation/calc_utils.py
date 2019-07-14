@@ -4,9 +4,11 @@ import pandas as pd
 
 def valid_open_runners(df, manual=pd.DataFrame()):
     if not manual.empty:
-        manual = manual.assign(simplename=[name.replace(' ', '').lower() for name in manual.name])
-        manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual.club])
+        manual = manual.assign(simplename=[name.replace(' ', '').lower() for name in manual['name']])
+        manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual['club']])
         manual = manual.assign(identified=False)
+
+    missing_age = pd.DataFrame()
 
     df = df.loc[df.started]  # Keep only started
     df = df.reset_index(drop=True, inplace=False)  # Make sure runners (i.e. rows) have unique index
@@ -15,15 +17,24 @@ def valid_open_runners(df, manual=pd.DataFrame()):
         if runner.birthyear is not None:
             if (runner.age <= 16) & (runner.age >= 5):
                 include = True
-            elif (np.isnan(runner.age)) & (not manual.empty):  # unknown birth year: Look in manual information
-                runner_match = manual.loc[(manual.simplename == runner['name'].replace(' ', '').lower()) &
-                                          (manual.simpleclub == runner['club'].replace(' ', '').lower())]
-                if not runner_match.empty:
-                    if len(runner_match) == 1:
-                        include = True
-                        manual.at[runner_match.index, 'identified'] = True
-                    else:
-                        print('Löpare ' + runner['name'] + ' är listad på flera ställen')
+            elif np.isnan(runner.age):
+                if not manual.empty:  # unknown birth year: Look in manual information
+                    runner_match = manual.loc[(manual.simplename == runner['name'].replace(' ', '').lower()) &
+                                              (manual.simpleclub == runner['club'].replace(' ', '').lower())]
+                    if not runner_match.empty:
+                        if len(runner_match) == 1:
+                            include = True
+                            manual.at[runner_match.index, 'identified'] = True
+                        else:
+                            print('  ')
+                            print('Löpare ' + runner['name'] + ' är listad på flera ställen')
+                            print('  ')
+                            print('  ')
+                    else:  # Missing-age runner not in manual list
+                        missing_age = missing_age.append(runner)
+                else:  # No manual list, so save all Missing-age runners
+                    missing_age = missing_age.append(runner)
+
         df.at[key, 'include'] = include
 
     if not manual.empty:
@@ -34,7 +45,11 @@ def valid_open_runners(df, manual=pd.DataFrame()):
 
     df = df.loc[df.include]
     df = df.drop(columns=['include'])
-    return df, un_identified
+
+    if not missing_age.empty:
+        missing_age = missing_age[['name', 'classname', 'club']]
+
+    return df, un_identified, missing_age
 
 
 def add_manual_night_runners(manual_df, night_df):
@@ -53,7 +68,7 @@ def add_manual_night_runners(manual_df, night_df):
         row.at['club'] = manual_df.loc[key, 'club']
         row.at['region'] = 0
         row.at['started'] = True
-        row.at['finished'] = manual_df.loc[key, 'finished']==1
+        row.at['finished'] = manual_df.loc[key, 'finished'] == 1
         row.at['position'] = 0
         row.at['seconds'] = 0
         row.at['region_position'] = 0
@@ -78,3 +93,13 @@ def add_person_id(manual_df, daily_df):
         if not identified.empty:
             manual_df.at[key, 'personid'] = identified['personid'].iloc[0]
     return manual_df
+
+
+def clean_division_input(div_df):
+    if div_df.empty:
+        division_df = pd.DataFrame()
+    else:
+        division_df = div_df.loc[~div_df.clubid.isna()]
+        division_df = division_df.assign(orgid=division_df.clubid.astype(int))
+        division_df = division_df.drop(columns=['clubid'])
+    return division_df

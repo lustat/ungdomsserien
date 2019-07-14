@@ -6,12 +6,13 @@ from bs4 import BeautifulSoup
 import numpy as np
 from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
-from calculation.summarize import individual_summary, club_summary
+from calculation.summarize import individual_summary, club_summary, sort_based_on_division
 from datetime import datetime
-from output.create_excel import individual_results_excel, club_results_excel
+from output.create_excel import individual_results_excel, club_results_to_excel
 from loader.club_to_region import get_parent_org_quick
-from calculation.calc_utils import add_manual_night_runners, add_person_id
+from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
+from loader.loader_utils import get_event_name
 
 
 def get_events(storage_path, event_list, apikey):
@@ -36,10 +37,10 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
-            print('Sparar resultat: ' + output_file)
-            df.to_csv(output_file, index=False)
+            if sum(df.finished) > 0:
+                print('Sparar resultat: ' + output_file)
+                df.to_csv(output_file, index=False)
     else:  # Load already stored event
-        print('Läser in resultat från tävling: ' + output_file)
         df = pd.read_csv(output_file)
 
     return df
@@ -50,29 +51,39 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
         unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
-        if not os.path.exists(output_file):  # Race not analysed
-            event_results = get_event(event, storage_path, apikey)
-            if event in event_to_manual.keys():
-                manual_df = event_to_manual[event]
-            else:
-                manual_df = pd.DataFrame()
-            if not event_results.empty:  # Results exist in Eventor
-                event_points, unidentified = add_points_to_event(event_results, manual=manual_df)
-                print('Sparar ' + output_file)
+        missing_age_file = os.path.join(storage_path, 'Missing_age_' + str(event) + '.xlsx')
+
+        event_results = get_event(event, storage_path, apikey)
+        if event in event_to_manual.keys():
+            manual_df = event_to_manual[event]
+        else:
+            manual_df = pd.DataFrame()
+        if not event_results.empty:  # Results exist in Eventor
+            if sum(event_results.finished) > 0:  # At least one runner has finished the race
+                event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
                 event_points.to_csv(output_file, index=False)
                 if not unidentified.empty:
+                    print('Listar oidentifierade manuella löpare i ' + unidentified_file)
                     unidentified.to_excel(unidentified_file, index=False)
+                if not missing_age.empty:
+                    print('Listar okänd-ålder-löpare i ' + missing_age_file)
+                    missing_age.to_excel(missing_age_file, index=False)
 
 
 def evaluate_night(storage_path, event_list, apikey):
     for event in event_list:
         output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
-        if not os.path.exists(output_file):
-            event_results = get_event(event, storage_path,  apikey)
-            if not event_results.empty:
-                event_points = add_night_points_to_event(event_results)
-                print('Sparar ' + output_file)
-                event_points.to_csv(output_file)
+        unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
+        missing_age_file = os.path.join(storage_path, 'Missing_age_' + str(event) + '.xlsx')
+
+        event_results = get_event(event, storage_path,  apikey)
+        if not event_results.empty:
+            event_points, unidentified, missing_age = add_night_points_to_event(event_results)
+            event_points.to_csv(output_file)
+            if not unidentified.empty:
+                unidentified.to_excel(unidentified_file, index=False)
+            if not missing_age.empty:
+                missing_age.to_excel(missing_age_file, index=False)
 
 
 def get_resultlist(root, apikey, debugmode=False):
@@ -269,18 +280,56 @@ def concatenate(storage_path, event_list):
     return df
 
 
-def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=None, race_to_manual_info={}):
-    if event_ids is None:
-        # 2018
-        # event_ids = [18218, 17412, 18308, 18106, 16981, 18995]
-        # 2019
-        event_ids = [20550, 21406, 21376, 21988, 21732, 21644]
+def get_user_events(user_input, value='event_ids', apikey=''):
+    event_ids = []
+    event_names = []
+    if value in user_input.keys():
+        if isinstance(user_input[value], float) | isinstance(user_input[value], int):
+            event_ids = [int(user_input[value])]
+        else:
+            if ',' in user_input[value]:
+                event_strings = user_input[value].split(',')
+                for id in event_strings:
+                    id = id.replace(' ', '')
+                    if id.isdigit():
+                        event_ids.append(int(id))
+            else:
+                if user_input[value].isdigit():
+                    event_ids = [int(user_input[value])]
 
-    if night_ids is None:
-        # 2018
-        # night_ids = [18459, 18485]
-        # 2019
-        night_ids = [21851, 21961]
+        for race in event_ids:
+            name, year = get_event_name(race, apikey)
+            event_names.append(name + ' (' + str(year) + ')')
+
+    return event_ids, event_names
+
+
+def print_event_names(day_events, night_events):
+    print(' ')
+    if len(day_events)>1:
+        print('Listade ordinarie tävlingar (dag):')
+    else:
+        print('Listad tävling (dag):')
+    for event in day_events:
+        print(event)
+    print(' ')
+    if night_events:
+        if len(day_events) > 1:
+            print('Listade natt-tävlingar:')
+        else:
+            print('Listad natt-tävling:')
+        for event in night_events:
+            print(event)
+    print(' ')
+
+
+def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, user_input, apikey=None):
+    if 'event_ids' not in user_input.keys():
+        raise ValueError('event_ids is missing in user_input dataframe')
+
+    event_ids, day_names = get_user_events(user_input, 'event_ids', apikey)
+    night_ids, night_names = get_user_events(user_input, 'night_ids', apikey)
+    print_event_names(day_names, night_names)
 
     get_events(storage_path, event_ids, apikey)
     evaluate(storage_path, event_ids, apikey, race_to_manual_info)
@@ -294,8 +343,11 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
     if 'night' in race_to_manual_info.keys():
         df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
 
-    df_club_summary, club_results = club_summary(df)
-    club_file = club_results_excel(storage_path, df_club_summary, club_results)
+    cleaned_division_df = clean_division_input(club_division_df)
+
+    df_club_summary, club_results = club_summary(df, cleaned_division_df)
+    df_club_summary = sort_based_on_division(df_club_summary)
+    club_file = club_results_to_excel(storage_path, df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(storage_path, si)
@@ -303,7 +355,7 @@ def extract_and_analyse(storage_path, event_ids=None, night_ids=None, apikey=Non
 
 
 if __name__ == "__main__":
-    manual = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx')
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test', race_to_manual_info=manual,
-                        event_ids=[20550], night_ids=[21851])
-
+    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
+                        club_division_df=club_division, user_input=user_dct)
+    #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])

@@ -13,14 +13,16 @@ def add_night_points_to_event(res, class_selection=None, region_id=16, manual=pd
     openres = res.loc[open_short_class]
 
     # Pick out runners from Skåne
-    region_competition = region_runners(compres)
-    region_open, unidentified = valid_open_runners(openres)
+    region_competition = region_runners(compres, region_id)
+    openres = openres.loc[openres.region == region_id]
+
+    region_open, unidentified, missing_age = valid_open_runners(openres)
 
     results1 = points_to_started_night(region_competition)
     results2 = points_to_started_night(region_open)
 
     results = results1.append(results2, sort=False)
-    return results
+    return results, unidentified, missing_age
 
 
 def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataFrame()):
@@ -34,8 +36,10 @@ def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataF
     openres = res.loc[open_short_class]
     
     # Pick out runners from Skåne
-    region_competition = region_runners(compres)
-    region_open, unidentified_manual = valid_open_runners(openres, manual)
+    region_competition = region_runners(compres, region_id)
+    openres = openres.loc[openres.region == region_id]
+
+    region_open, unidentified_manual, missing_age = valid_open_runners(openres, manual)
 
     # Remove runners in open classes that have already run a competition class
     region_open = remove_double_runners(region_open, region_competition)
@@ -44,7 +48,8 @@ def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataF
     results2 = points_to_started_open(region_open)
 
     results = results1.append(results2, sort=False)
-    return results, unidentified_manual
+
+    return results, unidentified_manual, missing_age
 
 
 def add_points_to_competion_class(res):
@@ -129,13 +134,18 @@ def remove_double_runners(df_open, df_compete):
     df_open = df_open.reset_index(drop=True, inplace=False)  #Make sure runners (i.e. rows) have unique index
     df_open = df_open.assign(keep=True)
 
-    for (key, person) in df_open.iterrows():
-        person_id_open = df_open.loc[key, 'personid']
-        double_run = df_compete.loc[df_compete.personid == person_id_open]
-        if not double_run.empty:
-            df_open.at[key, 'keep'] = False
+    if df_compete.empty:
+        print('Oväntat fel. Tom data-frame i "remove_double_runners"')
+        return None
+    else:
+        for (key, person) in df_open.iterrows():
+            person_id_open = df_open.loc[key, 'personid']
+            if person_id_open>0:
+                double_run = df_compete.loc[df_compete.personid == person_id_open]
+                if not double_run.empty:
+                    df_open.at[key, 'keep'] = False
 
-    df_open = df_open.loc[df_open.keep]
-    df_open = df_open.drop(columns='keep')
-    return df_open
+        df_open = df_open.loc[df_open.keep]
+        df_open = df_open.drop(columns='keep')
+        return df_open
 

@@ -3,7 +3,9 @@ import numpy as np
 
 
 def individual_summary(df, df_night, class_selection=None):
-    df_night = df_night.assign(found=False)
+    if not df_night.empty:
+        df_night = df_night.assign(found=False)
+
     if df.empty:
         return {}
 
@@ -34,8 +36,12 @@ def individual_summary(df, df_night, class_selection=None):
 
             for pid in ids:
                 res_person = df_race.loc[df_race.personid == pid]
-                night_person = df_night.loc[df_night.personid == pid]
-                if len(res_person)==1:
+                if df_night.empty:
+                    night_person = pd.DataFrame()
+                else:
+                    night_person = df_night.loc[df_night.personid == pid]
+
+                if len(res_person) == 1:
                     class_summary.at[pid, event] = res_person.points.iloc[0]
                 else:
                     class_summary.at[pid, event] = 0
@@ -45,7 +51,7 @@ def individual_summary(df, df_night, class_selection=None):
                 else:
                     class_summary.at[pid, 'night'] = max(night_person.points)
                     for index in night_person.index:
-                        df_night.at[index, 'found']=True
+                        df_night.at[index, 'found'] = True
 
         class_summary = add_best4_score(class_summary, events)
         class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
@@ -69,7 +75,7 @@ def add_best4_score(df, events):
     return df
 
 
-def club_summary(df):
+def club_summary(df, division_df):
     if df.empty:
         return pd.DataFrame(), pd.DataFrame()
 
@@ -101,6 +107,26 @@ def club_summary(df):
 
     clublist = club_points_per_event(df, summary.index)
 
+    if division_df.empty:
+        summary = summary.assign(division=np.nan)
+    else:
+        if 'orgid' in division_df.columns:
+            division_df = division_df.set_index('orgid', drop=True)
+            summary = summary.join(division_df, how='left', lsuffix='', rsuffix='_division')
+            summary.loc[summary.division.isna(), 'division'] = 'Okänd division'
+            if 'club_division' in summary.columns:
+                mismatch = summary.loc[summary.club != summary.club_division]
+                if not mismatch.empty:
+                    print(' ')
+                    print('Klubbnamn i divisionstabell matchar ej')
+                    print('Dubbelkolla Excel-fil')
+                    for (key, row) in mismatch.iterrows():
+                        print(row.club + '  =?   ' + row.club_division)
+                    print(' ')
+                summary = summary.drop(columns=['club_division'])
+        else:
+            raise ValueError('orgid missing in data frame')
+
     return summary, clublist
 
 
@@ -114,7 +140,7 @@ def club_points_per_event(df, club_ids=None):
 
     lst = []
     for clubid in club_ids:
-        df_club = df.loc[df.orgid==clubid]
+        df_club = df.loc[df.orgid == clubid]
         lst.append(df_club)
 
     return lst
@@ -123,6 +149,46 @@ def club_points_per_event(df, club_ids=None):
 def add_final_position(df):
     df = df.assign(position=0)
     for (key, row) in df.iterrows():
-        df.at[key, 'position']= sum(df.total>row.total) + 1
+        df.at[key, 'position'] = sum(df.total > row.total) + 1
 
     return df
+
+
+def sort_based_on_division(summary):
+    if summary.empty:
+        return summary
+    if 'division' not in summary.columns:
+        return summary
+    if all(summary.division.isna()):
+        return summary
+
+    for (key, row) in summary.iterrows():
+        if not isinstance(row.division, str):
+            summary.at[key, 'division'] = 'Okänd division'
+        else:
+            # Make sure division value starts with capital letter
+            summary.at[key, 'division'] = row.division.capitalize()
+
+    dct = {'Elit': 0}
+    summary = summary.assign(division_number=-1)
+    for (key, row) in summary.iterrows():
+        if row.division in dct.keys():
+            summary.at[key, 'division_number'] = dct[row.division]
+        else:
+            if row.division.startswith('Division '):
+                number = row.division.replace('Division ', '')
+                if number.isdigit():
+                    summary.at[key, 'division_number'] = int(number)
+
+    # Set unknown divisions to "max+1" division
+    number_for_unknown = summary.division_number.max() + 1
+    summary.loc[summary.division_number == -1, 'division_number'] = number_for_unknown
+
+    sorted_summary = pd.DataFrame()
+    for number in summary.division_number.unique():
+        df_temp = summary.loc[summary.division_number==number]
+        df_temp = df_temp.sort_values(by='score', ascending=False)
+        sorted_summary = sorted_summary.append(df_temp)
+
+    sorted_summary = sorted_summary.drop(columns=['division_number'])
+    return sorted_summary
