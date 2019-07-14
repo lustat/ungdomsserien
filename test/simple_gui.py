@@ -109,5 +109,7 @@ if __name__ == "__main__":
     widget.setWindowTitle('Skofcounter Version ' + version + ': Skånes ungdomsserie-beräknare')
     widget.resize(800, 90)
     widget.show()
-    sys.exit(app.exec_())
+    app.exec_()
+    input('Tryck ENTER för att avsluta')
+    sys.exit()
 
