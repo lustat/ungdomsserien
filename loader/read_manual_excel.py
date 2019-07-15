@@ -92,7 +92,6 @@ def check_excel_input(manual_input_file):
             else:
                 neglected_sheets.append(sheet)
 
-
     for sheet in valid_sheets:
         if sheet.replace(' ', '').isdigit():
             template_df = template[template_digit_sheet]['example_df']
@@ -115,7 +114,11 @@ def check_excel_input(manual_input_file):
 
         print('Flik "' + sheet + '": OK')
 
-    return valid_sheets, neglected_sheets
+    if neglected_sheets:
+        for neglected_sheet in neglected_sheets:
+            print('Flik "' + neglected_sheet + '" läses ej in')
+
+    return valid_sheets
 
 
 def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx'):
@@ -127,10 +130,7 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_input
         else:
             print('Ingen Excel-fil vald')
     else:
-        accepted_sheets, unaccepted_sheets = check_excel_input(manual_input_file)
-        if unaccepted_sheets:
-            for unaccepted_sheet in unaccepted_sheets:
-                print('Flik "' + unaccepted_sheet + '" läses ej in')
+        accepted_sheets = check_excel_input(manual_input_file)
 
         for sheet in accepted_sheets:
             df = pd.read_excel(manual_input_file, sheet)
