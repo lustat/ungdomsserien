@@ -52,10 +52,10 @@ def get_input_structure():
                  'compulsory': False,
                  'description': 'Anger deltagande i natt-tävling, i natt-tävlingar som inte listats via "night_ids" i Parameters-flik.'}
 
-    structure = {'Parameters': dct_parameters,
-                 'Division': dct_division,
+    structure = {'parameters': dct_parameters,
+                 'divisions': dct_division,
                  str(event_ids[0]): dct_event,
-                 'Night': dct_night}
+                 'night': dct_night}
     return structure
 
 
@@ -85,7 +85,7 @@ def create_excel_template(structure, template_path=''):
     wb = openpyxl.Workbook()
     standard_sheets = wb.get_sheet_names()
     for sheet in structure.keys():
-        worksheet = wb.create_sheet(sheet)
+        worksheet = wb.create_sheet(sheet.capitalize())
         df = structure[sheet]['example_df']
 
         for r in dataframe_to_rows(df, index=False, header=True):
