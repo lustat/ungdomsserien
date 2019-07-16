@@ -4,6 +4,7 @@ from datetime import datetime
 import openpyxl
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font, Color
+from openpyxl.styles.borders import Border, Side
 
 
 def individual_results_excel(storage_path, dct):
@@ -58,22 +59,58 @@ def individual_results_excel(storage_path, dct):
 
 
 def club_results_to_excel(storage_path, df, club_results):
+    def add_line_flag(data):
+        data = data.assign(position=0)
+        data = data.assign(negative_position=0)
+        for (key, row) in data.iterrows():
+            division_data = data.loc[data.division == row.division]
+            data.at[key, 'position'] = 1 + sum(row.score < division_data.score)
+            data.at[key, 'negative_position'] = sum(row.score > division_data.score)
+
+        data = data.assign(line_above=False)
+        for division in data.division.unique():
+            division_data = data.loc[data.division == division]
+            third_position = division_data.loc[division_data.position == 3]
+            if len(third_position) == 1:
+                if division.lower() != 'elit':
+                    data.at[third_position.index[0], 'line_above'] = True
+            second_last = division_data.loc[division_data.negative_position == 1]
+            if len(second_last) == 1:
+                data.at[second_last.index[0], 'line_above'] = True
+
+        data = data.drop(columns={'position', 'negative_position'})
+        return data
+
     def create_summary_with_division(worksheet, data):
         previous_division = ''
+        last_row_header = True
         for row in dataframe_to_rows(data, index=False, header=True):
-            current_division = row[-1]
+            current_division = row[-2]
+            line_above = row[-1]
+            print_row = row[:-2]
             if previous_division:
                 if current_division == previous_division:
-                    worksheet.append(row[:-1])
+                    worksheet.append(print_row)
+                    if line_above:
+                        for column_number in range(1, len(print_row) + 1):
+                            cell = worksheet.cell(worksheet.max_row, column_number)
+                            cell.border = Border(top=Side(style='dotted'))
                 else:
                     empty_row = [' ' for str in row]
-                    worksheet.append(empty_row)
+                    if last_row_header:
+                        worksheet.append(empty_row)
+                        last_row_header = False
+                    else:
+                        worksheet.append(empty_row)
+                        worksheet.append(empty_row)
                     title_row = empty_row
                     title_row[0] = current_division
                     worksheet.append(title_row)
-                    worksheet.append(row[:-1])
+                    cell = worksheet.cell(worksheet.max_row, 1)
+                    cell.font = Font(bold=True)
+                    worksheet.append(print_row)
             else:
-                worksheet.append(row[:-1])
+                worksheet.append(print_row)
             previous_division = current_division
 
     def create_summary_without_division(worksheet, data):
@@ -95,6 +132,7 @@ def club_results_to_excel(storage_path, df, club_results):
         if all(df.division.isna()):
             create_summary_without_division(ws, df)
         else:
+            df = add_line_flag(df)
             create_summary_with_division(ws, df)
 
         for (df_col, col) in zip(df.columns, ws.columns):
