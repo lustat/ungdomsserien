@@ -97,7 +97,7 @@ def create_excel_template(structure, template_path=''):
     df = pd.DataFrame()
     for sheet in structure.keys():
         if 'description' in structure[sheet].keys():
-            df.at[sheet, 'Sheet'] = sheet
+            df.at[sheet, 'Sheet'] = sheet.capitalize()
             df.at[sheet, 'Comment'] = structure[sheet]['description']
 
     for r in dataframe_to_rows(df, index=False, header=True):

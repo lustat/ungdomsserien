@@ -93,9 +93,6 @@ class SimpleWidget(QWidget):
 
 
 if __name__ == "__main__":
-    # TODO present division sorted club results with lines and bold headers
-    # TODO add ability to restart gui after calculation
-
     debug = False
     if debug:
         print('Debug mode')
