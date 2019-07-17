@@ -70,13 +70,16 @@ def club_results_to_excel(storage_path, df, club_results):
         data = data.assign(line_above=False)
         for division in data.division.unique():
             division_data = data.loc[data.division == division]
-            third_position = division_data.loc[division_data.position == 3]
-            if len(third_position) == 1:
-                if division.lower() != 'elit':
-                    data.at[third_position.index[0], 'line_above'] = True
-            second_last = division_data.loc[division_data.negative_position == 1]
-            if len(second_last) == 1:
-                data.at[second_last.index[0], 'line_above'] = True
+            if len(division_data) >= 4:
+                third_position = division_data.loc[division_data.position == 3]
+                if len(third_position) == 1:
+                    if division.lower() != 'elit':
+                        data.at[third_position.index[0], 'line_above'] = True
+
+                second_last = division_data.loc[division_data.negative_position == 1]
+                if len(second_last) == 1:
+                    if division.lower() != 'division 3':
+                        data.at[second_last.index[0], 'line_above'] = True
 
         data = data.drop(columns={'position', 'negative_position'})
         return data
