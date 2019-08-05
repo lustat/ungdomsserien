@@ -13,20 +13,27 @@ from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
+from joblib import Parallel, delayed
+import multiprocessing
 
 
 def get_events(storage_path, event_list, apikey):
-    for event in event_list:
-        get_event(event, storage_path, apikey)
+
+    if not os.path.exists(storage_path):
+        print(storage_path + ' skapas')
+        os.makedirs(storage_path)
+
+    number_of_cores = multiprocessing.cpu_count()
+    Parallel(n_jobs=number_of_cores-1, batch_size=1, verbose=0)(
+        delayed(get_event)(event, storage_path, apikey) for event in event_list)
+
+    # for event in event_list:
+    #     get_event(event, storage_path, apikey)
 
 
 def get_event(event_id, storage_path, apikey=None, debugmode=False):
     if apikey is None:
         apikey = os.environ["apikey"]
-
-    if not os.path.exists(storage_path):
-        print(storage_path + ' skapas')
-        os.makedirs(storage_path)
 
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
     if not os.path.exists(output_file):  #Load events
