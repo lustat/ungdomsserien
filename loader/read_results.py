@@ -17,18 +17,19 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 
-def get_events(storage_path, event_list, apikey):
+def get_events(storage_path, event_list, apikey, parallel_flag=True):
 
     if not os.path.exists(storage_path):
         print(storage_path + ' skapas')
         os.makedirs(storage_path)
 
     number_of_cores = multiprocessing.cpu_count()
-    Parallel(n_jobs=number_of_cores-1, batch_size=1, verbose=0)(
-        delayed(get_event)(event, storage_path, apikey) for event in event_list)
-
-    # for event in event_list:
-    #     get_event(event, storage_path, apikey)
+    if parallel_flag and (number_of_cores > 2):
+        Parallel(n_jobs=number_of_cores-1, batch_size=1, verbose=0)(
+            delayed(get_event)(event, storage_path, apikey) for event in event_list)
+    else:
+        for event in event_list:
+            get_event(event, storage_path, apikey)
 
 
 def get_event(event_id, storage_path, apikey=None, debugmode=False):
