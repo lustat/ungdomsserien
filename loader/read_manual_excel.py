@@ -1,8 +1,8 @@
 import pandas as pd
 import os
-import sys
 import xlrd
 import numpy as np
+from loader.input_structure import get_input_structure
 
 
 def get_excel_sheets(excel_file):
@@ -64,7 +64,64 @@ def check_columns_in_sheets(excel_file, sheets):
         print('Excel-fil:' + filename + ' saknar data')
 
 
-def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual results.xlsx'):
+def check_excel_input(manual_input_file):
+    print('Granskar ' + manual_input_file)
+    template = get_input_structure()
+    template_sheets_lower = [sheet.lower() for sheet in template.keys()]
+    template_digit_sheets = [sheet for sheet in template.keys() if sheet.isdigit()]
+    if not template_digit_sheets:
+        raise ValueError('Template must contain at least one sheet with a digit name')
+    template_digit_sheet = template_digit_sheets[0]
+
+    all_sheets = get_excel_sheets(manual_input_file)
+    all_sheets_lower = [sheet.lower() for sheet in all_sheets]
+
+    necessary_sheets = [sheet for sheet in template.keys() if template[sheet]['compulsory']]
+    for necessary_sheet in necessary_sheets:
+        if necessary_sheet.lower() not in all_sheets_lower:
+            raise ValueError(necessary_sheet.capitalize() + '-flik saknas i ' + manual_input_file)
+
+    valid_sheets = []
+    neglected_sheets = []
+    for sheet in all_sheets:
+        if sheet.replace(' ', '').isdigit():
+            valid_sheets.append(sheet)
+        else:
+            if sheet.lower() in template_sheets_lower:
+                valid_sheets.append(sheet)
+            else:
+                neglected_sheets.append(sheet)
+
+    for sheet in valid_sheets:
+        if sheet.replace(' ', '').isdigit():
+            template_df = template[template_digit_sheet]['example_df']
+        else:
+            template_df = template[sheet.lower()]['example_df']
+
+        input_df = pd.read_excel(manual_input_file, sheet)
+        for template_column in template_df.columns:
+            if template_column not in input_df.columns:
+                raise ValueError('Kolumnen ' + template_column + ' saknas i fliken ' + sheet)
+
+        if sheet.lower().replace(' ', '') == 'parameters':  # Special check of Parameters-sheet
+            input_df.columns = [col.lower() for col in input_df.columns]
+            for parameter in template_df['Parameter']:
+                if parameter not in list(input_df['parameter']):
+                    raise ValueError('Raden med ' + parameter + ' saknas i fliken ' + sheet)
+                else:
+                    value = input_df.loc[input_df['parameter'] == parameter, 'value'].values[0]
+                    print(parameter + ' = ' + str(value))
+
+        print('Flik "' + sheet + '": OK')
+
+    if neglected_sheets:
+        for neglected_sheet in neglected_sheets:
+            print('Flik "' + neglected_sheet + '" läses ej in')
+
+    return valid_sheets
+
+
+def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx'):
     race_to_manual_input = {}
     division_table = pd.DataFrame()
     if not os.path.exists(manual_input_file):
@@ -73,9 +130,7 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual result
         else:
             print('Ingen Excel-fil vald')
     else:
-        all_sheets = get_excel_sheets(manual_input_file)
-        accepted_sheets = check_sheet_names(all_sheets)
-        check_columns_in_sheets(manual_input_file, accepted_sheets)
+        accepted_sheets = check_excel_input(manual_input_file)
 
         for sheet in accepted_sheets:
             df = pd.read_excel(manual_input_file, sheet)
@@ -108,6 +163,18 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Manual result
 
 
 if __name__ == '__main__':
-    dct, div_df, user_dct = read_manual_input()
-    print(dct)
-    print(div_df)
+    test_excel_folder = 'C:\\Users\\Klas\\Desktop\\Example_inputs'
+    excel_names = [file for file in os.listdir(test_excel_folder) if file.endswith('.xlsx')]
+    excel_files = [os.path.join(test_excel_folder, file_name) for file_name in excel_names]
+    for excel_file in excel_files:
+        try:
+            dct, div_df, user_dct = read_manual_input(excel_file)
+        except ValueError:
+            print(excel_file + ' is incorrect')
+            print('  ')
+            print('  ')
+        else:
+            print(excel_file + ' is correct')
+            print('  ')
+            print('  ')
+    print('Finished')

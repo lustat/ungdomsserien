@@ -60,7 +60,6 @@ class SimpleWidget(QWidget):
             self.manual_info, self.division_df, self.user_input = read_manual_input(file_path[0])
             self.layout.addWidget(self.button_analyse)
             self.setLayout(self.layout)
-            # TODO check Excel input using structure-function
 
     def info_window(self):
         version_number = get_version()
@@ -94,18 +93,15 @@ class SimpleWidget(QWidget):
 
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    version = get_version()
-
-    # TODO present division sorted club results with lines and bold headers
-    # TODO add ability to restart gui after calculation
-
     debug = False
     if debug:
         print('Debug mode')
         api_key = os.environ["apikey"]
     else:
         api_key = input('Ange API nyckel: ')
+
+    app = QApplication(sys.argv)
+    version = get_version()
 
     icon_file_name = 'run1.ico'
     widget = SimpleWidget(api_key, icon_file_name)
