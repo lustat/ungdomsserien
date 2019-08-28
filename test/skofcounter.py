@@ -10,7 +10,6 @@ from loader.read_manual_excel import read_manual_input
 from base_utils import get_version
 import os
 from loader.input_structure import create_excel_template, get_input_structure
-from multiprocessing import freeze_support
 
 
 class SimpleWidget(QWidget):
@@ -94,14 +93,13 @@ class SimpleWidget(QWidget):
 
 
 if __name__ == "__main__":
-    debug = False
+    debug = True
     if debug:
         print('Debug mode')
         api_key = os.environ["apikey"]
     else:
         api_key = input('Ange API nyckel: ')
 
-    freeze_support()
     app = QApplication(sys.argv)
     version = get_version()
 

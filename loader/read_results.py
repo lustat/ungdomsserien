@@ -96,13 +96,14 @@ def evaluate_night(storage_path, event_list, apikey):
 
 def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
-    event_date = root.find('Event/FinishDate/Date')
-    if event_date is None:
+    event_date_string = root.find('Event/FinishDate/Date')
+    if event_date_string is None:
         print('Varning, okänt tävlingsdatum')
         event_year = np.nan
     else:
-        date = datetime.strptime(event_date.text, '%Y-%m-%d')
+        date = datetime.strptime(event_date_string.text, '%Y-%m-%d')
         event_year = date.year
+        event_date = event_date_string.text
 
     obj_event = root.find('Event/Name')
     if obj_event is None:
@@ -213,6 +214,7 @@ def get_resultlist(root, apikey, debugmode=False):
                         seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
 
             df.at[index, 'event_year'] = int(event_year)
+            df.at[index, 'event_date'] = event_date
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id

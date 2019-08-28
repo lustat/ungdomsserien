@@ -166,6 +166,9 @@ def club_results_to_excel(storage_path, df, club_results):
                     name_first_list.extend([col for col in club_result.columns if col != 'name'])
                     club_result = club_result[name_first_list]
 
+                do_not_print_columns = ['event_year', 'region', 'birthyear', 'seconds']
+                club_result = club_result.drop(columns=do_not_print_columns)
+
                 ws = wb.create_sheet(club_result.iloc[0].club)
                 for r in dataframe_to_rows(club_result, index=False, header=True):
                     ws.append(r)
