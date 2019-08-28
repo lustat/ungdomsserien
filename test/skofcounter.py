@@ -10,6 +10,7 @@ from loader.read_manual_excel import read_manual_input
 from base_utils import get_version
 import os
 from loader.input_structure import create_excel_template, get_input_structure
+from multiprocessing import freeze_support
 
 
 class SimpleWidget(QWidget):
@@ -100,6 +101,7 @@ if __name__ == "__main__":
     else:
         api_key = input('Ange API nyckel: ')
 
+    freeze_support()
     app = QApplication(sys.argv)
     version = get_version()
 

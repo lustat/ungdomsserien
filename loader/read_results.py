@@ -17,7 +17,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 
-def get_events(storage_path, event_list, apikey, parallel_flag=True):
+def get_events(storage_path, event_list, apikey, parallel_flag=False):
 
     if not os.path.exists(storage_path):
         print(storage_path + ' skapas')
@@ -306,8 +306,11 @@ def get_user_events(user_input, value='event_ids', apikey=''):
                     event_ids = [int(user_input[value])]
 
         for race in event_ids:
-            name, year = get_event_name(race, apikey)
-            event_names.append(name + ' (' + str(year) + ')')
+            if apikey is None:  # Debug-mode
+                event_names.append(str(race))
+            else:
+                name, year = get_event_name(race, apikey)
+                event_names.append(name + ' (' + str(year) + ')')
 
     return event_ids, event_names
 
@@ -364,6 +367,6 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 if __name__ == "__main__":
     manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test3', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
     #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])

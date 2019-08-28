@@ -27,6 +27,13 @@ def individual_results_excel(storage_path, dct):
                 if all(df.score == df.total):
                     df = df.drop(columns=['score'])
 
+                if 'position' in df.columns:
+                    new_column_order = ['position']
+                    columns = list(df.columns)
+                    columns.remove('position')
+                    new_column_order.extend(columns)
+                    df = df[new_column_order]
+
                 for r in dataframe_to_rows(df, index=False, header=True):
                     worksheet.append(r)
 
