@@ -40,15 +40,15 @@ def individual_results_excel(storage_path, dct):
                 for (df_col, col) in zip(df.columns, worksheet.columns):
                     column = col[0].column
                     header_cell = col[0]
-                    header_cell.font = Font(bold=True)
+                    header_cell.font = Font(bold=True, size=10)
                     if isinstance(df[df_col].iloc[0], str):
-                        adjusted_width = 1.4 * df[df_col].str.len().max()
+                        adjusted_width = 1.3 * df[df_col].str.len().max()
                         adjusted_width = min(adjusted_width, 40)
                         adjusted_width = max(adjusted_width, 8)
                     elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
-                        adjusted_width = 10
+                        adjusted_width = 12
                     else:
-                        adjusted_width = 10
+                        adjusted_width = 12
                     worksheet.column_dimensions[column].width = adjusted_width
 
                 # Freeze panes
