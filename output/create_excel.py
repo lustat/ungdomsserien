@@ -148,13 +148,16 @@ def club_results_to_excel(storage_path, df, club_results):
         for (df_col, col) in zip(df.columns, ws.columns):
             column = col[0].column
             header_cell = col[0]
-            header_cell.font = Font(bold=True)
+            if header_cell.value == 'club':
+                header_cell.value = ''
+            else:
+                header_cell.font = Font(bold=True)
             if isinstance(df[df_col].iloc[0], str):
                 adjusted_width = 1.4 * df[df_col].str.len().max()
                 if adjusted_width < 10:
                     adjusted_width = 10
             elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
-                adjusted_width = 30
+                adjusted_width = 50
             else:
                 adjusted_width = 10
             ws.column_dimensions[column].width = adjusted_width

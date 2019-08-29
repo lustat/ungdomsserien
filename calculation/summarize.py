@@ -75,14 +75,20 @@ def add_best4_score(df, events):
     return df
 
 
-def club_summary(df, division_df):
+def club_summary(df, division_df, event_column='event_date'):
     if df.empty:
         return pd.DataFrame(), pd.DataFrame()
 
     df = df.loc[~df.orgid.isna()]
     df = df.assign(orgid=df.orgid.astype(int))
 
-    events = list(df.eventid.unique())
+    if event_column == 'event_date':
+        event_dates = list(df[event_column].unique())
+        event_ids = list(df.eventid.unique())
+        if len(event_dates) != len(event_ids):
+            event_column = 'eventid'
+
+    events = list(df[event_column].unique())
     organisations = list(df.orgid.unique())
 
     summary = pd.DataFrame(index=organisations)
@@ -92,7 +98,7 @@ def club_summary(df, division_df):
 
     for event in events:
         summary = summary.assign(**{str(event): 0})
-        df_event = df.loc[df.eventid==event]
+        df_event = df.loc[df[event_column] == event]
         x = df_event.groupby(by='orgid')
         summed_points = x.points.sum()
         summary = summary.assign(**{str(event): summed_points})

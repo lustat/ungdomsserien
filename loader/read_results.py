@@ -369,6 +369,7 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 if __name__ == "__main__":
     manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test3', race_to_manual_info=manual,
+    user_dct['event_ids'] = '20550, 21406, 21376, 21988'
+    user_dct['night_ids'] = '21851'
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test1', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
-    #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])
