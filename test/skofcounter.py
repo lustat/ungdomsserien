@@ -93,7 +93,7 @@ class SimpleWidget(QWidget):
 
 
 if __name__ == "__main__":
-    debug = True
+    debug = False
     if debug:
         print('Debug mode')
         api_key = os.environ["apikey"]
