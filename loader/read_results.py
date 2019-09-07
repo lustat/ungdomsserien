@@ -45,12 +45,17 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
+            # # TODO simulate an empty df
+            # if str(event_id) == '21961':
+            #     print('THIS IS A TEST RUN. REMOVE THIS LINE')
+            #     return pd.DataFrame()
             if sum(df.finished) > 0:
                 print('Sparar resultat: ' + output_file)
                 df.to_csv(output_file, index=False)
+            else:
+                df = pd.DataFrame()
     else:  # Load already stored event
         df = pd.read_csv(output_file)
-
     return df
 
 
@@ -369,7 +374,7 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 if __name__ == "__main__":
     manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    user_dct['event_ids'] = '20550, 21406, 21376, 21988'
-    user_dct['night_ids'] = '21851'
+    # user_dct['event_ids'] = '20550, 21406, 21376, 21988'
+    # user_dct['night_ids'] = '21851'
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test1', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
