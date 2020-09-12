@@ -377,5 +377,6 @@ if __name__ == "__main__":
     user_dct['event_ids'] = '31070'
     user_dct['night_ids'] = ''
     manual = {}
+    club_division = pd.DataFrame()
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test1', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
