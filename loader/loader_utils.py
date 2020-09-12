@@ -32,6 +32,7 @@ def get_event_name(id, apikey=None):
 
 
 def included_class(class_name, debugmode=False):
+    class_name = class_name.replace(' ', '')
     if debugmode:
         if class_name.lower().startswith('sv'):
             output = True
@@ -51,10 +52,10 @@ def included_class(class_name, debugmode=False):
                 if class_year <= 16:
                     output = True
 
-        if class_name.lower().endswith('kort'):
+        if class_name.lower().endswith('kort') | class_name.lower().endswith('k'):
             class_name = class_name.replace('Kort', '')
             class_name = class_name.replace('kort', '')
-            class_name = class_name.replace(' ', '')
+            class_name = class_name.replace('k', '')
             if len(class_name) == 3:
                 class_year = class_name[1:]
                 if class_year.isdigit():
@@ -62,7 +63,7 @@ def included_class(class_name, debugmode=False):
                     if class_year <= 16:
                         output = True
     else:
-        # All classes not starting with H nor D is an open class
+        # All other classes are assumed to be open
         output = True
 
     return output

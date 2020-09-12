@@ -143,8 +143,8 @@ def remove_double_runners(df_open, df_compete):
     df_open = df_open.assign(keep=True)
 
     if df_compete.empty:
-        print('Oväntat fel. Tom data-frame i "remove_double_runners"')
-        return None
+        print('Oväntad indata till "remove_double_runners": Inga tävlingsklasser registrerade')
+        return df_open
     else:
         for (key, person) in df_open.iterrows():
             person_id_open = df_open.loc[key, 'personid']
