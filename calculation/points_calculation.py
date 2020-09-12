@@ -70,6 +70,9 @@ def add_points_to_competion_class(res):
 
 
 def region_runners(df, region_id=16):
+    if df.empty:
+        return df
+
     df = df.assign(region=df.region.astype('int'))
     region_runners = df.loc[df.region == region_id]
 
@@ -101,6 +104,9 @@ def region_runners(df, region_id=16):
 
 
 def points_to_started_open(df, region_id=16, manual=pd.DataFrame()):
+    if df.empty:
+        return pd.DataFrame()
+
     df = df.assign(region=df.region.astype('int'))
     df = df.loc[df.region == region_id]
 

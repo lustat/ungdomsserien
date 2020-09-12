@@ -37,7 +37,7 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         apikey = os.environ["apikey"]
 
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
-    if not os.path.exists(output_file):  #Load events
+    if not os.path.exists(output_file):  # Load events
         url = "https://eventor.orientering.se/api/results/event"
 
         headers = {'ApiKey': apikey}
@@ -374,7 +374,7 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 if __name__ == "__main__":
     manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    # user_dct['event_ids'] = '20550, 21406, 21376, 21988'
-    # user_dct['night_ids'] = '21851'
+    user_dct['event_ids'] = '25065'
+    user_dct['night_ids'] = ''
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test1', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
