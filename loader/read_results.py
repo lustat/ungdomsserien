@@ -131,6 +131,7 @@ def get_resultlist(root, apikey, debugmode=False):
             if obj_person is not None:
                 obj_given = obj_person.find('PersonName/Given')
                 obj_last = obj_person.find('PersonName/Family')
+
                 if (obj_given is not None) and (isinstance(obj_given.text, str)):
                     name = obj_given.text
                 else:
@@ -195,7 +196,7 @@ def get_resultlist(root, apikey, debugmode=False):
 
             obj_status = y.find('Result/CompetitorStatus')
             status = obj_status.get('value')
-            if status.lower() == 'didnotstart':
+            if (status.lower() == 'didnotstart') | (status.lower() == 'cancelled'):
                 started = False
             else:
                 started = True
@@ -374,7 +375,7 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 if __name__ == "__main__":
     manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    user_dct['event_ids'] = '31070'
+    user_dct['event_ids'] = '26163'
     user_dct['night_ids'] = ''
     manual = {}
     club_division = pd.DataFrame()
