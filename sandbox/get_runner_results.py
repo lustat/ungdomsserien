@@ -65,14 +65,18 @@ def get_runner_results(id, apikey=None):
         class_name = result_list.find('ClassResult').find('EventClass').find('Name').text
         event_type = int(result_list.find('Event').find('EventClassificationId').text)
         include_class = is_competition_class(class_name)
-        include_event = is_competition(class_name)
+        include_event = is_competition(event_type)
 
         if include_class & include_event:
             print(int(result_list.find('Event').find('EventId').text))
             print(class_name)
+            print('%%%%%%%%%%%%%%%%%%%%')
             for t in result_list.find('ClassResult').findall('PersonResult'):
                 for x in t.itertext():
                     print(x)
+            print(' ')
+            print(' ')
+
 
 
 def is_competition(event_classification_id):
