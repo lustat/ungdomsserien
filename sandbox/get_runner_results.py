@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 import requests
 import xml.etree.ElementTree as ET
 from datetime import datetime
@@ -22,11 +23,25 @@ def get_members_in_organisation(id=125, apikey=None):
     return root
 
 
-def get_age_group(root, birth_year):
-    for t in root.itertext():
-        print(t)
+def get_age_group(root, birth_year_interval):
+    persons = pd.DataFrame()
+    for t in root.findall('Person'):
+        birth_year = int(t.find('BirthDate').find('Date').text[:4])
+        if (birth_year >= birth_year_interval[1]) & (birth_year <= birth_year_interval[1]):
+            name = t.find('PersonName').find('Given').text + ' ' + t.find('PersonName').find('Family').text
+            id = int(t.find('PersonId').text)
+            sex = t.get('sex')
+            persons.at[id, 'name'] = name
+            persons.at[id, 'birth_year'] = int(birth_year)
+            persons.at[id, 'sex'] = sex
+
+    persons = persons.assign(birth_year=persons.birth_year.astype(int))
+    return persons
 
 
+def pick_gender(persons, sex='M'):
+    persons = persons.loc[persons.sex==sex]
+    return persons
 
 
 def get_runner_results(id, apikey=None):
@@ -37,7 +52,6 @@ def get_runner_results(id, apikey=None):
 
     if not isinstance(id, str):
         id = str(id)
-
 
     response = requests.get('https://eventor.orientering.se/api/results/person/', headers=headers)
     root = ET.fromstringlist(response.text)
@@ -59,4 +73,7 @@ def get_runner_results(id, apikey=None):
 
 if __name__ == '__main__':
     raw = get_members_in_organisation()
-    persons = get_age_group(raw, birth_year=(2007, 2008))
+    runners = get_age_group(raw, birth_year_interval=(2007, 2008))
+    runners = pick_gender(runners, 'M')
+    get_runner_results(runners.index[0], apikey=None)
+    print(runners)
