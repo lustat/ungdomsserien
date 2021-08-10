@@ -70,6 +70,9 @@ def add_points_to_competion_class(res):
 
 
 def region_runners(df, region_id=16):
+    if df.empty:
+        return df
+
     df = df.assign(region=df.region.astype('int'))
     region_runners = df.loc[df.region == region_id]
 
@@ -101,6 +104,9 @@ def region_runners(df, region_id=16):
 
 
 def points_to_started_open(df, region_id=16, manual=pd.DataFrame()):
+    if df.empty:
+        return pd.DataFrame()
+
     df = df.assign(region=df.region.astype('int'))
     df = df.loc[df.region == region_id]
 
@@ -115,6 +121,8 @@ def points_to_started_open(df, region_id=16, manual=pd.DataFrame()):
 
 
 def points_to_started_night(df, region_id=16):
+    if 'started' not in df.columns:
+        raise ValueError('started column is missing in dataframe')
     df = df.loc[df.started]  #Remove not started
 
     df = df.assign(region=df.region.astype('int'))
@@ -135,8 +143,8 @@ def remove_double_runners(df_open, df_compete):
     df_open = df_open.assign(keep=True)
 
     if df_compete.empty:
-        print('Oväntat fel. Tom data-frame i "remove_double_runners"')
-        return None
+        print('Oväntad indata till "remove_double_runners": Inga tävlingsklasser registrerade')
+        return df_open
     else:
         for (key, person) in df_open.iterrows():
             person_id_open = df_open.loc[key, 'personid']

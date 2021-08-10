@@ -13,23 +13,31 @@ from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
+from joblib import Parallel, delayed
+import multiprocessing
 
 
-def get_events(storage_path, event_list, apikey):
-    for event in event_list:
-        get_event(event, storage_path, apikey)
+def get_events(storage_path, event_list, apikey, parallel_flag=False):
+
+    if not os.path.exists(storage_path):
+        print(storage_path + ' skapas')
+        os.makedirs(storage_path)
+
+    number_of_cores = multiprocessing.cpu_count()
+    if parallel_flag and (number_of_cores > 2):
+        Parallel(n_jobs=number_of_cores-1, batch_size=1, verbose=0)(
+            delayed(get_event)(event, storage_path, apikey) for event in event_list)
+    else:
+        for event in event_list:
+            get_event(event, storage_path, apikey)
 
 
 def get_event(event_id, storage_path, apikey=None, debugmode=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    if not os.path.exists(storage_path):
-        print(storage_path + ' skapas')
-        os.makedirs(storage_path)
-
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
-    if not os.path.exists(output_file):  #Load events
+    if not os.path.exists(output_file):  # Load events
         url = "https://eventor.orientering.se/api/results/event"
 
         headers = {'ApiKey': apikey}
@@ -37,12 +45,17 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
+            # # TODO simulate an empty df
+            # if str(event_id) == '21961':
+            #     print('THIS IS A TEST RUN. REMOVE THIS LINE')
+            #     return pd.DataFrame()
             if sum(df.finished) > 0:
                 print('Sparar resultat: ' + output_file)
                 df.to_csv(output_file, index=False)
+            else:
+                df = pd.DataFrame()
     else:  # Load already stored event
         df = pd.read_csv(output_file)
-
     return df
 
 
@@ -88,13 +101,14 @@ def evaluate_night(storage_path, event_list, apikey):
 
 def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
-    event_date = root.find('Event/FinishDate/Date')
-    if event_date is None:
+    event_date_string = root.find('Event/FinishDate/Date')
+    if event_date_string is None:
         print('Varning, okänt tävlingsdatum')
         event_year = np.nan
     else:
-        date = datetime.strptime(event_date.text, '%Y-%m-%d')
+        date = datetime.strptime(event_date_string.text, '%Y-%m-%d')
         event_year = date.year
+        event_date = event_date_string.text
 
     obj_event = root.find('Event/Name')
     if obj_event is None:
@@ -117,6 +131,7 @@ def get_resultlist(root, apikey, debugmode=False):
             if obj_person is not None:
                 obj_given = obj_person.find('PersonName/Given')
                 obj_last = obj_person.find('PersonName/Family')
+
                 if (obj_given is not None) and (isinstance(obj_given.text, str)):
                     name = obj_given.text
                 else:
@@ -181,7 +196,7 @@ def get_resultlist(root, apikey, debugmode=False):
 
             obj_status = y.find('Result/CompetitorStatus')
             status = obj_status.get('value')
-            if status.lower() == 'didnotstart':
+            if (status.lower() == 'didnotstart') | (status.lower() == 'cancelled'):
                 started = False
             else:
                 started = True
@@ -205,6 +220,7 @@ def get_resultlist(root, apikey, debugmode=False):
                         seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
 
             df.at[index, 'event_year'] = int(event_year)
+            df.at[index, 'event_date'] = event_date
             df.at[index, 'classname'] = class_name
             df.at[index, 'name'] = name
             df.at[index, 'personid'] = person_id
@@ -298,8 +314,11 @@ def get_user_events(user_input, value='event_ids', apikey=''):
                     event_ids = [int(user_input[value])]
 
         for race in event_ids:
-            name, year = get_event_name(race, apikey)
-            event_names.append(name + ' (' + str(year) + ')')
+            if apikey is None:  # Debug-mode
+                event_names.append(str(race))
+            else:
+                name, year = get_event_name(race, apikey)
+                event_names.append(name + ' (' + str(year) + ')')
 
     return event_ids, event_names
 
@@ -356,6 +375,9 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 if __name__ == "__main__":
     manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test2', race_to_manual_info=manual,
+    user_dct['event_ids'] = '26163'
+    user_dct['night_ids'] = ''
+    manual = {}
+    club_division = pd.DataFrame()
+    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test1', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
-    #extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test',  event_ids=[25944, 25993])
