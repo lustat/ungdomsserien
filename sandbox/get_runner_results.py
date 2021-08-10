@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import requests
 import xml.etree.ElementTree as ET
-from datetime import datetime
+import datetime
 
 
 def get_members_in_organisation(id=125, apikey=None):
@@ -45,31 +45,55 @@ def pick_gender(persons, sex='M'):
 
 
 def get_runner_results(id, apikey=None):
+
     if apikey is None:
         apikey = os.environ["apikey"]
 
+    from_date = datetime.datetime.now() - datetime.timedelta(days=400)
+    from_date_str = from_date.strftime('%Y-%m-%d') + ' 00:00:00'
+
     headers = {'ApiKey': apikey}
+    params = {'personId': id, 'includeSplitTimes': False, 'top': 10, 'fromDate': from_date_str}
 
     if not isinstance(id, str):
         id = str(id)
 
-    response = requests.get('https://eventor.orientering.se/api/results/person/', headers=headers)
+    response = requests.get('https://eventor.orientering.se/api/results/person', headers=headers, params=params)
     root = ET.fromstringlist(response.text)
-    obj_name = root.find('Name')
-    if obj_name is None:
-        event_name = 'Okänt namn'
-    else:
-        event_name = obj_name.text
+    for result_list in root.findall('ResultList'):
+        # print(result_list.getchildren())
+        class_name = result_list.find('ClassResult').find('EventClass').find('Name').text
+        event_type = int(result_list.find('Event').find('EventClassificationId').text)
+        include_class = is_competition_class(class_name)
+        include_event = is_competition(class_name)
 
-    event_date = root.find('StartDate/Date')
-    if event_date is None:
-        event_year = 'Year?'
-    else:
-        date = datetime.strptime(event_date.text, '%Y-%m-%d')
-        event_year = date.year
+        if include_class & include_event:
+            print(int(result_list.find('Event').find('EventId').text))
+            print(class_name)
+            for t in result_list.find('ClassResult').findall('PersonResult'):
+                for x in t.itertext():
+                    print(x)
 
-    return event_name, event_year
 
+def is_competition(event_classification_id):
+    """ 1=mästerskapstävling, 2=nationell tävling, 3=distriktstävling, 4=närtävling, 5=klubbtävling,
+    6=internationell tävling.
+
+    """
+    is_not_local = False
+    if (event_classification_id < 3) | (event_classification_id > 4):
+        is_not_local = True
+
+    return is_not_local
+
+
+def is_competition_class(event_class_name):
+    is_competition = False
+    if len(event_class_name) == 3:
+        if event_class_name.lower().startswith('h') | event_class_name.lower().startswith('d'):
+            is_competition = True
+
+    return is_competition
 
 if __name__ == '__main__':
     raw = get_members_in_organisation()
