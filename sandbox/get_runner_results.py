@@ -53,7 +53,7 @@ def get_runner_results(id, apikey=None):
     from_date_str = from_date.strftime('%Y-%m-%d') + ' 00:00:00'
 
     headers = {'ApiKey': apikey}
-    params = {'personId': id, 'includeSplitTimes': False, 'top': 10, 'fromDate': from_date_str}
+    params = {'personId': id, 'includeSplitTimes': False, 'top': 5, 'fromDate': from_date_str}
 
     if not isinstance(id, str):
         id = str(id)
