@@ -374,10 +374,10 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 
 if __name__ == "__main__":
-    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx')
-    user_dct['event_ids'] = '26163'
-    user_dct['night_ids'] = ''
-    manual = {}
-    club_division = pd.DataFrame()
+    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input_2021.xlsx')
+    # user_dct['event_ids'] = '36580'
+    # user_dct['night_ids'] = ''
+    # manual = {}
+    # club_division = pd.DataFrame()
     extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\test1', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
