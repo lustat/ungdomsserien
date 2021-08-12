@@ -17,7 +17,7 @@ from joblib import Parallel, delayed
 import multiprocessing
 
 
-def get_events(storage_path, event_list, apikey, parallel_flag=False):
+def get_events(storage_path, event_list, apikey=None, parallel_flag=False):
 
     if not os.path.exists(storage_path):
         print(storage_path + ' skapas')

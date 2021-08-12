@@ -3,6 +3,8 @@ import pandas as pd
 import requests
 import xml.etree.ElementTree as ET
 import datetime
+from definitions import DATA_DIR
+from loader.read_results import get_events, get_event
 
 
 def get_runner_data(person_id=64322, apikey=None):
@@ -17,9 +19,9 @@ def get_runner_data(person_id=64322, apikey=None):
 
     headers = {'ApiKey': apikey}
 
-    response = requests.get('https://eventor.orientering.se/api/results/person/', headers=headers, params=params)
-    root = ET.fromstringlist(response.text)
-    return root
+    # response = requests.get('https://eventor.orientering.se/api/results/person/', headers=headers, params=params)
+    # root = ET.fromstringlist(response.text)
+    # return root
 
 def get_members_in_organisation(id=16, apikey=None):
     # SKOF = 16
@@ -60,18 +62,28 @@ def pick_gender(persons, sex='M'):
     return persons
 
 
-def get_runner_results(id='99847', apikey=None):
+def get_runner_participation(id='99847', apikey=None):
+    data_path = DATA_DIR + '/runner_data/'
+    if not os.path.exists(data_path):
+        os.makedirs(data_path)
+
     if apikey is None:
         apikey = os.environ["apikey"]
 
     if not isinstance(id, str):
         id = str(id)
 
-    from_date = datetime.datetime.now() - datetime.timedelta(days=400)
+    file_path = data_path + '/' +  id + '.parq'
+
+    if os.path.isfile(file_path):
+        competitions = pd.read_parquet(file_path)
+        return competitions
+
+    from_date = datetime.datetime.now() - datetime.timedelta(days=200)
     from_date_str = from_date.strftime('%Y-%m-%d') + ' 00:00:00'
 
     headers = {'ApiKey': apikey}
-    params = {'personId': id, 'includeSplitTimes': False, 'top': 5, 'fromDate': from_date_str}
+    params = {'personId': id, 'includeSplitTimes': 'false', 'fromDate': from_date_str}
 
     response = requests.get('https://eventor.orientering.se/api/results/person', headers=headers, params=params)
     root = ET.fromstringlist(response.text)
@@ -92,22 +104,29 @@ def get_runner_results(id='99847', apikey=None):
             competitions.at[event_id, 'event_name'] = event_name
             competitions.at[event_id, 'class_name'] = class_name
 
-    competitions = competitions.reset_index(drop=False).rename(columns = {'index': 'event_id'})
+    competitions = competitions.reset_index(drop=False).rename(columns={'index': 'event_id'})
+    competitions.to_parquet(file_path)
+
     return competitions
 
 
-def get_runners_results(ids=None):
+def get_runners_participation(ids=None):
     if ids is None:
-        ids = [135147, 148254, 110483, 145811, 99847, 105821, 105822, 135150, 121897, 162282, 114463, 126502]
+        ids = [99847, 135147, 148254, 110483, 145811, 105821, 105822, 135150, 121897, 162282, 114463, 126502]
 
     df_list = []
     for id in ids:
-        df = get_runner_results(id=id)
+        df = get_runner_participation(id=id)
         df_list.append(df)
 
     runs = pd.concat(df_list, axis=0)
     return runs
 
+
+def get_runners_per_class(df):
+    events = df[['event_id', 'class_name', 'runner']].groupby(by=['event_id', 'class_name']).count()
+    events = events.reset_index(drop=False)
+    return events
 
 def is_competition(event_classification_id):
     """ 1=mästerskapstävling, 2=nationell tävling, 3=distriktstävling, 4=närtävling, 5=klubbtävling,
@@ -130,12 +149,32 @@ def is_competition_class(event_class_name):
     return is_competition
 
 
+def identify_relevant_classes(comps, inpath, outpath):
+    races = []
+    for key, row in comps.iterrows():
+        df = get_event(row.event_id, inpath)
+        race = df.loc[df.classname == row.class_name]
+        races.append(race)
+
+        print('%%%%%%%%%%%%%%%%%')
+        print(race)
+
+
+
+
+
 if __name__ == '__main__':
     pd.set_option('max_columns', 10)
-    raw_results = get_runner_results()
-    # raw_results = get_runners_results()
-    print(raw_results)
-    print(raw_results)
+    pd.set_option('display.width', 200)
+    partic = get_runners_participation()
+    competitons = get_runners_per_class(partic)
+
+    storage_path = DATA_DIR + '/events'
+    get_events(storage_path, event_list=competitons.event_id.unique())
+
+    output_path = DATA_DIR + '/identified_races'
+    identify_relevant_classes(competitons, inpath=storage_path, outpath=output_path)
+
     # raw = get_members_in_organisation()
     # runners = get_age_group(raw, birth_year_interval=(2007, 2008))
     # runners = pick_gender(runners, 'M')
