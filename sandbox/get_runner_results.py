@@ -23,6 +23,7 @@ def get_runner_data(person_id=64322, apikey=None):
     # root = ET.fromstringlist(response.text)
     # return root
 
+
 def get_members_in_organisation(id=16, apikey=None):
     # SKOF = 16
     # HSOK = 125
@@ -124,9 +125,13 @@ def get_runners_participation(ids=None):
 
 
 def get_runners_per_class(df):
-    events = df[['event_id', 'class_name', 'runner']].groupby(by=['event_id', 'class_name']).count()
+    columns = ['event_id', 'event_name', 'class_name', 'runner']
+    groupby_columns = ['event_id', 'event_name', 'class_name']
+    events = df[columns].groupby(by=groupby_columns).count()
     events = events.reset_index(drop=False)
+
     return events
+
 
 def is_competition(event_classification_id):
     """ 1=mästerskapstävling, 2=nationell tävling, 3=distriktstävling, 4=närtävling, 5=klubbtävling,
@@ -149,23 +154,46 @@ def is_competition_class(event_class_name):
     return is_competition
 
 
-def identify_relevant_classes(comps, inpath, outpath):
+def identify_relevant_classes(comps, inpath):
     races = []
     for key, row in comps.iterrows():
         df = get_event(row.event_id, inpath)
         race = df.loc[df.classname == row.class_name]
+        race = race.assign(event_name=row.event_name)
         races.append(race)
 
         print('%%%%%%%%%%%%%%%%%')
         print(race)
 
+    return races
 
 
+def races_to_excel(races: pd.DataFrame, outpath: str):
+    if not os.path.isdir(outpath):
+        os.makedirs(outpath)
+    excel_file = outpath + '/results.xlsx'
+
+    empty_row = pd.DataFrame(columns=races[0].columns, index=[0])
+    name_row = pd.DataFrame(columns=races[0].columns, index=[0])
+
+    extended_list = []
+    for race in races:
+        name_row.at[0, 'name'] = race.event_name.iloc[0]
+        filtered_race = race.loc[race.region == 16]
+        extended_list.append(pd.concat([empty_row, name_row, filtered_race], axis=0, sort=False))
+
+    df_out = pd.concat(extended_list, axis=0, sort=False)
+
+    column_order = ['name', 'event_year', 'event_date', 'classname', 'personid', 'birthyear', 'age', 'orgid',
+                   'club', 'region', 'started', 'finished', 'position', 'seconds']
+
+    df_out[column_order].to_excel(excel_file)
+    return excel_file
 
 
 if __name__ == '__main__':
-    pd.set_option('max_columns', 10)
-    pd.set_option('display.width', 200)
+    pd.set_option('max_columns', 20)
+    pd.set_option('display.width', 400)
     partic = get_runners_participation()
     competitons = get_runners_per_class(partic)
 
@@ -173,7 +201,8 @@ if __name__ == '__main__':
     get_events(storage_path, event_list=competitons.event_id.unique())
 
     output_path = DATA_DIR + '/identified_races'
-    identify_relevant_classes(competitons, inpath=storage_path, outpath=output_path)
+    results = identify_relevant_classes(competitons, inpath=storage_path)
+    races_to_excel(results, outpath=output_path)
 
     # raw = get_members_in_organisation()
     # runners = get_age_group(raw, birth_year_interval=(2007, 2008))
