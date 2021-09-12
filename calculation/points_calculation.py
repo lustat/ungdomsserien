@@ -121,6 +121,9 @@ def points_to_started_open(df, region_id=16, manual=pd.DataFrame()):
 
 
 def points_to_started_night(df, region_id=16):
+    if df.empty:
+        return pd.DataFrame()
+
     if 'started' not in df.columns:
         raise ValueError('started column is missing in dataframe')
     df = df.loc[df.started]  #Remove not started

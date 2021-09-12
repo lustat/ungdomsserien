@@ -181,7 +181,7 @@ def races_to_excel(races: pd.DataFrame, outpath: str):
         name_row.at[0, 'name'] = race.event_name.iloc[0]
         filtered_race = race.loc[(race.region == 16) & race.started]
         filtered_race = filtered_race.assign(minutes=round(race.seconds/60, 2))
-        
+
         extended_list.append(pd.concat([empty_row, name_row, filtered_race], axis=0, sort=False))
 
     df_out = pd.concat(extended_list, axis=0, sort=False)
