@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-
+from definitions import EVENT_COUNT
 
 def individual_summary(df, df_night, class_selection=None, event_column='event_date'):
     if not df_night.empty:
@@ -59,7 +59,7 @@ def individual_summary(df, df_night, class_selection=None, event_column='event_d
                     for index in night_person.index:
                         df_night.at[index, 'found'] = True
 
-        class_summary = add_best4_score(class_summary, events)
+        class_summary = total_score_for_best_n_events(class_summary, events)
         class_summary = class_summary.assign(total=class_summary.score + class_summary.night)
         class_summary = class_summary.sort_values(by='total', inplace=False, ascending=False)
 
@@ -70,13 +70,13 @@ def individual_summary(df, df_night, class_selection=None, event_column='event_d
     return summary
 
 
-def add_best4_score(df, events, n=3):
+def total_score_for_best_n_events(df, events, n=EVENT_COUNT):
     points = df[events].values
     sorted_points = -np.sort(-points, axis=1)  #Sort in descending order
 
-    # Sum over four best competitions
-    np.sum(sorted_points[:,:4])
-    score = np.sum(sorted_points[:,:n],axis=1)
+    # Sum over n best competitions
+    np.sum(sorted_points[:, :n])
+    score = np.sum(sorted_points[:, :n], axis=1)
     df = df.assign(score=score)
     return df
 
@@ -114,7 +114,7 @@ def club_summary(df, division_df, event_column='event_date'):
         summary = summary.assign(**{str(event): summary[str(event)].astype(int)})
 
     events_str = [str(event) for event in events]
-    summary = add_best4_score(summary, events_str)
+    summary = total_score_for_best_n_events(summary, events_str)
     summary = summary.sort_values(by='score', ascending=False, inplace=False)
 
     clublist = club_points_per_event(df, summary.index)
