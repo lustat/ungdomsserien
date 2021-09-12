@@ -70,13 +70,13 @@ def individual_summary(df, df_night, class_selection=None, event_column='event_d
     return summary
 
 
-def add_best4_score(df, events):
+def add_best4_score(df, events, n=3):
     points = df[events].values
     sorted_points = -np.sort(-points, axis=1)  #Sort in descending order
 
     # Sum over four best competitions
     np.sum(sorted_points[:,:4])
-    score = np.sum(sorted_points[:,:4],axis=1)
+    score = np.sum(sorted_points[:,:n],axis=1)
     df = df.assign(score=score)
     return df
 

@@ -79,7 +79,7 @@ def club_results_to_excel(storage_path, df, club_results):
         data = data.assign(red_place=False)
         data = data.assign(green_place=False)
 
-        for division in data.division.unique():
+        for division in ['Elit', 'Division 1', 'Division 2', 'Division 3']:
             division_data = data.loc[data.division == division]
             if len(division_data) >= 4:
                 first_or_2nd = division_data.loc[(division_data.position == 1) |
