@@ -74,13 +74,13 @@ def get_runner_participation(id='99847', apikey=None):
     if not isinstance(id, str):
         id = str(id)
 
-    file_path = data_path + '/' +  id + '.parq'
+    file_path = data_path + '/' + id + '.parq'
 
     if os.path.isfile(file_path):
         competitions = pd.read_parquet(file_path)
         return competitions
 
-    from_date = datetime.datetime.now() - datetime.timedelta(days=200)
+    from_date = datetime.datetime.now() - datetime.timedelta(days=300)
     from_date_str = from_date.strftime('%Y-%m-%d') + ' 00:00:00'
 
     headers = {'ApiKey': apikey}
@@ -96,14 +96,15 @@ def get_runner_participation(id='99847', apikey=None):
         include_event = is_competition(event_type)
 
         if include_class & include_event:
-            person = result_list.find('ClassResult').find('PersonResult').find('Person').find('PersonName')
-            runner = person.find('Given').text + ' ' + person.find('Family').text
-            event_name = result_list.find('Event').find('Name').text
-            event_id = int(result_list.find('Event').find('EventId').text)
+            if result_list.find('ClassResult').find('PersonResult') is not None:
+                person = result_list.find('ClassResult').find('PersonResult').find('Person').find('PersonName')
+                runner = person.find('Given').text + ' ' + person.find('Family').text
+                event_name = result_list.find('Event').find('Name').text
+                event_id = int(result_list.find('Event').find('EventId').text)
 
-            competitions.at[event_id, 'runner'] = runner
-            competitions.at[event_id, 'event_name'] = event_name
-            competitions.at[event_id, 'class_name'] = class_name
+                competitions.at[event_id, 'runner'] = runner
+                competitions.at[event_id, 'event_name'] = event_name
+                competitions.at[event_id, 'class_name'] = class_name
 
     competitions = competitions.reset_index(drop=False).rename(columns={'index': 'event_id'})
     competitions.to_parquet(file_path)
