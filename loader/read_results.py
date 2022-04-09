@@ -55,6 +55,7 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
             else:
                 df = pd.DataFrame()
     else:  # Load already stored event
+        print('Läser in lokal fil: ' + str(output_file))
         df = pd.read_csv(output_file)
     return df
 

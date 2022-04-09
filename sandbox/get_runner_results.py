@@ -161,10 +161,13 @@ def identify_relevant_classes(comps, inpath):
     races = []
     for key, row in comps.iterrows():
         df = get_event(row.event_id, inpath)
-        race = df.loc[df.classname == row.class_name]
-        race = race.assign(event_name=row.event_name)
-        if not race.empty:
-            races.append(race)
+        if df.empty:
+            print('No data for event ' + str(row.event_id))
+        else:
+            race = df.loc[df.classname == row.class_name]
+            race = race.assign(event_name=row.event_name)
+            if not race.empty:
+                races.append(race)
 
     return races
 
@@ -201,7 +204,7 @@ if __name__ == '__main__':
     competitons = get_runners_per_class(partic)
 
     storage_path = DATA_DIR + '/events'
-    get_events(storage_path, event_list=competitons.event_id.unique())
+    # get_events(storage_path, event_list=competitons.event_id.unique())
 
     output_path = DATA_DIR + '/identified_races'
     results = identify_relevant_classes(competitons, inpath=storage_path)
