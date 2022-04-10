@@ -117,7 +117,7 @@ def get_runner_participation(id='99847', apikey=None):
 def get_runners_participation(ids=None):
     if ids is None:
         # ids = [99847, 135147, 148254, 110483, 145811, 105821, 105822, 135150, 121897, 162282, 114463, 126502]
-        ids = [135150, 99847, 110483, 94497, 105822, 105821, 61254, 135147, 148254, 126502, 114463, 145811, 162282, 121897, \
+        ids = [99847, 110483, 94497, 105822, 105821, 61254, 135147, 148254, 126502, 114463, 145811, 162282, 121897, \
                162503, 132573, 86261, 196346]
 
     df_list = []
@@ -187,15 +187,17 @@ def races_to_excel(races: pd.DataFrame, outpath: str):
     extended_list = []
     for race in races:
         name_row.at[0, 'name'] = race.event_name.iloc[0]
-        filtered_race = race.loc[(race.region == 16) & race.started]
-        filtered_race = filtered_race.assign(minutes=round(race.seconds/60, 2))
+        race = race.assign(minutes=round(race.seconds/60, 2))
+        winner_time = race.loc[race.position == 1].minutes.iloc[0]
+        race = race.assign(after_winner=race.minutes - winner_time)
 
+        filtered_race = race.loc[((race.region == 16) & race.started) | (race.position == 1)]
         extended_list.append(pd.concat([empty_row, name_row, filtered_race], axis=0, sort=False))
 
     df_out = pd.concat(extended_list, axis=0, sort=False)
 
-    column_order = ['name', 'event_year', 'event_date', 'classname', 'personid', 'birthyear', 'age',  'club',
-                    'finished', 'position', 'minutes']
+    column_order = ['name', 'event_date', 'classname', 'birthyear', 'age',  'club', 'finished', 'position', 'minutes',
+                    'after_winner']
 
     df_out[column_order].to_excel(excel_file, index=False)
     return excel_file
