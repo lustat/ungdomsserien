@@ -59,7 +59,7 @@ def get_age_group(root, birth_year_interval):
 
 
 def pick_gender(persons, sex='M'):
-    persons = persons.loc[persons.sex==sex]
+    persons = persons.loc[persons.sex == sex]
     return persons
 
 
@@ -80,7 +80,7 @@ def get_runner_participation(id='99847', apikey=None):
         competitions = pd.read_parquet(file_path)
         return competitions
 
-    from_date = datetime.datetime.now() - datetime.timedelta(days=300)
+    from_date = datetime.datetime.now() - datetime.timedelta(days=100)
     from_date_str = from_date.strftime('%Y-%m-%d') + ' 00:00:00'
 
     headers = {'ApiKey': apikey}
@@ -101,10 +101,12 @@ def get_runner_participation(id='99847', apikey=None):
                 runner = person.find('Given').text + ' ' + person.find('Family').text
                 event_name = result_list.find('Event').find('Name').text
                 event_id = int(result_list.find('Event').find('EventId').text)
+                date = result_list.find('Event').find('StartDate').find('Date').text
 
                 competitions.at[event_id, 'runner'] = runner
                 competitions.at[event_id, 'event_name'] = event_name
                 competitions.at[event_id, 'class_name'] = class_name
+                competitions.at[event_id, 'date'] = date
 
     competitions = competitions.reset_index(drop=False).rename(columns={'index': 'event_id'})
     competitions.to_parquet(file_path)
@@ -128,11 +130,13 @@ def get_runners_participation(ids=None):
 
 
 def get_runners_per_class(df):
-    columns = ['event_id', 'event_name', 'class_name', 'runner']
-    groupby_columns = ['event_id', 'event_name', 'class_name']
+    groupby_columns = ['event_id', 'event_name', 'class_name', 'date']
+    columns = ['runner'] + groupby_columns
     events = df[columns].groupby(by=groupby_columns).count()
     events = events.reset_index(drop=False)
 
+    events = events.sort_values(by='date')
+    print(events)
     return events
 
 
