@@ -13,23 +13,16 @@ from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
-from joblib import Parallel, delayed
-import multiprocessing
 
 
-def get_events(storage_path, event_list, apikey=None, parallel_flag=False):
+def get_events(storage_path, event_list, apikey=None):
 
     if not os.path.exists(storage_path):
         print(storage_path + ' skapas')
         os.makedirs(storage_path)
 
-    number_of_cores = multiprocessing.cpu_count()
-    if parallel_flag and (number_of_cores > 2):
-        Parallel(n_jobs=number_of_cores-1, batch_size=1, verbose=0)(
-            delayed(get_event)(event, storage_path, apikey) for event in event_list)
-    else:
-        for event in event_list:
-            get_event(event, storage_path, apikey)
+    for event in event_list:
+        get_event(event, storage_path, apikey)
 
 
 def get_event(event_id, storage_path, apikey=None, debugmode=False):
@@ -117,6 +110,7 @@ def get_resultlist(root, apikey, debugmode=False):
         event_name = '?'
     else:
         event_name = obj_event.text
+    print(f'Läser in tävling {event_name}')
 
     # Extract results from classes
     index = 0
@@ -147,9 +141,11 @@ def get_resultlist(root, apikey, debugmode=False):
             obj_id = obj_person.find('PersonId')
             if obj_id is None:
                 person_id = 0
+                print(f'person_id={person_id}')
             else:
                 if obj_id.text is None:
                     person_id = 0
+                    print(f'person_id={person_id}')
                 else:
                     person_id = obj_id.text
 
@@ -326,7 +322,7 @@ def get_user_events(user_input, value='event_ids', apikey=''):
 
 def print_event_names(day_events, night_events):
     print(' ')
-    if len(day_events)>1:
+    if len(day_events) > 1:
         print('Listade ordinarie tävlingar (dag):')
     else:
         print('Listad tävling (dag):')
