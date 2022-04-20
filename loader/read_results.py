@@ -32,7 +32,6 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
     output_file = os.path.join(storage_path, str(event_id) + '.csv')
     if not os.path.exists(output_file):  # Load events
         url = "https://eventor.orientering.se/api/results/event"
-
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
