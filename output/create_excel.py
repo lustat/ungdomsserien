@@ -221,7 +221,7 @@ def club_results_to_excel(storage_path, df, club_results):
                 # Freeze panes
                 c = ws['B2']
                 ws.freeze_panes = c
-        wb.save(excel_file)
         print('Sparar ' + excel_file)
+        wb.save(excel_file)
         return excel_file
 
