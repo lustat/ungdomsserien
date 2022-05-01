@@ -4,11 +4,10 @@ from datetime import datetime
 import openpyxl
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font, Color
-from openpyxl.worksheet.dimensions import ColumnDimension, DimensionHolder
-from openpyxl.utils import get_column_letter
 
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import PatternFill
+from output.excel_helpers import adjust_column_width
 
 
 def individual_results_excel(storage_path, dct):
@@ -40,24 +39,7 @@ def individual_results_excel(storage_path, dct):
 
                 for r in dataframe_to_rows(df, index=False, header=True):
                     worksheet.append(r)
-
-                for (df_col, col) in zip(df.columns, worksheet.columns):
-                    column = col[0].column
-                    header_cell = col[0]
-                    header_cell.font = Font(bold=True, size=10)
-                    if isinstance(df[df_col].iloc[0], str):
-                        adjusted_width = 1.3 * df[df_col].str.len().max()
-                        adjusted_width = min(adjusted_width, 40)
-                        adjusted_width = max(adjusted_width, 8)
-                    elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
-                        adjusted_width = 12
-                    else:
-                        adjusted_width = 12
-                    worksheet.column_dimensions[column].width = adjusted_width
-
-                # Freeze panes
-                c = worksheet['B2']
-                worksheet.freeze_panes = c
+                worksheet = adjust_column_width(worksheet, df)
 
         # Remove standard sheets
         for standard_sheet in standard_sheets:
@@ -180,22 +162,7 @@ def club_results_to_excel(storage_path, df, club_results):
             df = add_line_flag(df)
             create_summary_with_division(ws, df)
 
-        for (df_col, col) in zip(df.columns, ws.columns):
-            column = col[0].column
-            header_cell = col[0]
-            if header_cell.value == 'club':
-                header_cell.value = ''
-            else:
-                header_cell.font = Font(bold=True, size=10)
-            if isinstance(df[df_col].iloc[0], str):
-                adjusted_width = 1.2 * df[df_col].str.len().max()
-                if adjusted_width < 10:
-                    adjusted_width = 10
-            elif isinstance(df[df_col].iloc[0], int) | isinstance(df[df_col].iloc[0], float):
-                adjusted_width = 12
-            else:
-                adjusted_width = 12
-            ws.column_dimensions[column].width = adjusted_width
+        ws = adjust_column_width(ws, df)
 
         for club_result in club_results:
             if not club_result.empty:
@@ -211,24 +178,8 @@ def club_results_to_excel(storage_path, df, club_results):
                 for r in dataframe_to_rows(club_result, index=False, header=True):
                     ws.append(r)
 
-                dim_holder = DimensionHolder(worksheet=ws)
-                for (df_col, col) in zip(club_result.columns, ws.columns):
-                    column = col[0].column
-                    header_cell = col[0]
-                    header_cell.font = Font(bold=True)
-                    if isinstance(club_result[df_col].iloc[0], str):
-                        adjusted_width = 1.4 * club_result[df_col].str.len().max()
-                    else:
-                        adjusted_width = 10
-                    # TODO change here
-                    # ws.column_dimensions[column].width = adjusted_width
-                    dim_holder[get_column_letter(col[0].col_idx)] = ColumnDimension(ws, min=col[0].col_idx, max=col[0].col_idx, width=adjusted_width)
+                ws = adjust_column_width(ws, club_result)
 
-                ws.column_dimensions = dim_holder
-
-                # Freeze panes
-                c = ws['B2']
-                ws.freeze_panes = c
         print('Sparar ' + excel_file)
 
         wb.save(excel_file)
