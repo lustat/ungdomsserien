@@ -287,7 +287,7 @@ def concatenate(storage_path, event_list):
             if df.empty:
                 df = df0.copy()
             else:
-                df = df.append(df0, sort=False, ignore_index=True)
+                df = pd.concat([df, df0], sort=False, ignore_index=True)
     df = df.reset_index(drop=True, inplace=False)
     return df
 

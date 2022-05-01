@@ -210,18 +210,23 @@ def club_results_to_excel(storage_path, df, club_results):
 
                 for (df_col, col) in zip(club_result.columns, ws.columns):
                     column = col[0].column
+                    print(column)
                     header_cell = col[0]
                     header_cell.font = Font(bold=True)
                     if isinstance(club_result[df_col].iloc[0], str):
                         adjusted_width = 1.4 * club_result[df_col].str.len().max()
                     else:
                         adjusted_width = 10
-                    ws.column_dimensions[str(column)].width = adjusted_width
+                    # TODO change here
+                    ws.column_dimensions[column].width = adjusted_width
+                    raise ValueError('Temp break')
 
                 # Freeze panes
                 c = ws['B2']
                 ws.freeze_panes = c
         print('Sparar ' + excel_file)
+
         wb.save(excel_file)
+        wb.close()
         return excel_file
 

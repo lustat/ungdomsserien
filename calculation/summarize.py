@@ -198,9 +198,9 @@ def sort_based_on_division(summary):
 
     sorted_summary = pd.DataFrame()
     for number in summary.division_number.unique():
-        df_temp = summary.loc[summary.division_number==number]
+        df_temp = summary.loc[summary.division_number == number]
         df_temp = df_temp.sort_values(by='score', ascending=False)
-        sorted_summary = sorted_summary.append(df_temp)
+        sorted_summary = pd.concat([sorted_summary, df_temp])
 
     sorted_summary = sorted_summary.drop(columns=['division_number'])
     return sorted_summary

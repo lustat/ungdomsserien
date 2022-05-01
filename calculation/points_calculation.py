@@ -21,7 +21,7 @@ def add_night_points_to_event(res, class_selection=None, region_id=16, manual=pd
     results1 = points_to_started_night(region_competition)
     results2 = points_to_started_night(region_open)
 
-    results = results1.append(results2, sort=False)
+    results = pd.concat([results1, results2], sort=False)
     return results, unidentified, missing_age
 
 
@@ -116,7 +116,7 @@ def points_to_started_open(df, region_id=16, manual=pd.DataFrame()):
 
     df_fin = df_fin.assign(points=10)
     df_sta = df_sta.assign(points=5)
-    df_out = df_fin.append(df_sta, sort=False)
+    df_out = pd.concat([df_fin, df_sta], sort=False)
     return df_out
 
 
