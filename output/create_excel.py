@@ -4,6 +4,9 @@ from datetime import datetime
 import openpyxl
 from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Font, Color
+from openpyxl.worksheet.dimensions import ColumnDimension, DimensionHolder
+from openpyxl.utils import get_column_letter
+
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import PatternFill
 
@@ -192,7 +195,7 @@ def club_results_to_excel(storage_path, df, club_results):
                 adjusted_width = 12
             else:
                 adjusted_width = 12
-            ws.column_dimensions[str(column)].width = adjusted_width
+            ws.column_dimensions[column].width = adjusted_width
 
         for club_result in club_results:
             if not club_result.empty:
@@ -208,9 +211,9 @@ def club_results_to_excel(storage_path, df, club_results):
                 for r in dataframe_to_rows(club_result, index=False, header=True):
                     ws.append(r)
 
+                dim_holder = DimensionHolder(worksheet=ws)
                 for (df_col, col) in zip(club_result.columns, ws.columns):
                     column = col[0].column
-                    print(column)
                     header_cell = col[0]
                     header_cell.font = Font(bold=True)
                     if isinstance(club_result[df_col].iloc[0], str):
@@ -218,8 +221,10 @@ def club_results_to_excel(storage_path, df, club_results):
                     else:
                         adjusted_width = 10
                     # TODO change here
-                    ws.column_dimensions[column].width = adjusted_width
-                    raise ValueError('Temp break')
+                    # ws.column_dimensions[column].width = adjusted_width
+                    dim_holder[get_column_letter(col[0].col_idx)] = ColumnDimension(ws, min=col[0].col_idx, max=col[0].col_idx, width=adjusted_width)
+
+                ws.column_dimensions = dim_holder
 
                 # Freeze panes
                 c = ws['B2']
