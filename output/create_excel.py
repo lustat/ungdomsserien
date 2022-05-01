@@ -192,7 +192,7 @@ def club_results_to_excel(storage_path, df, club_results):
                 adjusted_width = 12
             else:
                 adjusted_width = 12
-            ws.column_dimensions[column].width = adjusted_width
+            ws.column_dimensions[str(column)].width = adjusted_width
 
         for club_result in club_results:
             if not club_result.empty:
@@ -216,7 +216,7 @@ def club_results_to_excel(storage_path, df, club_results):
                         adjusted_width = 1.4 * club_result[df_col].str.len().max()
                     else:
                         adjusted_width = 10
-                    ws.column_dimensions[column].width = adjusted_width
+                    ws.column_dimensions[str(column)].width = adjusted_width
 
                 # Freeze panes
                 c = ws['B2']

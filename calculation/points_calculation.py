@@ -137,7 +137,7 @@ def points_to_started_night(df, region_id=16):
 
     df_fin = df_fin.assign(points=10)
     df_sta = df_sta.assign(points=5)
-    df_out = df_fin.append(df_sta, sort=False)
+    df_out = pd.concat([df_fin, df_sta], sort=False)
     return df_out
 
 
