@@ -9,6 +9,7 @@ def valid_open_runners(df, manual=pd.DataFrame()):
         manual = manual.assign(identified=False)
 
     missing_age = pd.DataFrame()
+    missing_age_runners = []
 
     df = df.loc[df.started]  # Keep only started
     df = df.reset_index(drop=True, inplace=False)  # Make sure runners (i.e. rows) have unique index
@@ -24,17 +25,18 @@ def valid_open_runners(df, manual=pd.DataFrame()):
                     if not runner_match.empty:
                         if len(runner_match) == 1:
                             include = True
-                            manual.at[runner_match.index, 'identified'] = True
+                            manual.at[runner_match.index[0], 'identified'] = True
                         else:
                             print('  ')
                             print('Löpare ' + runner['name'] + ' är listad på flera ställen')
                             print('  ')
                             print('  ')
                     else:  # Missing-age runner not in manual list
-                        missing_age = missing_age.append(runner)
+                        missing_age_runners.append(runner)
                 else:  # No manual list, so save all Missing-age runners
-                    missing_age = missing_age.append(runner)
+                    missing_age_runners.append(runner)
 
+        pd.concat([runner, runner], axis=1).transpose()
         df.at[key, 'include'] = include
 
     if not manual.empty:
@@ -46,7 +48,8 @@ def valid_open_runners(df, manual=pd.DataFrame()):
     df = df.loc[df.include]
     df = df.drop(columns=['include'])
 
-    if not missing_age.empty:
+    if missing_age_runners:
+        missing_age = pd.concat(missing_age_runners, axis=1).transpose()
         missing_age = missing_age[['name', 'classname', 'club']]
 
     return df, un_identified, missing_age

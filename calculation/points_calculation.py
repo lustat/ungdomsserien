@@ -47,7 +47,7 @@ def add_points_to_event(res, class_selection=None, region_id=16, manual=pd.DataF
     results1 = add_points_to_competion_class(region_competition)
     results2 = points_to_started_open(region_open)
 
-    results = results1.append(results2, sort=False)
+    results = pd.concat([results1, results2], sort=False)
 
     return results, unidentified_manual, missing_age
 
@@ -94,11 +94,11 @@ def region_runners(df, region_id=16):
 
         # Append started but not finished runners
         df_notfin = region_runners_notfinished.loc[region_runners_notfinished.classname == cname]
-        df0 = df0.append(df_notfin)
+        df0 = pd.concat([df0, df_notfin])
         if df_all.empty:
             df_all = df0.copy()
         else:
-            df_all = df_all.append(df0)
+            df_all = pd.concat([df_all, df0])
 
     return df_all
 

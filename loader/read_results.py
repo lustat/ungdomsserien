@@ -370,6 +370,6 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 
 if __name__ == "__main__":
-    manual, club_division, user_dct = read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input_2022.xlsx')
-    extract_and_analyse(storage_path='C:\\Users\\Klas\\Desktop\\results_2022', race_to_manual_info=manual,
+    manual, club_division, user_dct = read_manual_input(manual_input_file='C:/PycharmProjects/ungdomsserien/input/Manual_input_2022.xlsx')
+    extract_and_analyse(storage_path='C:/PycharmProjects/ungdomsserien/output/results_2022', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
