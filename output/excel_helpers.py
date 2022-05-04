@@ -26,3 +26,13 @@ def adjust_column_width(ws, df: pd.DataFrame, default_width=10):
     c = ws['B2']
     ws.freeze_panes = c
     return ws
+
+
+def reorder_columns(df: pd.DataFrame, new_column_order=None):
+    if new_column_order is None:
+        new_column_order = ['position']
+    columns = list(df.columns)
+    columns.remove('position')
+    new_column_order.extend(columns)
+    df = df[new_column_order]
+    return df

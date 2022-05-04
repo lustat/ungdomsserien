@@ -7,7 +7,7 @@ from openpyxl.styles import Font, Color
 
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import PatternFill
-from output.excel_helpers import adjust_column_width
+from output.excel_helpers import adjust_column_width, reorder_columns
 
 
 def individual_results_excel(storage_path, dct):
@@ -31,11 +31,7 @@ def individual_results_excel(storage_path, dct):
                     df = df.drop(columns=['score'])
 
                 if 'position' in df.columns:
-                    new_column_order = ['position']
-                    columns = list(df.columns)
-                    columns.remove('position')
-                    new_column_order.extend(columns)
-                    df = df[new_column_order]
+                    df = reorder_columns(df, ['position'])
 
                 for r in dataframe_to_rows(df, index=False, header=True):
                     worksheet.append(r)
