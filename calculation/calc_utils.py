@@ -57,7 +57,6 @@ def valid_open_runners(df, manual=pd.DataFrame()):
 
 def add_manual_night_runners(manual_df, night_df):
     night_df = night_df.reset_index(drop=True, inplace=False)
-    columns = list(night_df.columns)
     for (key, row) in manual_df.iterrows():
         new_key = len(night_df)
         row = pd.Series()
