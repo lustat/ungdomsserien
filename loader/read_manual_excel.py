@@ -127,9 +127,9 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_input
     division_table = pd.DataFrame()
     if not os.path.exists(manual_input_file):
         if manual_input_file:
-            print('Ingen Excel-fil identifierad: ' + manual_input_file)
+            raise ValueError('Ingen Excel-fil identifierad med namn: ' + manual_input_file)
         else:
-            print('Ingen Excel-fil vald')
+            raise ValueError('Ingen Excel-fil vald')
     else:
         accepted_sheets = check_excel_input(manual_input_file)
 
