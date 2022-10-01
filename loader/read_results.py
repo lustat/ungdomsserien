@@ -13,6 +13,7 @@ from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
+from definitions import OUTPUT_DIR
 
 
 def get_events(storage_path, event_list, apikey=None):
@@ -360,15 +361,18 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
     cleaned_division_df = clean_division_input(club_division_df)
 
-    # Lägg till fil för utlottning vid Älgot Cup
-    lottery = pd.DataFrame(df.personid.value_counts()).reset_index(drop=False)
-    lottery = lottery.loc[(lottery.personid >= 3) & (lottery.index != 0)]
-    lottery = lottery.rename(columns={'personid': 'events'})
-    lottery = lottery.rename(columns={'index': 'personid'})
-    df0 = df[['personid', 'name', 'club']]
-    df0 = df0.loc[df0.personid.isin(lottery.personid)]
-    df0 = df0.drop_duplicates('personid')[['name', 'club']]
-    df0.to_excel(f'{DATA_DIR}/lottery.xlsx', index=False)
+    if df.event_date.nunique() == 6:
+        # Lägg till fil för utlottning vid Älgot Cup
+        lottery = pd.DataFrame(df.personid.value_counts()).reset_index(drop=False)
+        lottery = lottery.loc[(lottery.personid >= 3) & (lottery.index != 0)]
+        lottery = lottery.rename(columns={'personid': 'events'})
+        lottery = lottery.rename(columns={'index': 'personid'})
+        df0 = df[['personid', 'name', 'club']]
+        df0 = df0.loc[df0.personid.isin(lottery.personid)]
+        df0 = df0.drop_duplicates('personid')[['name', 'club']]
+        lottery_file = f'{OUTPUT_DIR}/lottery.xlsx'
+        df0.to_excel(lottery_file, index=False)
+        print('Skapade lotterilista: ' + lottery_file)
 
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
     df_club_summary = sort_based_on_division(df_club_summary)
