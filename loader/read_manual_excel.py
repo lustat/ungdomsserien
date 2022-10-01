@@ -1,13 +1,14 @@
 import pandas as pd
 import os
-import xlrd
 import numpy as np
+from openpyxl import load_workbook
+
 from loader.input_structure import get_input_structure
 
 
-def get_excel_sheets(excel_file):
-    excel_work_book = xlrd.open_workbook(excel_file)
-    return excel_work_book.sheet_names()
+def get_excel_sheets(excel_file: str):
+    wb = load_workbook(excel_file)
+    return wb.sheetnames
 
 
 def check_sheet_names(sheet_names):
@@ -166,15 +167,15 @@ if __name__ == '__main__':
     test_excel_folder = 'C:\\Users\\Klas\\Desktop\\Example_inputs'
     excel_names = [file for file in os.listdir(test_excel_folder) if file.endswith('.xlsx')]
     excel_files = [os.path.join(test_excel_folder, file_name) for file_name in excel_names]
-    for excel_file in excel_files:
+    for file in excel_files:
         try:
-            dct, div_df, user_dct = read_manual_input(excel_file)
+            dct, div_df, user_dct = read_manual_input(file)
         except ValueError:
-            print(excel_file + ' is incorrect')
+            print(file + ' is incorrect')
             print('  ')
             print('  ')
         else:
-            print(excel_file + ' is correct')
+            print(file + ' is correct')
             print('  ')
             print('  ')
     print('Finished')
