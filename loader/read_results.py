@@ -360,6 +360,16 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
     cleaned_division_df = clean_division_input(club_division_df)
 
+    # Lägg till fil för utlottning vid Älgot Cup
+    lottery = pd.DataFrame(df.personid.value_counts()).reset_index(drop=False)
+    lottery = lottery.loc[(lottery.personid >= 3) & (lottery.index != 0)]
+    lottery = lottery.rename(columns={'personid': 'events'})
+    lottery = lottery.rename(columns={'index': 'personid'})
+    df0 = df[['personid', 'name', 'club']]
+    df0 = df0.loc[df0.personid.isin(lottery.personid)]
+    df0 = df0.drop_duplicates('personid')[['name', 'club']]
+    df0.to_excel(f'{DATA_DIR}/lottery.xlsx', index=False)
+
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
     df_club_summary = sort_based_on_division(df_club_summary)
     club_file = club_results_to_excel(storage_path, df_club_summary, club_results)
