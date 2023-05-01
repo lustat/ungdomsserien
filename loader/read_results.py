@@ -99,6 +99,7 @@ def get_resultlist(root, apikey, debugmode=False):
     if event_date_string is None:
         print('Varning, okänt tävlingsdatum')
         event_year = np.nan
+        event_date = '?'
     else:
         date = datetime.strptime(event_date_string.text, '%Y-%m-%d')
         event_year = date.year
@@ -170,7 +171,7 @@ def get_resultlist(root, apikey, debugmode=False):
                     club = 'Klubblös'
                 else:
                     orgid = int(obj_orgid.text)
-                    obj_clubname= obj_org.find('Name')
+                    obj_clubname = obj_org.find('Name')
                     if obj_clubname is None:
                         club = '?'
                         print(name)
@@ -205,7 +206,7 @@ def get_resultlist(root, apikey, debugmode=False):
 
             seconds = 0
             if finished:
-                obj_time=y.find('Result/Time')
+                obj_time = y.find('Result/Time')
                 if not (obj_time is None):
                     time_string = obj_time.text
                     t = time_string.split(':')
@@ -270,8 +271,7 @@ def get_region_table(apikey):
 
     root = ET.fromstringlist(response.text)
 
-    soup = BeautifulSoup(response.text, 'html.parser')
-    text = soup.prettify()
+    # soup = BeautifulSoup(response.text, 'html.parser')
 
     return root, response
 
@@ -384,6 +384,6 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
 
 if __name__ == "__main__":
-    manual, club_division, user_dct = read_manual_input(manual_input_file='C:/PycharmProjects/ungdomsserien/input/Manual_input_2022.xlsx')
-    extract_and_analyse(storage_path='C:/PycharmProjects/ungdomsserien/output/results_2022', race_to_manual_info=manual,
+    manual, club_division, user_dct = read_manual_input(manual_input_file='C:/PycharmProjects/ungdomsserien/input/Manual_input_2023.xlsx')
+    extract_and_analyse(storage_path='C:/PycharmProjects/ungdomsserien/output/results_2023', race_to_manual_info=manual,
                         club_division_df=club_division, user_input=user_dct)
