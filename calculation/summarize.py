@@ -133,7 +133,7 @@ def club_summary(df, division_df, event_column='event_date'):
                     print('Klubbnamn i divisionstabell matchar ej')
                     print('Dubbelkolla Excel-fil')
                     for (key, row) in mismatch.iterrows():
-                        print(str(row.club) + '  =?   ' + str(row.club_division))
+                        print(str(row.club) + '  :   ' + str(row.club_division) + ' != ' + str(key))
                     print(' ')
                 summary = summary.drop(columns=['club_division'])
         else:
