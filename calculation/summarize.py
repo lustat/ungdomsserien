@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from definitions import EVENT_COUNT
 
+
 def individual_summary(df, df_night, class_selection=None, event_column='event_date'):
     if not df_night.empty:
         df_night = df_night.assign(found=False)

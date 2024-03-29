@@ -13,7 +13,8 @@ from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
-from definitions import OUTPUT_DIR
+from definitions import OUTPUT_DIR, NOT_STARTED_NAMES
+
 
 
 def get_events(storage_path, event_list, apikey=None):
@@ -117,92 +118,29 @@ def get_resultlist(root, apikey, debugmode=False):
     index = 0
     df = pd.DataFrame()
     for x in root.findall('ClassResult'):
-        obj_eventclass = x.find('EventClass')
-        class_name = obj_eventclass.find('Name').text
+        class_name = x.findtext('EventClass/Name')
         if not included_class(class_name, debugmode):
             continue
-        for y in x.findall('PersonResult'):  # Get result for each person
-            index += 1
-            obj_person = y.find('Person')
-            if obj_person is not None:
-                obj_given = obj_person.find('PersonName/Given')
-                obj_last = obj_person.find('PersonName/Family')
 
-                if (obj_given is not None) and (isinstance(obj_given.text, str)):
-                    name = obj_given.text
-                else:
-                    name = '?'
-                if (obj_last is not None) and (isinstance(obj_last.text, str)):
-                    name = name + ' ' + obj_last.text
-                else:
-                    name = name + ' ' + '?'
-                    print('Oväntat namn: ' + name)
-            else:
-                name = '?'
-            obj_id = obj_person.find('PersonId')
-            if obj_id is None:
-                person_id = 0
-                print(f'person_id={person_id}')
-            else:
-                if obj_id.text is None:
-                    person_id = 0
-                    print(f'person_id={person_id}')
-                else:
-                    person_id = obj_id.text
+        for idx, y in enumerate(x.findall('PersonResult'), start=1):  # Get result for each person
+            person = y.find('Person')
+            name = f"{person.findtext('PersonName/Given', default='')} {person.findtext('PersonName/Family', default='?')}"
+            person.findtext('PersonId')
+            person_id = int(person.findtext('PersonId').replace('', '0'))
 
-            obj_birth = obj_person.find('BirthDate/Date')
-            if obj_birth is None:
-                birthyear = np.nan
-            else:
-                year_str = obj_birth.text[:4]
-                if year_str.isdigit():
-                    birthyear = int(year_str)
-                else:
-                    birthyear = np.nan
+            birth_date = person.findtext('BirthDate/Date', default='')
+            birth_year = int(birth_date[:4]) if birth_date != '' else np.nan
 
-            obj_org = y.find('Organisation')
-            if obj_org is None:
-                orgid = int(0)
-                club = 'Klubblös'
-            else:
-                obj_orgid = obj_org.find('OrganisationId')
-                if obj_orgid is None:
-                    orgid = int(0)
-                    club = 'Klubblös'
-                else:
-                    orgid = int(obj_orgid.text)
-                    obj_clubname = obj_org.find('Name')
-                    if obj_clubname is None:
-                        club = '?'
-                        print(name)
-                        print(club)
-                    else:
-                        club = obj_org.find('Name').text
+            org = y.find('Organisation')
+            orgid = int(org.findtext('OrganisationId', default='0'))
+            club = org.findtext('Name', default='?') if orgid != 0 else 'Klubblös'
 
             parent_org_id = get_parent_organisation(orgid, apikey)
 
-            obj_res = y.find('Result/ResultPosition')
-            if obj_res is None:
-                position = 0
-            else:
-                str_position = obj_res.text
-                if str_position.isdigit():
-                    position = int(str_position)
-                else:
-                    print('Okänd position för ' + name)
-                    position = 0
-
-            obj_status = y.find('Result/CompetitorStatus')
-            status = obj_status.get('value')
-            if (status.lower() == 'didnotstart') | (status.lower() == 'cancelled'):
-                started = False
-            else:
-                started = True
-
-            if status.lower() == 'ok':
-                finished = True
-            else:
-                finished = False
+            position = int(y.findtext('Result/ResultPosition', default='0'))
+            status = y.find('Result/CompetitorStatus').get('value').lower() if y.find('Result/CompetitorStatus') is not None else ''
+            started = status not in NOT_STARTED_NAMES
+            finished = status == 'ok'
 
             seconds = 0
             if finished:
@@ -217,24 +155,25 @@ def get_resultlist(root, apikey, debugmode=False):
                     elif len(t) == 3:
                         seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
 
-            df.at[index, 'event_year'] = int(event_year)
-            df.at[index, 'event_date'] = event_date
-            df.at[index, 'classname'] = class_name
-            df.at[index, 'name'] = name
-            df.at[index, 'personid'] = person_id
-            df.at[index, 'birthyear'] = birthyear
-            df.at[index, 'age'] = event_year - birthyear
-            df.at[index, 'orgid'] = orgid
-            df.at[index, 'club'] = club
-            df.at[index, 'region'] = parent_org_id
-            df.at[index, 'started'] = started
-            df.at[index, 'finished'] = finished
-            df.at[index, 'position'] = position
-            df.at[index, 'seconds'] = seconds
+            df.at[idx, 'event_year'] = int(event_year)
+            df.at[idx, 'event_date'] = event_date
+            df.at[idx, 'classname'] = class_name
+            df.at[idx, 'name'] = name
+            df.at[idx, 'personid'] = person_id
+            df.at[idx, 'birthyear'] = birth_year
+            df.at[idx, 'age'] = event_year - birth_year
+            df.at[idx, 'orgid'] = orgid
+            df.at[idx, 'club'] = club
+            df.at[idx, 'region'] = parent_org_id
+            df.at[idx, 'started'] = started
+            df.at[idx, 'finished'] = finished
+            df.at[idx, 'position'] = position
+            df.at[idx, 'seconds'] = seconds
 
     if not df.empty:
         integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds']
         for col in integer_columns:
+            print(col)
             if all(~df[col].isna()):
                 df = df.assign(**{col: df[col].astype('int')})
     return df
