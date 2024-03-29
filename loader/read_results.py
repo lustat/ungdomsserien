@@ -2,7 +2,7 @@ import requests
 import xml.etree.ElementTree as ET
 import os
 import pandas as pd
-from bs4 import BeautifulSoup
+
 import numpy as np
 from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
@@ -14,7 +14,6 @@ from calculation.calc_utils import add_manual_night_runners, clean_division_inpu
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
 from definitions import OUTPUT_DIR, NOT_STARTED_NAMES
-
 
 
 def get_events(storage_path, event_list, apikey=None):
@@ -125,8 +124,9 @@ def get_resultlist(root, apikey, debugmode=False):
         for idx, y in enumerate(x.findall('PersonResult'), start=1):  # Get result for each person
             person = y.find('Person')
             name = f"{person.findtext('PersonName/Given', default='')} {person.findtext('PersonName/Family', default='?')}"
-            person.findtext('PersonId')
-            person_id = int(person.findtext('PersonId').replace('', '0'))
+            print('----Check person ID----')
+            raise ValueError('Check person ID')
+            person_id = person.findtext('PersonId').replace('', '0')
 
             birth_date = person.findtext('BirthDate/Date', default='')
             birth_year = int(birth_date[:4]) if birth_date != '' else np.nan
