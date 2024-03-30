@@ -125,14 +125,13 @@ def get_resultlist(root, apikey, debugmode=False):
     print(f'Läser in tävling {event_name}')
 
     # Extract results from classes
-    index = 0
     df = pd.DataFrame()
     for x in root.findall('ClassResult'):
         class_name = x.findtext('EventClass/Name')
         if not included_class(class_name, debugmode):
             continue
 
-        for idx, y in enumerate(x.findall('PersonResult'), start=1):  # Get result for each person
+        for y in x.findall('PersonResult'):  # Get result for each person
             person = y.find('Person')
             name = f"{get_field(person, 'PersonName/Given', '')} {get_field(person, 'PersonName/Family', '?')}"
 
@@ -166,6 +165,7 @@ def get_resultlist(root, apikey, debugmode=False):
                     elif len(t) == 3:
                         seconds = int(t[0]) * 3600 + int(t[1]) * 60 + int(t[2])
 
+            idx = len(df)
             df.at[idx, 'event_year'] = int(event_year)
             df.at[idx, 'event_date'] = event_date
             df.at[idx, 'classname'] = class_name
@@ -182,7 +182,7 @@ def get_resultlist(root, apikey, debugmode=False):
             df.at[idx, 'seconds'] = seconds
 
     if not df.empty:
-        integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds']
+        integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds', 'birthyear', 'age']
         for col in integer_columns:
             print(col)
             if all(~df[col].isna()):
