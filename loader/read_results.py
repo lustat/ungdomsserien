@@ -93,6 +93,17 @@ def evaluate_night(storage_path, event_list, apikey):
                 missing_age.to_excel(missing_age_file, index=False)
 
 
+def get_field(object, field_name, default, dtype=None):
+    value = object.findtext(field_name)
+    if (value is None) | (value == ''):
+        value = default
+
+    if dtype is not None:
+        value = dtype(value)
+
+    return value
+
+
 def get_resultlist(root, apikey, debugmode=False):
     # Get year of competition
     event_date_string = root.find('Event/FinishDate/Date')
@@ -123,22 +134,22 @@ def get_resultlist(root, apikey, debugmode=False):
 
         for idx, y in enumerate(x.findall('PersonResult'), start=1):  # Get result for each person
             person = y.find('Person')
-            name = f"{person.findtext('PersonName/Given', default='')} {person.findtext('PersonName/Family', default='?')}"
-            print('----Check person ID----')
-            raise ValueError('Check person ID')
-            person_id = person.findtext('PersonId').replace('', '0')
+            name = f"{get_field(person, 'PersonName/Given', '')} {get_field(person, 'PersonName/Family', '?')}"
 
-            birth_date = person.findtext('BirthDate/Date', default='')
+            person_id = get_field(person, 'PersonId', '0', np.int64)
+
+            birth_date = get_field(person, 'BirthDate/Date', '', str)
             birth_year = int(birth_date[:4]) if birth_date != '' else np.nan
 
             org = y.find('Organisation')
-            orgid = int(org.findtext('OrganisationId', default='0'))
-            club = org.findtext('Name', default='?') if orgid != 0 else 'Klubblös'
+            orgid = get_field(org, 'OrganisationId', 0, int)
+            club = get_field(org, 'Name', 'Klubblös', str)
 
             parent_org_id = get_parent_organisation(orgid, apikey)
 
-            position = int(y.findtext('Result/ResultPosition', default='0'))
-            status = y.find('Result/CompetitorStatus').get('value').lower() if y.find('Result/CompetitorStatus') is not None else ''
+            position = get_field(y, 'Result/ResultPosition', 0, int)
+            status_raw = y.find('Result/CompetitorStatus')
+            status = status_raw.get('value').lower() if status_raw is not None else ''
             started = status not in NOT_STARTED_NAMES
             finished = status == 'ok'
 
