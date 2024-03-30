@@ -133,17 +133,15 @@ def get_resultlist(root, apikey, debugmode=False):
 
         for y in x.findall('PersonResult'):  # Get result for each person
             person = y.find('Person')
+
             name = f"{get_field(person, 'PersonName/Given', '')} {get_field(person, 'PersonName/Family', '?')}"
-
             person_id = get_field(person, 'PersonId', '0', np.int64)
-
             birth_date = get_field(person, 'BirthDate/Date', '', str)
             birth_year = int(birth_date[:4]) if birth_date != '' else np.nan
 
             org = y.find('Organisation')
             orgid = get_field(org, 'OrganisationId', 0, int)
             club = get_field(org, 'Name', 'Klubblös', str)
-
             parent_org_id = get_parent_organisation(orgid, apikey)
 
             position = get_field(y, 'Result/ResultPosition', 0, int)
@@ -219,9 +217,6 @@ def get_region_table(apikey):
     response = requests.get(url, headers=headers)
 
     root = ET.fromstringlist(response.text)
-
-    # soup = BeautifulSoup(response.text, 'html.parser')
-
     return root, response
 
 
