@@ -184,7 +184,6 @@ def get_resultlist(root, apikey, debugmode=False):
     if not df.empty:
         integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds', 'birthyear', 'age']
         for col in integer_columns:
-            print(col)
             if all(~df[col].isna()):
                 df = df.assign(**{col: df[col].astype('int')})
     return df
