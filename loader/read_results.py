@@ -94,6 +94,9 @@ def evaluate_night(storage_path, event_list, apikey):
 
 
 def get_field(object, field_name, default, dtype=None):
+    if object is None:
+        return default
+
     value = object.findtext(field_name)
     if (value is None) | (value == ''):
         value = default
