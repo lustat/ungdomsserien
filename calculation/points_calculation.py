@@ -72,19 +72,20 @@ def add_points_to_competion_class(res):
 def region_runners(df, region_id=16):
     if df.empty:
         return df
-
+    region_id = int(region_id)
     df = df.assign(region=df.region.astype('int'))
-    region_runners = df.loc[df.region == region_id]
 
-    region_runners_finished = region_runners.loc[region_runners.finished]
-    region_runners_notfinished = region_runners.loc[(~region_runners.finished) & (region_runners.started)]
+    selected = df.loc[df.region == region_id]
 
-    region_runners_finished = region_runners_finished.assign(position=region_runners_finished.position.astype('int'))
-    region_runners_notfinished = region_runners_notfinished.assign(position=0, region_position=0)
+    selected_finished = selected.loc[selected.finished]
+    selected_notfinished = selected.loc[(~selected.finished) & (selected.started)]
+
+    selected_finished = selected_finished.assign(position=selected_finished.position.astype('int'))
+    selected_notfinished = selected_notfinished.assign(position=0, region_position=0)
 
     df_all = pd.DataFrame()
-    for cname in region_runners_finished.classname.unique():
-        df0 = region_runners_finished.loc[region_runners_finished.classname == cname]
+    for cname in selected_finished.classname.unique():
+        df0 = selected_finished.loc[selected_finished.classname == cname]
 
         # Get region position (handles shared positions)
         df0 = df0.reset_index(drop=True, inplace=False)
@@ -93,7 +94,7 @@ def region_runners(df, region_id=16):
             df0.at[key, 'region_position'] = sum(df0.seconds < person.seconds) + 1
 
         # Append started but not finished runners
-        df_notfin = region_runners_notfinished.loc[region_runners_notfinished.classname == cname]
+        df_notfin = selected_notfinished.loc[selected_notfinished.classname == cname]
         df0 = pd.concat([df0, df_notfin])
         if df_all.empty:
             df_all = df0.copy()

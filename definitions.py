@@ -6,6 +6,7 @@ OUTPUT_DIR = SOURCE_DIR + '/output'
 
 NOT_STARTED_NAMES = {'didnotstart', 'cancelled'}
 EVENT_COUNT = 4  # Number of events to be counted
+TOTAL_COMPETITIONS = 7
 
 
 

@@ -35,8 +35,11 @@ def get_input_structure():
                     'compulsory': False,
                     'description': 'Anger divisionstillhörighet for respektive klubb'}
 
-    df_event = pd.DataFrame(data={'Name': ['Förnamn1 Efternamn1', 'Förnamn2 Efternamn2'], 'Class': ['U1', 'Inskolning'],
-                                  'Club': ['Skåneslättens OL', 'Lunds OK']})
+    df_event = pd.DataFrame(data={'name': ['Förnamn1 Efternamn1', 'Förnamn2 Efternamn2'],
+                                  'classname': ['U1', 'Inskolning'],
+                                  'club': ['Skåneslättens OL', 'Lunds OK'],
+                                  'include (Y/N/?)': ['Y', 'N'],
+                                  })
     dct_event = {'example_df': df_event,
                  'compulsory': False,
                  'description': 'Anger namn på tävlande med okänd ålder som ska räknas'}

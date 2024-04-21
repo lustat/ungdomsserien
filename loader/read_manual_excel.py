@@ -138,6 +138,7 @@ def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_input
             sheet = sheet.replace(' ', '').lower()
             df.columns = [col.lower().replace(' ', '').replace('-', '') for col in df.columns]
             if sheet.isdigit():
+                df = df.rename(columns={'include(y/n/?)': 'include'})
                 race_to_manual_input[int(sheet)] = df
             else:
                 if sheet.startswith('division'):
