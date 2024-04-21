@@ -26,11 +26,11 @@ def get_events(storage_path, event_list, apikey=None):
         get_event(event, storage_path, apikey)
 
 
-def get_event(event_id, storage_path, apikey=None, debugmode=False):
+def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_excel=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    output_file = os.path.join(storage_path, str(event_id) + '.csv')
+    output_file = os.path.join(storage_path, str(event_id) + '.parquet')
     if not os.path.exists(output_file):  # Load events
         url = "https://eventor.orientering.se/api/results/event"
         headers = {'ApiKey': apikey}
@@ -44,12 +44,15 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False):
             #     return pd.DataFrame()
             if sum(df.finished) > 0:
                 print('Sparar resultat: ' + output_file)
-                df.to_csv(output_file, index=False)
+                df.to_parquet(output_file, index=False)
+                if additional_excel:
+                    output_excel = output_file.replace('.parquet', 'xlsx')
+                    df.to_excel(output_excel)
             else:
                 df = pd.DataFrame()
     else:  # Load already stored event
         print('Läser in lokal fil: ' + str(output_file))
-        df = pd.read_csv(output_file)
+        df = pd.read_parquet(output_file)
     return df
 
 
