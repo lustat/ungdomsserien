@@ -59,9 +59,9 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_e
 def evaluate(storage_path, event_list, apikey, event_to_manual):
 
     for event in event_list:
-        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
-        unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
-        missing_age_file = os.path.join(storage_path, 'Missing_age_' + str(event) + '.xlsx')
+        output_file = f'{storage_path}/result_{event}.parquet'
+        unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
+        missing_age_file = f'{storage_path}/Missing_age_{event}.xlsx'
 
         event_results = get_event(event, storage_path, apikey)
         if event in event_to_manual.keys():
@@ -71,7 +71,10 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
         if not event_results.empty:  # Results exist in Eventor
             if sum(event_results.finished) > 0:  # At least one runner has finished the race
                 event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
-                event_points.to_csv(output_file, index=False)
+                event_points.to_parquet(output_file)
+                # excel_file = output_file.replace(".parquet", ".xlsx")
+                # print(f'Excel ---------> {excel_file}')
+                # event_points.to_excel(excel_file, index=False)
                 if not unidentified.empty:
                     print('Listar oidentifierade manuella löpare i ' + unidentified_file)
                     unidentified.to_excel(unidentified_file, index=False)
@@ -82,14 +85,14 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
 
 def evaluate_night(storage_path, event_list, apikey):
     for event in event_list:
-        output_file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
-        unidentified_file = os.path.join(storage_path, 'Unidentified_' + str(event) + '.xlsx')
-        missing_age_file = os.path.join(storage_path, 'Missing_age_' + str(event) + '.xlsx')
+        output_file = f'{storage_path}/result_{event}.parquet'
+        unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
+        missing_age_file = f'{storage_path}/Missing_age_{event}.xlsx'
 
         event_results = get_event(event, storage_path,  apikey)
         if not event_results.empty:
             event_points, unidentified, missing_age = add_night_points_to_event(event_results)
-            event_points.to_csv(output_file)
+            event_points.to_parquet(output_file)
             if not unidentified.empty:
                 unidentified.to_excel(unidentified_file, index=False)
             if not missing_age.empty:
@@ -229,10 +232,12 @@ def get_region_table(apikey):
 def concatenate(storage_path, event_list):
     df = pd.DataFrame()
     for event in event_list:
-        file = os.path.join(storage_path, 'Result_' + str(event) + '.csv')
+        file = f'{storage_path}/result_{event}.parquet'
         if os.path.exists(file):
-            df0 = pd.read_csv(file, index_col=False)
+            print(f'Läser parquet file: {file}')
+            df0 = pd.read_parquet(file)
             if 'Unnamed: 0' in df0.columns:
+                raise ValueError('Unknown column')
                 df0 = df0.drop(columns=['Unnamed: 0'])
             df0 = df0.assign(eventid=event)
             if df.empty:
