@@ -28,17 +28,15 @@ def valid_open_runners(df, manual=pd.DataFrame()):
 
                     if not runner_match.empty:
                         if len(runner_match) == 1:
-                            manual.at[runner_match.index[0], 'identified'] = True
-                            include = runner_match.include.iloc[0] == 'Y'
                             manual_input = str(runner_match.include.iloc[0])
-
+                            manual.at[runner_match.index[0], 'identified'] = True
+                            include = manual_input == 'Y'
+                            if manual_input == '?':
+                                missing_age_runners.append(runner)
                         else:
-                            print('  ')
-                            print('Löpare ' + runner['name'] + ' är listad på flera ställen')
-                            print('  ')
-                            print('  ')
+                            msg = f'{runner["name"]}, {runner["club"]}, {runner["event_date"]} är listad på flera rader'
+                            raise ValueError(msg)
                     else:  # Missing-age runner not in manual list
-                        print(runner['name'])
                         missing_age_runners.append(runner)
                 else:  # No manual list, so save all Missing-age runners
                     missing_age_runners.append(runner)
