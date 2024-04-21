@@ -40,13 +40,15 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_e
                 print('Sparar resultat: ' + output_file)
                 df.to_parquet(output_file, index=False)
                 if additional_excel:
-                    output_excel = output_file.replace('.parquet', 'xlsx')
+                    output_excel = output_file.replace('.parquet', '.xlsx')
                     df.to_excel(output_excel)
             else:
                 df = pd.DataFrame()
     else:  # Load already stored event
         print('Läser in lokal fil: ' + str(output_file))
         df = pd.read_parquet(output_file)
+        # output_excel = output_file.replace('.parquet', '.xlsx')
+        # df.to_excel(output_excel)
     return df
 
 
