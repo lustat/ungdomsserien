@@ -7,6 +7,9 @@ def valid_open_runners(df, manual=pd.DataFrame()):
         manual = manual.assign(simplename=[name.replace(' ', '').lower() for name in manual['name']])
         manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual['club']])
         manual = manual.assign(identified=False)
+        if set(manual.include.unique()) > {'Y', 'N', '?'}:
+            values = ', '.join([str(value) for value in manual.include.unique()])
+            raise ValueError(f'Manual data includes unexpected values: {values}. Value must be Y, N or ?')
 
     missing_age = pd.DataFrame()
     missing_age_runners = []
@@ -22,21 +25,23 @@ def valid_open_runners(df, manual=pd.DataFrame()):
                 if not manual.empty:  # unknown birth year: Look in manual information
                     runner_match = manual.loc[(manual.simplename == runner['name'].replace(' ', '').lower()) &
                                               (manual.simpleclub == runner['club'].replace(' ', '').lower())]
+
                     if not runner_match.empty:
                         if len(runner_match) == 1:
-                            include = True
                             manual.at[runner_match.index[0], 'identified'] = True
+                            include = runner_match.include.iloc[0] == 'Y'
+                            manual_input = str(runner_match.include.iloc[0])
+
                         else:
                             print('  ')
                             print('Löpare ' + runner['name'] + ' är listad på flera ställen')
                             print('  ')
                             print('  ')
                     else:  # Missing-age runner not in manual list
+                        print(runner['name'])
                         missing_age_runners.append(runner)
                 else:  # No manual list, so save all Missing-age runners
                     missing_age_runners.append(runner)
-
-        pd.concat([runner, runner], axis=1).transpose()
         df.at[key, 'include'] = include
 
     if not manual.empty:

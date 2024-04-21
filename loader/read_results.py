@@ -13,13 +13,11 @@ from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
-from definitions import OUTPUT_DIR, NOT_STARTED_NAMES
+from definitions import OUTPUT_DIR, NOT_STARTED_NAMES, TOTAL_COMPETITIONS
 
 
 def get_events(storage_path, event_list, apikey=None):
-
     if not os.path.exists(storage_path):
-        print(storage_path + ' skapas')
         os.makedirs(storage_path)
 
     for event in event_list:
@@ -30,18 +28,14 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_e
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    output_file = os.path.join(storage_path, str(event_id) + '.parquet')
-    if not os.path.exists(output_file):  # Load events
+    output_file = f'{storage_path}/{event_id}.parquet'
+    if not os.path.exists(output_file):  # Load event
         url = "https://eventor.orientering.se/api/results/event"
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ET.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
-            # # TODO simulate an empty df
-            # if str(event_id) == '21961':
-            #     print('THIS IS A TEST RUN. REMOVE THIS LINE')
-            #     return pd.DataFrame()
             if sum(df.finished) > 0:
                 print('Sparar resultat: ' + output_file)
                 df.to_parquet(output_file, index=False)
@@ -72,14 +66,12 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
             if sum(event_results.finished) > 0:  # At least one runner has finished the race
                 event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
                 event_points.to_parquet(output_file)
-                # excel_file = output_file.replace(".parquet", ".xlsx")
-                # print(f'Excel ---------> {excel_file}')
-                # event_points.to_excel(excel_file, index=False)
                 if not unidentified.empty:
                     print('Listar oidentifierade manuella löpare i ' + unidentified_file)
                     unidentified.to_excel(unidentified_file, index=False)
                 if not missing_age.empty:
                     print('Listar okänd-ålder-löpare i ' + missing_age_file)
+                    missing_age = missing_age.assign(**{'include (Y/N/?)': '?'})
                     missing_age.to_excel(missing_age_file, index=False)
 
 
@@ -316,7 +308,7 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
 
     cleaned_division_df = clean_division_input(club_division_df)
 
-    if df.event_date.nunique() == 6:
+    if df.event_date.nunique() == TOTAL_COMPETITIONS:
         # Lägg till fil för utlottning vid Älgot Cup
         lottery = pd.DataFrame(df.personid.value_counts()).reset_index(drop=False)
         lottery = lottery.loc[(lottery.personid >= 3) & (lottery.index != 0)]
