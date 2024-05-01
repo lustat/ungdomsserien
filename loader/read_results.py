@@ -1,5 +1,5 @@
 import requests
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree
 import os
 import pandas as pd
 
@@ -24,7 +24,7 @@ def get_events(storage_path, event_list, apikey=None):
         get_event(event, storage_path, apikey)
 
 
-def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_excel=False):
+def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_excel=False, verbose=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 
@@ -33,7 +33,7 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_e
         url = "https://eventor.orientering.se/api/results/event"
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
-        root = ET.fromstringlist(response.text)
+        root = ElementTree.fromstringlist(response.text)
         df = get_resultlist(root, apikey, debugmode)
         if not df.empty:
             if sum(df.finished) > 0:
@@ -45,7 +45,8 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_e
             else:
                 df = pd.DataFrame()
     else:  # Load already stored event
-        print('Läser in lokal fil: ' + str(output_file))
+        if verbose:
+            print('Tidigare inläst tävling: ' + str(output_file))
         df = pd.read_parquet(output_file)
         # output_excel = output_file.replace('.parquet', '.xlsx')
         # df.to_excel(output_excel)
@@ -214,7 +215,7 @@ def get_parent_organisation(id, apikey):
             id = str(id)
 
         response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
-        root = ET.fromstringlist(response.text)
+        root = ElementTree.fromstringlist(response.text)
         obj_parent = root.find('ParentOrganisation/OrganisationId')
         if obj_parent is None:
             parent_org = 0
@@ -233,16 +234,17 @@ def get_region_table(apikey):
     url = "https://eventor.orientering.se/api/organisation"
     response = requests.get(url, headers=headers)
 
-    root = ET.fromstringlist(response.text)
+    root = ElementTree.fromstringlist(response.text)
     return root, response
 
 
-def concatenate(storage_path, event_list):
+def concatenate(storage_path, event_list, verbose=False):
     dfs = []
     for event in event_list:
         file = f'{storage_path}/result_{event}.parquet'
         if os.path.exists(file):
-            print(f'Läser parquet file: {file}')
+            if verbose:
+                print(f'Läser parquet file: {file}')
             df0 = pd.read_parquet(file)
             if not df0.empty:
                 dfs.append(df0)
