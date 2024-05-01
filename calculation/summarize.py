@@ -3,7 +3,7 @@ import numpy as np
 from definitions import EVENT_COUNT
 
 
-def individual_summary(df, df_night, class_selection=None, event_column='event_date'):
+def individual_summary(df, df_night, class_selection=None, event_column='event_date', verbose=False):
     if not df_night.empty:
         df_night = df_night.assign(found=False)
 
@@ -21,7 +21,8 @@ def individual_summary(df, df_night, class_selection=None, event_column='event_d
 
     summary = {}
     for classname in class_selection:
-        print('Individuell summering för ' + classname)
+        if verbose:
+            print('Individuell summering för ' + classname)
         df_class = df.loc[df.classname == classname]
         ids = [pid for pid in df_class.personid.unique() if not (pid is None)]
         events = list(df_class[event_column].unique())
@@ -67,7 +68,6 @@ def individual_summary(df, df_night, class_selection=None, event_column='event_d
         class_summary = add_final_position(class_summary)
         summary[classname] = class_summary
 
-    #df_only_night = df_night[(~df_night.found) & (~(df_night.classname=='H10')) & (~(df_night.classname=='D10'))]
     return summary
 
 
