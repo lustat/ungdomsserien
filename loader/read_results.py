@@ -125,7 +125,15 @@ def get_resultlist(root, apikey, debugmode=False):
         event_name = '?'
     else:
         event_name = obj_event.text
-    print(f'Läser in tävling {event_name}')
+
+    obj_event = root.find('Event/EventId')
+    if obj_event is None:
+        print('Varning, okänt tävlings-ID')
+        event_id = 0
+    else:
+        event_id = int(obj_event.text)
+
+    print(f'Hämtar: {event_name} (https://eventor.orientering.se/Events/Show/{event_id})')
 
     # Extract results from classes
     df = pd.DataFrame()
@@ -181,9 +189,11 @@ def get_resultlist(root, apikey, debugmode=False):
             df.at[idx, 'finished'] = finished
             df.at[idx, 'position'] = position
             df.at[idx, 'seconds'] = seconds
+            df.at[idx, 'eventid'] = event_id
 
     if not df.empty:
-        integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid', 'seconds', 'birthyear', 'age']
+        integer_columns = ['event_year', 'personid', 'position', 'region', 'orgid',
+                           'seconds', 'birthyear', 'age', 'eventid']
         for col in integer_columns:
             if all(~df[col].isna()):
                 df = df.assign(**{col: df[col].astype('int')})
@@ -193,6 +203,7 @@ def get_resultlist(root, apikey, debugmode=False):
 def get_parent_organisation(id, apikey):
 
     parent_org = get_parent_org_quick(id)
+
     if not (parent_org is None):
         return parent_org
     else:
@@ -210,6 +221,9 @@ def get_parent_organisation(id, apikey):
         else:
             parent_org = int(obj_parent.text)
 
+        # Lägg till följande rad i get_parent_org_quick:
+        print(f'        {id}: {parent_org},')
+
         return parent_org
 
 
@@ -224,20 +238,15 @@ def get_region_table(apikey):
 
 
 def concatenate(storage_path, event_list):
-    df = pd.DataFrame()
+    dfs = []
     for event in event_list:
         file = f'{storage_path}/result_{event}.parquet'
         if os.path.exists(file):
             print(f'Läser parquet file: {file}')
             df0 = pd.read_parquet(file)
-            if 'Unnamed: 0' in df0.columns:
-                raise ValueError('Unknown column')
-                df0 = df0.drop(columns=['Unnamed: 0'])
-            df0 = df0.assign(eventid=event)
-            if df.empty:
-                df = df0.copy()
-            else:
-                df = pd.concat([df, df0], sort=False, ignore_index=True)
+            if not df0.empty:
+                dfs.append(df0)
+    df = pd.concat(dfs, sort=False, ignore_index=True)
     df = df.reset_index(drop=True, inplace=False)
     return df
 
