@@ -11,24 +11,20 @@ from datetime import datetime
 from output.create_excel import individual_results_excel, club_results_to_excel
 from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
-from loader.read_manual_excel import read_manual_input
 from loader.loader_utils import get_event_name
-from definitions import OUTPUT_DIR, NOT_STARTED_NAMES, TOTAL_COMPETITIONS
+from definitions import DATA_DIR, NOT_STARTED_NAMES, TOTAL_COMPETITIONS
 
 
-def get_events(storage_path, event_list, apikey=None):
-    if not os.path.exists(storage_path):
-        os.makedirs(storage_path)
-
+def get_events(event_list, apikey=None):
     for event in event_list:
-        get_event(event, storage_path, apikey)
+        get_event(event, apikey)
 
 
-def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_excel=False, verbose=False):
+def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, verbose=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    output_file = f'{storage_path}/{event_id}.parquet'
+    output_file = f'{DATA_DIR}/02_raw_results/{event_id}.parquet'
     if not os.path.exists(output_file):  # Load event
         url = "https://eventor.orientering.se/api/results/event"
         headers = {'ApiKey': apikey}
@@ -53,21 +49,31 @@ def get_event(event_id, storage_path, apikey=None, debugmode=False, additional_e
     return df
 
 
-def evaluate(storage_path, event_list, apikey, event_to_manual):
+def fetch_local_event_file(event):
+    output_file = f'{DATA_DIR}/02_raw_results/{event_id}.parquet'
+    if os.path.exists(output_file):
+        df = pd.read_parquet(output_file)
+    else:
+        return pd.DataFrame()
 
+    return df
+
+
+def evaluate(event_list, event_to_manual):
+    storage_path = f'{DATA_DIR}/03_evaluated_results'
     for event in event_list:
         output_file = f'{storage_path}/result_{event}.parquet'
         unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
         missing_age_file = f'{storage_path}/Missing_age_{event}.xlsx'
 
-        event_results = get_event(event, storage_path, apikey)
+        event_result = fetch_local_event_file(event)
         if event in event_to_manual.keys():
             manual_df = event_to_manual[event]
         else:
             manual_df = pd.DataFrame()
-        if not event_results.empty:  # Results exist in Eventor
-            if sum(event_results.finished) > 0:  # At least one runner has finished the race
-                event_points, unidentified, missing_age = add_points_to_event(event_results, manual=manual_df)
+        if not event_result.empty:  # Results exist in Eventor
+            if sum(event_result.finished) > 0:  # At least one runner has finished the race
+                event_points, unidentified, missing_age = add_points_to_event(event_result, manual=manual_df)
                 event_points.to_parquet(output_file)
                 if not unidentified.empty:
                     print('Listar oidentifierade manuella löpare i ' + unidentified_file)
@@ -78,13 +84,14 @@ def evaluate(storage_path, event_list, apikey, event_to_manual):
                     missing_age.to_excel(missing_age_file, index=False)
 
 
-def evaluate_night(storage_path, event_list, apikey):
+def evaluate_night(event_list):
+    storage_path = f'{DATA_DIR}/03_evaluated_results'
     for event in event_list:
         output_file = f'{storage_path}/result_{event}.parquet'
         unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
         missing_age_file = f'{storage_path}/Missing_age_{event}.xlsx'
 
-        event_results = get_event(event, storage_path,  apikey)
+        event_results = fetch_local_event_file(event)
         if not event_results.empty:
             event_points, unidentified, missing_age = add_night_points_to_event(event_results)
             event_points.to_parquet(output_file)
@@ -238,7 +245,8 @@ def get_region_table(apikey):
     return root, response
 
 
-def concatenate(storage_path, event_list, verbose=False):
+def concatenate(event_list, verbose=False):
+    storage_path = f'{DATA_DIR}/03_evaluated_results'
     dfs = []
     for event in event_list:
         file = f'{storage_path}/result_{event}.parquet'
@@ -299,7 +307,7 @@ def print_event_names(day_events, night_events):
     print(' ')
 
 
-def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, user_input, apikey=None):
+def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apikey=None):
     if 'event_ids' not in user_input.keys():
         raise ValueError('event_ids is missing in user_input dataframe')
 
@@ -307,14 +315,14 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
     night_ids, night_names = get_user_events(user_input, 'night_ids', apikey)
     print_event_names(day_names, night_names)
 
-    get_events(storage_path, event_ids, apikey)
-    evaluate(storage_path, event_ids, apikey, race_to_manual_info)
+    get_events(event_ids, apikey)
+    get_events(night_ids, apikey)
 
-    get_events(storage_path, night_ids, apikey)
-    evaluate_night(storage_path, night_ids, apikey)
-    df_night = concatenate(storage_path, night_ids)
+    evaluate(event_ids, race_to_manual_info)
+    evaluate_night(night_ids, apikey)
 
-    df = concatenate(storage_path, event_ids)
+    df_night = concatenate(night_ids)
+    df = concatenate(event_ids)
 
     if 'night' in race_to_manual_info.keys():
         df_night = add_manual_night_runners(race_to_manual_info['night'], df_night)
@@ -341,9 +349,3 @@ def extract_and_analyse(storage_path, race_to_manual_info, club_division_df, use
     si = individual_summary(df, df_night)
     indiv_file = individual_results_excel(storage_path, si)
     return club_file, indiv_file
-
-
-if __name__ == "__main__":
-    manual, club_division, user_dct = read_manual_input(manual_input_file='/data/01_input/Manual_input_2024.xlsx')
-    extract_and_analyse(storage_path='C:/PycharmProjects/ungdomsserien/output/results_2024', race_to_manual_info=manual,
-                        club_division_df=club_division, user_input=user_dct)

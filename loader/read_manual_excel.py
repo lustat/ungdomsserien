@@ -122,7 +122,7 @@ def check_excel_input(manual_input_file):
     return valid_sheets
 
 
-def read_manual_input(manual_input_file='C:\\Users\\Klas\\Desktop\\Example_inputs\\Manual_input.xlsx'):
+def read_manual_input(manual_input_file: str):
     race_to_manual_input = {}
     division_table = pd.DataFrame()
     if not os.path.exists(manual_input_file):
