@@ -56,24 +56,26 @@ def fetch_local_event_file(event, verbose=False):
         if verbose:
             print(f'Hämtar inläst data: {event_file}')
         df = pd.read_parquet(event_file)
+        event_date = df.event_date.iloc[0].replace('-', '')
     else:
-        return pd.DataFrame()
+        return pd.DataFrame(), '?'
 
-    return df
+    return df, event_date
 
 
 def evaluate(event_list, event_to_manual):
     storage_path = f'{DATA_DIR}/03_evaluated_events'
     for event in event_list:
         output_file = f'{storage_path}/result_{event}.parquet'
-        unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
-        missing_age_file = f'{storage_path}/Missing_age_{event}.xlsx'
 
-        event_result = fetch_local_event_file(event)
+        event_result, event_date = fetch_local_event_file(event)
         if event in event_to_manual.keys():
             manual_df = event_to_manual[event]
         else:
             manual_df = pd.DataFrame()
+
+        unidentified_file = f'{storage_path}/Unidentified_{event}_{event_date}.xlsx'
+        missing_age_file = f'{storage_path}/Missing_{event}_{event_date}.xlsx'
         if not event_result.empty:  # Results exist in Eventor
             if sum(event_result.finished) > 0:  # At least one runner has finished the race
                 event_points, unidentified, missing_age = add_points_to_event(event_result, manual=manual_df)
@@ -91,10 +93,10 @@ def evaluate_night(event_list):
     storage_path = f'{DATA_DIR}/03_evaluated_events'
     for event in event_list:
         output_file = f'{storage_path}/result_{event}.parquet'
-        unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
-        missing_age_file = f'{storage_path}/Missing_age_{event}.xlsx'
+        event_results, event_date = fetch_local_event_file(event)
 
-        event_results = fetch_local_event_file(event)
+        unidentified_file = f'{storage_path}/Unidentified_{event}_{event_date}.xlsx'
+        missing_age_file = f'{storage_path}/Missing_{event}_{event_date}.xlsx'
         if not event_results.empty:
             event_points, unidentified, missing_age = add_night_points_to_event(event_results)
             event_points.to_parquet(output_file)
@@ -249,6 +251,9 @@ def get_region_table(apikey):
 
 
 def concatenate(event_list, verbose=False):
+    if not event_list:
+        return pd.DataFrame()
+
     storage_path = f'{DATA_DIR}/03_evaluated_events'
     dfs = []
     for event in event_list:
@@ -310,7 +315,7 @@ def print_event_names(day_events, night_events):
     print(' ')
 
 
-def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apikey=None):
+def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apikey=None, algots_cup=False):
     if 'event_ids' not in user_input.keys():
         raise ValueError('event_ids is missing in user_input dataframe')
 
@@ -345,10 +350,19 @@ def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apike
         df0.to_excel(lottery_file, index=False)
         print('Skapade lotterilista: ' + lottery_file)
 
+
+
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
     df_club_summary = sort_based_on_division(df_club_summary)
-    club_file = club_results_to_excel(df_club_summary, club_results)
+    if algots_cup:
+        club_file = club_results_to_excel(df_club_summary, club_results, excel_prefix='Algots_Cup_')
+    else:
+        club_file = club_results_to_excel(df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
-    indiv_file = individual_results_excel(si)
+    if algots_cup:
+        indiv_file = individual_results_excel(si, excel_prefix='Algots_Cup_Individuellt_')
+    else:
+        indiv_file = individual_results_excel(si)
+
     return club_file, indiv_file

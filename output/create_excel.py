@@ -11,12 +11,12 @@ from output.excel_helpers import adjust_column_width, reorder_columns
 from definitions import DATA_DIR
 
 
-def individual_results_excel(dct):
+def individual_results_excel(dct, excel_prefix='Ungdomsserien_individuellt_'):
     storage_path = f'{DATA_DIR}/04_output'
     if dct:  # if dictionary is non-empty
         # One Excel sheet per class
         today = datetime.today().strftime('%y%m%d')
-        excel_name = 'IndividualResults_' + today + '.xlsx'
+        excel_name = f'{excel_prefix}' + today + '.xlsx'
         excel_file = f'{storage_path}/{excel_name}'
         wb = openpyxl.Workbook()
         standard_sheets = wb.get_sheet_names()
@@ -48,7 +48,7 @@ def individual_results_excel(dct):
         return excel_file
 
 
-def club_results_to_excel(df, club_results):
+def club_results_to_excel(df, club_results, excel_prefix='Ungdomsserien_'):
     storage_path = f'{DATA_DIR}/04_output'
     def add_line_flag(data):
         data = data.assign(position=0)
@@ -146,7 +146,7 @@ def club_results_to_excel(df, club_results):
         return None
     else:
         today = datetime.today().strftime('%y%m%d')
-        excel_name = 'ClubResults_' + today + '.xlsx'
+        excel_name = f'{excel_prefix}{today}.xlsx'
         excel_file = f'{storage_path}/{excel_name}'
 
         wb = openpyxl.Workbook()
