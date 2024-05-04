@@ -8,15 +8,16 @@ from openpyxl.styles import Font, Color
 from openpyxl.styles.borders import Border, Side
 from openpyxl.styles import PatternFill
 from output.excel_helpers import adjust_column_width, reorder_columns
+from definitions import DATA_DIR
 
 
-def individual_results_excel(storage_path, dct):
+def individual_results_excel(dct):
+    storage_path = f'{DATA_DIR}/04_output'
     if dct:  # if dictionary is non-empty
         # One Excel sheet per class
         today = datetime.today().strftime('%y%m%d')
         excel_name = 'IndividualResults_' + today + '.xlsx'
-        excel_file = os.path.join(storage_path, excel_name)
-
+        excel_file = f'{storage_path}/{excel_name}'
         wb = openpyxl.Workbook()
         standard_sheets = wb.get_sheet_names()
         for class_name in dct.keys():
@@ -47,7 +48,8 @@ def individual_results_excel(storage_path, dct):
         return excel_file
 
 
-def club_results_to_excel(storage_path, df, club_results):
+def club_results_to_excel(df, club_results):
+    storage_path = f'{DATA_DIR}/04_output'
     def add_line_flag(data):
         data = data.assign(position=0)
         data = data.assign(negative_position=0)
@@ -145,7 +147,7 @@ def club_results_to_excel(storage_path, df, club_results):
     else:
         today = datetime.today().strftime('%y%m%d')
         excel_name = 'ClubResults_' + today + '.xlsx'
-        excel_file = os.path.join(storage_path, excel_name)
+        excel_file = f'{storage_path}/{excel_name}'
 
         wb = openpyxl.Workbook()
         ws = wb.active

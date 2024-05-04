@@ -24,7 +24,7 @@ def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, ve
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    output_file = f'{DATA_DIR}/02_raw_results/{event_id}.parquet'
+    output_file = f'{DATA_DIR}/02_raw_events/{event_id}.parquet'
     if not os.path.exists(output_file):  # Load event
         url = "https://eventor.orientering.se/api/results/event"
         headers = {'ApiKey': apikey}
@@ -39,6 +39,7 @@ def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, ve
                     output_excel = output_file.replace('.parquet', '.xlsx')
                     df.to_excel(output_excel)
             else:
+                print(f'Resultat ej tillgängliga för {event_id}')
                 df = pd.DataFrame()
     else:  # Load already stored event
         if verbose:
@@ -49,10 +50,12 @@ def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, ve
     return df
 
 
-def fetch_local_event_file(event):
-    output_file = f'{DATA_DIR}/02_raw_results/{event_id}.parquet'
-    if os.path.exists(output_file):
-        df = pd.read_parquet(output_file)
+def fetch_local_event_file(event, verbose=False):
+    event_file = f'{DATA_DIR}/02_raw_events/{event}.parquet'
+    if os.path.exists(event_file):
+        if verbose:
+            print(f'Hämtar inläst data: {event_file}')
+        df = pd.read_parquet(event_file)
     else:
         return pd.DataFrame()
 
@@ -60,7 +63,7 @@ def fetch_local_event_file(event):
 
 
 def evaluate(event_list, event_to_manual):
-    storage_path = f'{DATA_DIR}/03_evaluated_results'
+    storage_path = f'{DATA_DIR}/03_evaluated_events'
     for event in event_list:
         output_file = f'{storage_path}/result_{event}.parquet'
         unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
@@ -85,7 +88,7 @@ def evaluate(event_list, event_to_manual):
 
 
 def evaluate_night(event_list):
-    storage_path = f'{DATA_DIR}/03_evaluated_results'
+    storage_path = f'{DATA_DIR}/03_evaluated_events'
     for event in event_list:
         output_file = f'{storage_path}/result_{event}.parquet'
         unidentified_file = f'{storage_path}/Unidentified_{event}.xlsx'
@@ -246,7 +249,7 @@ def get_region_table(apikey):
 
 
 def concatenate(event_list, verbose=False):
-    storage_path = f'{DATA_DIR}/03_evaluated_results'
+    storage_path = f'{DATA_DIR}/03_evaluated_events'
     dfs = []
     for event in event_list:
         file = f'{storage_path}/result_{event}.parquet'
@@ -319,7 +322,7 @@ def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apike
     get_events(night_ids, apikey)
 
     evaluate(event_ids, race_to_manual_info)
-    evaluate_night(night_ids, apikey)
+    evaluate_night(night_ids)
 
     df_night = concatenate(night_ids)
     df = concatenate(event_ids)
@@ -344,8 +347,8 @@ def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apike
 
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
     df_club_summary = sort_based_on_division(df_club_summary)
-    club_file = club_results_to_excel(storage_path, df_club_summary, club_results)
+    club_file = club_results_to_excel(df_club_summary, club_results)
 
     si = individual_summary(df, df_night)
-    indiv_file = individual_results_excel(storage_path, si)
+    indiv_file = individual_results_excel(si)
     return club_file, indiv_file
