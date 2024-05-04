@@ -14,7 +14,7 @@ if __name__ == "__main__":
 
     use_manual_file = True
     if use_manual_file:
-        manual, club_division, user_dct = read_manual_input(manual_input_file='C:/PycharmProjects/ungdomsserien/input/Manual-input-2023-algots.xlsx')
+        manual, club_division, user_dct = read_manual_input(manual_input_file='/data/01_input/Manual-input-2023-algots.xlsx')
     else:
         manual = pd.DataFrame()
 
