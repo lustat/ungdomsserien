@@ -1,4 +1,4 @@
-# 3.12
+# Python 3.12
 python-dotenv~=1.0.1
 pyarrow==16.0.0
 numpy==1.26.4

@@ -1,3 +1,5 @@
+import sys
+
 from dotenv import load_dotenv
 import pandas as pd
 from loader.read_manual_excel import read_manual_input
@@ -6,6 +8,7 @@ from definitions import DATA_DIR
 
 
 if __name__ == "__main__":
+    print(f'Running with {sys.version}')
     youth_series = True
     load_dotenv()
 
