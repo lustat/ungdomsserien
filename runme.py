@@ -8,10 +8,10 @@ from definitions import DATA_DIR
 
 
 if __name__ == "__main__":
-    ungdomsserien = True
+    youth_series = True
     load_dotenv()
 
-    if ungdomsserien:
+    if youth_series:
         manual, club_division, user_dct = read_manual_input(manual_input_file=f'{DATA_DIR}/01_input/Manual_input_2024.xlsx')
         extract_and_analyse(race_to_manual_info=manual,
                             club_division_df=club_division,
