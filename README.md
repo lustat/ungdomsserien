@@ -1,4 +1,10 @@
-## To create executable, 
+# To run analysis
+1. Create Input Excel files
+2. Execute runme.py
+
+
+
+## Alternative  with gui: To create executable, 
 #### 1. Start windows command prompt (cmd)
 Go to project folder: PATH\ungdomsserien
 #### 2. activate virtual environment

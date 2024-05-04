@@ -10,7 +10,8 @@ if __name__ == "__main__":
     load_dotenv()
 
     if youth_series:
-        manual, club_division, user_dct = read_manual_input(manual_input_file=f'{DATA_DIR}/01_input/Manual_input_2024.xlsx')
+        manual_input_file = f'{DATA_DIR}/01_input/Manual_input_2024.xlsx'
+        manual, club_division, user_dct = read_manual_input(manual_input_file=manual_input_file)
         extract_and_analyse(race_to_manual_info=manual,
                             club_division_df=club_division,
                             user_input=user_dct)
