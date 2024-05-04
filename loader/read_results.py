@@ -8,7 +8,7 @@ from loader.loader_utils import included_class
 from calculation.points_calculation import add_points_to_event, add_night_points_to_event
 from calculation.summarize import individual_summary, club_summary, sort_based_on_division
 from datetime import datetime
-from output.create_excel import individual_results_excel, club_results_to_excel
+from create_output.create_excel import individual_results_excel, club_results_to_excel
 from loader.club_to_region import get_parent_org_quick
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.loader_utils import get_event_name
