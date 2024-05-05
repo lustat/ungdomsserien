@@ -24,7 +24,7 @@ def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, ve
     if apikey is None:
         apikey = os.environ["apikey"]
 
-    output_file = f'{DATA_DIR}/02_raw_data/{event_id}.parquet'
+    output_file = f'{DATA_DIR}/02_raw_data/event_{event_id}.parquet'
     if not os.path.exists(output_file):  # Load event
         url = "https://eventor.orientering.se/api/results/event"
         headers = {'ApiKey': apikey}
@@ -51,7 +51,7 @@ def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, ve
 
 
 def fetch_local_event_file(event, verbose=False):
-    event_file = f'{DATA_DIR}/02_raw_data/{event}.parquet'
+    event_file = f'{DATA_DIR}/02_raw_data/event_{event}.parquet'
     if os.path.exists(event_file):
         if verbose:
             print(f'Hämtar inläst data: {event_file}')

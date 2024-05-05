@@ -1,3 +1,10 @@
+*.yaml
+*.parquet
+*.parq
+*.xlsx
+*.xls
+*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -111,10 +118,7 @@ venv.bak/
 
 /data
 
-*.parq
-*.xlsx
-*.xls
-*.csv
+
 
 # Auto saved Excel-files
 /output/~*
