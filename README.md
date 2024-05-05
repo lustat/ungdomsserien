@@ -1,16 +1,14 @@
 # Instructions
-1. Download and install Python (3.12)
-2. 
-3. Create a virtual environment
+1. Download and install Python (3.12), https://www.python.org/downloads/
+   1. Stored (e.g.) here: `C:\Python\Python312\python.exe`
+2. Clone GitHub project `https://github.com/lustat/ungdomsserien`
+3. Open a command window to create a virtual environment.
    1. Go to project folder 
-   2. C:\Python\Python312\python.exe -m venv venv
-4. Activate venv
-   1. venv\Scripts\activate
-5. Install requirements
-   1. pip install -r requirements.txt
-6. Create Input Excel files
-7. Execute runme.py
-
+   2. Execute: `C:\Python\Python312\python.exe -m venv venv`
+   3. Activate environment: `venv\Scripts\activate`
+   4. Install requirements: `pip install -r requirements.txt`
+4. Create Input Excel files
+5. Execute runme.py
 
 
 ## Alternative with gui: To create executable, 
