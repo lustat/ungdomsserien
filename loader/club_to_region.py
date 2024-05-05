@@ -1,28 +1,48 @@
-def get_parent_org_quick(id):
-    d = {125: 16, 483: 16, 258: 16, 35: 16, 167: 16, 639: 16, 165: 16, 544: 16, 507: 16, 54: 16, 842: 650, 294: 16, 114: 16,
-         829: 650, 487: 16, 614: 16, 471: 16, 461: 16, 111: 16, 400: 16, 169: 16, 132: 16, 81: 16, 138: 2, 0: 0, 558: 16,
-         1120: 650, 41: 8, 261: 2, 324: 4, 482: 16, 331: 16, 60: 2, 450: 2, 551: 7, 635: 3, 729: 650, 116: 12, 339: 7,
-         2698: 7, 288: 7, 762: 650, 364: 7, 484: 2, 327: 16, 623: 12, 310: 7, 449: 2, 495: 7, 429: 2, 102: 650, 404: 12,
-         350: 16, 228: 16, 700: 650, 140: 12, 786: 650, 392: 16, 732: 650, 317: 16, 1329: 650, 874: 650, 582: 13, 486: 16,
-         124: 2, 373: 18, 546: 18, 410: 18, 565: 18, 204: 2, 413: 3, 402: 3, 365: 2, 242: 24, 384: 13, 277: 2, 1712: 650,
-         26: 2, 2340: 21, 388: 18, 703: 650, 465: 20, 73: 24, 646: 2, 2919: 13, 758: 650, 282: 24, 229: 8, 501: 17,
-         2828: 16, 540: 2, 296: 12, 32: 17, 435: 2, 572: 13, 408: 3, 123: 17, 29: 13, 503: 6, 254: 12, 90: 2, 86: 12,
-         266: 12, 630: 18, 446: 3, 107: 2, 588: 24, 555: 3, 217: 3, 341: 3, 564: 21, 65: 2, 416: 21, 340: 18, 440: 9,
-         509: 16, 1781: 650, 634: 3, 82: 3, 70: 650, 754: 650, 84: 4, 305: 15, 812: 650, 585: 18, 657: 650, 637: 8, 87: 2,
-         1134: 650, 683: 650, 2141: 650, 687: 650, 668: 650, 451: 2, 374: 14, 502: 17, 285: 20, 935: 650, 667: 650,
-         780: 650, 3259: 650, 764: 650, 2123: 650, 118: 10, 302: 18, 549: 22, 187: 20, 348: 18, 184: 22, 1088: 650,
-         1323: 650, 553: 24, 342: 8, 638: 18, 689: 650, 526: 21, 74: 21, 684: 650, 200: 2, 757: 18, 198: 18, 3314: 650,
-         1664: 650, 250: 8, 2083: 650, 1404: 650, 1314: 650, 172: 18, 1435: 650, 234: 8, 101: 9, 417: 18, 241: 17,
-         2205: 650, 252: 20, 796: 650, 36: 2, 596: 2, 554: 23, 391: 24, 335: 18, 105: 2, 563: 13, 608: 18, 708: 650,
-         489: 18, 162: 17, 284: 2, 332: 5, 530: 3, 145: 13, 617: 24, 423: 13, 281: 2, 137: 12, 3398: 650, 447: 18, 122: 3,
-         1586: 650, 444: 2, 355: 20, 39: 2, 283: 2, 394: 24, 610: 24, 556: 8, 632: 18, 666: 650, 369: 19, 375: 23, 268: 2}
+import yaml
+import requests
+from xml.etree import ElementTree
 
-    if id in d.keys():
-        return d[id]
+from definitions import DATA_DIR
+
+
+def fetch_organisation_from_eventor(club_id, apikey=None):
+    headers = {'ApiKey': apikey}
+
+    if not isinstance(club_id, str):
+        club_id = str(club_id)
+
+    response = requests.get(f'https://eventor.orientering.se/api/organisation/{club_id}', headers=headers)
+    root = ElementTree.fromstringlist(response.text)
+    obj_parent = root.find('ParentOrganisation/OrganisationId')
+    if obj_parent is None:
+        parent_org = 0
     else:
-        return None
+        parent_org = int(obj_parent.text)
+
+    return parent_org
+
+
+def read_yaml_file(file_name='club_to_region.yaml'):
+    with open(f'{DATA_DIR}/02_raw_data/{file_name}', 'r') as file:
+        dct = yaml.safe_load(file)
+    return dct
+
+
+def get_parent_organisation(club_id, apikey=None):
+    club_to_organisation = read_yaml_file()
+    if club_id in club_to_organisation.keys():
+        return club_to_organisation[club_id]
+    else:  # Club is missing. Update yaml data
+        if not apikey:
+            raise ValueError(f'An eventor call is needed and the apikey is missing')
+        organisation_id = fetch_organisation_from_eventor(club_id, apikey)
+        club_to_organisation[club_id] = organisation_id
+        with open(f"{DATA_DIR}/02_raw_data/club_to_region.yaml", "w") as file:
+            print(f'Updating yaml-file: {club_id}: {organisation_id}')
+            yaml.dump(club_to_organisation, file)
+        return organisation_id
 
 
 if __name__ == '__main__':
-    id = 1586
-    print(get_parent_org_quick(id))
+    club_number = 1586
+    print(get_parent_organisation(club_number))

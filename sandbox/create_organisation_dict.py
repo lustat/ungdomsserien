@@ -13,12 +13,10 @@ for file in files:
     df0 = pd.read_parquet(f'{DATA_DIR}/02_raw_data/{file}')
     dfs.append(df0)
 df = pd.concat(dfs, axis=0)
-print(df)
 df = df[['orgid', 'region']].drop_duplicates()
 df = df.set_index('orgid')
-dct = df.to_dict()['region']
+club_to_org = df.to_dict()['region']
 
-file = open(f"{DATA_DIR}/02_raw_data/club_to_region.yaml", "w")
-yaml.dump(dct, file)
-file.close()
+with open(f"{DATA_DIR}/02_raw_data/club_to_region.yaml", "w") as file:
+    yaml.dump(club_to_org, file)
 print("YAML file saved.")
