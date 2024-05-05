@@ -30,7 +30,7 @@ def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, ve
         headers = {'ApiKey': apikey}
         response = requests.get(url, headers=headers, params={'eventId': event_id, 'includeSplitTimes': False})
         root = ElementTree.fromstringlist(response.text)
-        df = get_resultlist(root, apikey, debugmode)
+        df = get_result_list(root, apikey, debugmode)
         if not df.empty:
             if sum(df.finished) > 0:
                 print('Sparar resultat: ' + output_file)
@@ -106,11 +106,11 @@ def evaluate_night(event_list):
                 missing_age.to_excel(missing_age_file, index=False)
 
 
-def get_field(object, field_name, default, dtype=None):
-    if object is None:
+def get_field(obj, field_name, default, dtype=None):
+    if obj is None:
         return default
 
-    value = object.findtext(field_name)
+    value = obj.findtext(field_name)
     if (value is None) | (value == ''):
         value = default
 
@@ -120,7 +120,7 @@ def get_field(object, field_name, default, dtype=None):
     return value
 
 
-def get_resultlist(root, apikey, debugmode=False):
+def get_result_list(root, apikey, debugmode=False):
     # Get year of competition
     event_date_string = root.find('Event/FinishDate/Date')
     if event_date_string is None:
@@ -251,10 +251,10 @@ def get_user_events(user_input, value='event_ids', apikey=''):
         else:
             if ',' in user_input[value]:
                 event_strings = user_input[value].split(',')
-                for id in event_strings:
-                    id = id.replace(' ', '')
-                    if id.isdigit():
-                        event_ids.append(int(id))
+                for event_id in event_strings:
+                    event_id = event_id.replace(' ', '')
+                    if event_id.isdigit():
+                        event_ids.append(int(event_id))
             else:
                 if user_input[value].isdigit():
                     event_ids = [int(user_input[value])]
@@ -310,20 +310,25 @@ def extract_and_analyse(race_to_manual_info, club_division_df, user_input, apike
 
     cleaned_division_df = clean_division_input(club_division_df)
 
-    if df.event_date.nunique() == TOTAL_COMPETITIONS:
-        # Lägg till fil för utlottning vid Älgot Cup
+    if df.event_date.nunique() == len(event_ids):
+        print('%%%%%%')
+        print(f'Alla tävlingar är inlästa: {", ".join([str(x) for x in event_ids])}')
         lottery = pd.DataFrame(df.personid.value_counts()).reset_index(drop=False)
-        lottery = lottery.loc[(lottery.personid >= 3) & (lottery.index != 0)]
-        lottery = lottery.rename(columns={'personid': 'events'})
-        lottery = lottery.rename(columns={'index': 'personid'})
+        lottery = lottery.loc[lottery.index != 0]
+        lottery = lottery.rename(columns={'count': 'number_of_competitions'})
+        lottery = lottery.loc[(lottery.number_of_competitions >= 3)]
+
         df0 = df[['personid', 'name', 'club']]
         df0 = df0.loc[df0.personid.isin(lottery.personid)]
         df0 = df0.drop_duplicates('personid')[['name', 'club']]
-        lottery_file = f'{OUTPUT_DIR}/lottery.xlsx'
+        df0 = df0.sample(n=len(df0), replace=False).reset_index(drop=True)
+        df0 = df0.reset_index(drop=False)
+        df0 = df0.assign(index=df0['index'] + 1)
+        df0 = df0.rename(columns={'index': 'Lottnummer', 'name': 'Namn', 'club': 'Klubb'})
+        lottery_file = f'{DATA_DIR}/04_output/Utlottning.xlsx'
+        print('Skapar lotterilista: ' + lottery_file)
         df0.to_excel(lottery_file, index=False)
-        print('Skapade lotterilista: ' + lottery_file)
-
-
+        print('%%%%%%')
 
     df_club_summary, club_results = club_summary(df, cleaned_division_df)
     df_club_summary = sort_based_on_division(df_club_summary)
