@@ -1,52 +1,24 @@
 # Create dictionary of organisation ID
 import os
 import pandas as pd
-import json
+import yaml
+from definitions import DATA_DIR
 
 
-event_files = 'C:\\Users\\Klas\\PycharmProjects\\ungdomsserien\\events_storage'
+event_files = f'{DATA_DIR}/02_raw_data'
+files = [filename for filename in os.listdir(event_files) if filename.startswith('event_')]
 
-
-files = [filename for filename in os.listdir(event_files) if (not filename.startswith('Result_')) & (filename.endswith('csv'))]
-
-df = pd.DataFrame()
+dfs = []
 for file in files:
-    dftemp = pd.read_csv(os.path.join(event_files, file))
+    df0 = pd.read_parquet(f'{DATA_DIR}/02_raw_data/{file}')
+    dfs.append(df0)
+df = pd.concat(dfs, axis=0)
+print(df)
+df = df[['orgid', 'region']].drop_duplicates()
+df = df.set_index('orgid')
+dct = df.to_dict()['region']
 
-    if df.empty:
-        df = dftemp.copy()
-    else:
-        df = df.append(dftemp)
-
-dct = {}
-print("dct = {")
-for orgid in df.orgid.unique():
-    dftemp = df.loc[df.orgid==orgid]
-    club = dftemp.iloc[0].club
-
-    region = dftemp.iloc[0].region
-    print(str(orgid) + ':' + str(region) + ',')
-print("}")
-
-
-
-dct = {}
-for orgid in df.orgid.unique():
-    dftemp = df.loc[df.orgid==orgid]
-    club = dftemp.iloc[0].club
-    club = club.replace("å",'aa').replace("ä",'ae').replace("ö",'o')
-    club = club.replace("æ",'ae').replace("ø",'o')
-    club = club.replace("Å", 'Aa').replace("Ä", 'Ae').replace("Ö", 'O')
-    club = club.replace("Æ", 'Ae').replace("Ø", 'O')
-
-    region = dftemp.iloc[0].region
-    dct[str(orgid)] = (str(region), club)
-
-print(dct)
-json = json.dumps(dct, indent=8)
-f = open("../test/region.json", "w")
-f.write(json)
-f.close()
-
-
-print('Finished')
+file = open(f"{DATA_DIR}/02_raw_data/club_to_region.yaml", "w")
+yaml.dump(dct, file)
+file.close()
+print("YAML file saved.")
