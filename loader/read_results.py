@@ -9,7 +9,7 @@ from calculation.points_calculation import add_points_to_event, add_night_points
 from calculation.summarize import individual_summary, club_summary, sort_based_on_division
 from datetime import datetime
 from create_output.create_excel import individual_results_excel, club_results_to_excel
-from loader.club_to_region import get_parent_org_quick
+from loader.club_to_region import get_parent_organisation
 from calculation.calc_utils import add_manual_night_runners, clean_division_input
 from loader.loader_utils import get_event_name
 from definitions import DATA_DIR, NOT_STARTED_NAMES, TOTAL_COMPETITIONS
@@ -211,33 +211,6 @@ def get_resultlist(root, apikey, debugmode=False):
             if all(~df[col].isna()):
                 df = df.assign(**{col: df[col].astype('int')})
     return df
-
-
-def get_parent_organisation(id, apikey):
-
-    parent_org = get_parent_org_quick(id)
-
-    if not (parent_org is None):
-        return parent_org
-    else:
-        # Fetch organisation id from Eventor
-        headers = {'ApiKey': apikey}
-
-        if not isinstance(id, str):
-            id = str(id)
-
-        response = requests.get('https://eventor.orientering.se/api/organisation/' + id, headers=headers)
-        root = ElementTree.fromstringlist(response.text)
-        obj_parent = root.find('ParentOrganisation/OrganisationId')
-        if obj_parent is None:
-            parent_org = 0
-        else:
-            parent_org = int(obj_parent.text)
-
-        # Lägg till följande rad i get_parent_org_quick:
-        print(f'        {id}: {parent_org},')
-
-        return parent_org
 
 
 def get_region_table(apikey):
