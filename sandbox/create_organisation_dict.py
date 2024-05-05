@@ -44,7 +44,7 @@ for orgid in df.orgid.unique():
 
 print(dct)
 json = json.dumps(dct, indent=8)
-f = open("region.json", "w")
+f = open("../test/region.json", "w")
 f.write(json)
 f.close()
 
