@@ -48,7 +48,7 @@ def individual_results_excel(dct, excel_prefix='Ungdomsserien_individuellt_'):
         return excel_file
 
 
-def club_results_to_excel(df, club_results, excel_prefix='Ungdomsserien_'):
+def club_results_to_excel(df, club_results, excel_prefix='Ungdomsserien_klubb_'):
     storage_path = f'{DATA_DIR}/04_output'
     def add_line_flag(data):
         data = data.assign(position=0)
