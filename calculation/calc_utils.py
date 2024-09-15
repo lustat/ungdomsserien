@@ -3,6 +3,13 @@ import pandas as pd
 
 
 def valid_open_runners(df, manual=pd.DataFrame()):
+    if df.empty:
+        # Make sure the include column exist in an empty input
+        df = df.assign(include=df.started)
+
+    if not manual.empty:
+        manual = manual.loc[~manual.name.isna()]
+
     if not manual.empty:
         manual = manual.assign(simplename=[name.replace(' ', '').lower() for name in manual['name']])
         manual = manual.assign(simpleclub=[name.replace(' ', '').lower() for name in manual['club']])

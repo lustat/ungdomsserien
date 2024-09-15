@@ -11,7 +11,7 @@ from create_output.excel_helpers import adjust_column_width, reorder_columns
 from definitions import DATA_DIR
 
 
-def individual_results_excel(dct, excel_prefix='Ungdomsserien_individuellt_'):
+def individual_results_excel(dct, excel_prefix='Ungdomsserien-individuellt-'):
     storage_path = f'{DATA_DIR}/04_output'
     if dct:  # if dictionary is non-empty
         # One Excel sheet per class
@@ -48,7 +48,7 @@ def individual_results_excel(dct, excel_prefix='Ungdomsserien_individuellt_'):
         return excel_file
 
 
-def club_results_to_excel(df, club_results, excel_prefix='Ungdomsserien_klubb_'):
+def club_results_to_excel(df, club_results, excel_prefix='Ungdomsserien-klubbresultat-'):
     storage_path = f'{DATA_DIR}/04_output'
     def add_line_flag(data):
         data = data.assign(position=0)
