@@ -20,7 +20,7 @@ def get_events(event_list, apikey=None):
         get_event(event, apikey)
 
 
-def get_event(event_id, apikey=None, debugmode=False, additional_excel=False, verbose=False):
+def get_event(event_id, apikey=None, debugmode=False, additional_excel=True, verbose=False):
     if apikey is None:
         apikey = os.environ["apikey"]
 

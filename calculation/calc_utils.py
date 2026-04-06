@@ -90,7 +90,7 @@ def add_manual_night_runners(manual_df, night_df):
             row.at['points'] = 5
         row.at['eventid'] = manual_df.loc[key, 'eventid']
         row.name = new_key
-        night_df = night_df.append(row, ignore_index=True)
+        night_df = pd.concat([night_df, row.to_frame().transpose()])
     return night_df
 
 
