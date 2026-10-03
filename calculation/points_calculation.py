@@ -146,13 +146,14 @@ def remove_double_runners(df_open, df_compete):
     df_open = df_open.reset_index(drop=True, inplace=False)  #Make sure runners (i.e. rows) have unique index
     df_open = df_open.assign(keep=True)
 
+    df_compete = df_compete.loc[df_compete.started]  # Started in competetion races
     if df_compete.empty:
         print('Oväntad indata till "remove_double_runners": Inga tävlingsklasser registrerade')
         return df_open
     else:
         for (key, person) in df_open.iterrows():
             person_id_open = df_open.loc[key, 'personid']
-            if person_id_open>0:
+            if person_id_open > 0:
                 double_run = df_compete.loc[df_compete.personid == person_id_open]
                 if not double_run.empty:
                     df_open.at[key, 'keep'] = False
