@@ -9,11 +9,11 @@ from definitions import DATA_DIR
 
 if __name__ == "__main__":
     print(f'Running with {sys.version}')
-    youth_series = True
+    youth_series = False
     load_dotenv()
 
     if youth_series:
-        manual_input_file = f'{DATA_DIR}/01_input/Manual_input_2024.xlsx'
+        manual_input_file = f'{DATA_DIR}/01_input/Manual_input_2026.xlsx'
         manual, club_division, user_dct = read_manual_input(manual_input_file=manual_input_file)
         extract_and_analyse(race_to_manual_info=manual,
                             club_division_df=club_division,
@@ -22,15 +22,18 @@ if __name__ == "__main__":
         # print('Älgots Cup 2021: 32730)')
         # print('Älgots Cup 2022: 34537)')
         # print('Älgots Cup 2023: 46558)')
+        # print('Älgots Cup 2024: 44110)')
+        # print('Älgots Cup 2025: 49357)')
+        print('Älgots Cup 2026: 55566)')
 
         use_manual_file = True
         if use_manual_file:
             manual, club_division, user_dct = read_manual_input(
-                manual_input_file=f'{DATA_DIR}/01_input/Manual-input-2023-algots.xlsx')
+                manual_input_file=f'{DATA_DIR}/01_input/Manual-input-2026-algots.xlsx')
         else:
             manual = pd.DataFrame()
             club_division = pd.DataFrame()
-            user_dct = {'event_ids': '46558',
+            user_dct = {'event_ids': '55566',
                         'night_ids': ''}
 
         extract_and_analyse(race_to_manual_info=manual,
